@@ -92,7 +92,8 @@ int	vars_initializing(t_vars *vars, char **envp)
 {
 //	builtin_array_creator(vars);
 	envp_init(vars, envp);
-	envp_lst_creator(vars, envp);
+//	lst_print(vars->envp_lst);
+	
 	
 	return (0);
 }
