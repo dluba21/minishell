@@ -144,6 +144,7 @@ char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать 
 	printf("len = %d\n", len);
 	free(temp);
 //	if (len == -1) //nado li voobshe? esli net iz etogo spiska znachit eto konec stroki, chto normalno
+	//net, nado, tak kak eto znachit chto vtoroy kavichki net
 //		return (NULL);
 	trimmed_str = (char *)(malloc(len + 1));
 	if (!trimmed_str)
@@ -155,7 +156,7 @@ char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать 
 	return (trimmed_str);
 }
 
-t_list **bash_args_first_lst_init(char *bash_str)
+t_list **bash_args_lst_lexer(char *bash_str)
 {
 	t_list	*temp; //стереть
 	t_list	**lst;
@@ -166,27 +167,30 @@ t_list **bash_args_first_lst_init(char *bash_str)
 	lst = lst_new(0);
 	if (!lst || !bash_str)
 		return (NULL);
+//	printf("{%d}\n", *(bash_str + 13));
+	if (!*bash_str)
+		lst_push_back(lst, lst_new_elem("\0", WORD));
 	while (*bash_str)
 	{
 //		printf("cmp = %d\n", ft_strcmp_n(bash_str, ">>", 2));
 		if (*bash_str == '\'')
 		{
-			if (!*(++bash_str)) //дальше конец строки и ошибка значит
-				exit (printf("error: no second double quote\n")); //не иксит а надо вывести ошибку!!
-			str = quote_str_trim(++bash_str, "\'"); //!!вот бля хуй знает, ведь может быть aboba"aboba'aboba, то есть обе кавчки надо учитывать
-			if (!str)
-				exit (printf("error: no second double quote\n")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
+//			printf("bash_str = [%s]\n", bash_str);
+//			printf("strchr = {%d}\n", ft_strchr(bash_str, "\'"));
+			++bash_str;
+			if (ft_strchr(bash_str, "\'") == ft_strlen(bash_str))
+				exit(printf("error: no second single quote")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
+			str = quote_str_trim(++bash_str, "\'");
 			lst_push_back(lst, lst_new_elem(str, FIELD));
+
 			bash_str += ft_strchr(bash_str, "\'") + 1; // +1 чтобы выйти за кавычку
-			printf("bash_str = [%s]\n", bash_str);
 		}
 		else if (*bash_str == '\"') //двойная кавычка
 		{
-			if (!*(++bash_str)) //++ проехать кавычку и чекнуть конец строки ли следующий
-				exit (printf("error: no second single quote\n"));
+			++bash_str;
+			if (ft_strchr(bash_str, "\"") == ft_strlen(bash_str))
+				exit(printf("error: no second double quote")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
 			str = quote_str_trim(bash_str, "\"");
-			if (!str)
-				exit (printf("error: no second single quote\n")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
 			lst_push_back(lst, lst_new_elem(str, EXP_FIELD));
 			bash_str += ft_strchr(bash_str, "\"") + 1; //nado li +1??
 		}
@@ -209,19 +213,23 @@ t_list **bash_args_first_lst_init(char *bash_str)
 		}
 		else if (*bash_str == '>')
 		{
-			if (!*(++bash_str))
-				return (NULL);
+			++bash_str;
 			lst_push_back(lst, lst_new_elem(NULL, REDIR_OUT));
 		}
-		else if (!ft_strcmp_n(bash_str, "||", 2))
+//		else if (!ft_strcmp_n(bash_str, "||", 2)) //для бонуса если что
+//		{
+//			bash_str += 2;
+//			lst_push_back(lst, lst_new_elem(NULL, OR));
+//		}
+		else if (*bash_str == '|')
 		{
-			bash_str += 2;
+			++bash_str;
 			lst_push_back(lst, lst_new_elem(NULL, PIPE));
 		}
 		else if (ft_isspace(*bash_str))
 		{
 			while (ft_isspace(*bash_str))
-				bash_str++;
+				++bash_str;
 			lst_push_back(lst, lst_new_elem(NULL, SPACE));
 		}
 		else
@@ -263,4 +271,7 @@ t_list **bash_args_first_lst_init(char *bash_str)
 //если второй кавычки нет чтобы обрабатывало надо
 
 //exit (printf("error: no second once single quote\n")); //не иксит а надо вывести ошибку!!
-//пустуж строку обработаьь ""
+//пустуж строку обработаьь "" - есть
+
+
+//echo "huy" > lol kek

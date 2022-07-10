@@ -104,11 +104,13 @@
 //{
 //	char	isspecial_arr[7] = {'\'', '\"', '\t', '\n', '\v', '\f', ' '}; //там слэш ноль должен добавить?
 ////	char s[6] = "abcdef";
+////	char *aboba[7];
+////	aboba = {"REDIR_APPNED", "cd", "pwd", "export", "unset", "env", "exit"};
 ////	char s2[6] = "abcdeo";
 ////	char *str;
 ////	str = &s[0];
 //////	char *
-//	
+////	printf("%s", aboba[0]);
 //////		  readline (const char *prompt);
 //////	char *str = readline("./minishell ");
 //////	printf("%s", str);
@@ -127,9 +129,9 @@
 ////	char *str = ft_strdup("12456 ");
 ////	int len = ft_strchr(str, isspecial_arr);
 ////	printf("len = %d\n", len);
-//	int n = 2;
-//	char *str_2 = ft_strdup("   aboba   < 12456 ");
-//	char *str = ft_strdup("<<");
+////	int n = 2;
+////	char *str_2 = ft_strdup("   aboba   < 12456 ");
+////	char *str = ft_strdup("<<");
 ////	printf("%d\n", ft_strcmp_n(str, str_2, n));
 ////	printf("%d\n", strncmp(str, str_2, n));
 ////	char *p = strchr(str, '');

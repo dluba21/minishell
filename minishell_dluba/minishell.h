@@ -39,12 +39,21 @@
 //8) REDIR_HEREDOC - ХЕРдок <<
 //9) PIPE -  |
 
+//typedef struct s_list
+//{
+//	void			*val;
+////	void			*key;
+//	int				key;
+//	struct s_list	*next;
+//}					t_list;
+
 typedef struct s_list
 {
 	void			*val;
 //	void			*key;
 	int				key;
 	struct s_list	*next;
+	struct s_list	*prev;
 }					t_list;
 
 
@@ -75,6 +84,7 @@ t_list **lst_new(int n);
 t_list	**lst_env_copy(char **envp);
 int	lst_print(t_list **lst);
 int	lst_elem_print(t_list *node);
+int	lst_print_tokens(t_list **lst);
 
 int ft_strlen(char *str);
 void free_big_str(char **big_str);
@@ -88,10 +98,18 @@ int	ft_strcmp(char *s1, char *s2);
 int pipe_len_and_check(char *bash_str);
 int ft_strchr(char *str, char *c);
 char *quote_str_trim(char *bash_str, char *sym_arr);
-t_list **bash_args_first_lst_init(char *bash_str);
+t_list **bash_args_lst_lexer(char *bash_str);
+t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
 //int	ft_strcmp_n(char *s1, char *s2, int n);
 int	ft_strcmp_n(const char *str1, const char *str2, size_t n);
 
 
+t_list *lst_get_last(t_list **lst);
+t_list *lst_get_first(t_list *tale);
+int		lst_elem_free(t_list *node);
+
+
 #endif
+
+

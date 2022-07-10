@@ -1,3 +1,12 @@
+Makefile
 aboba
-aboba
-aboba
+env_funcs.c
+initializing.c
+lexer.c
+list_methods.c
+ls
+main.c
+minishell
+minishell.h
+parser.c
+test.c

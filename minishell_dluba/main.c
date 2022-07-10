@@ -14,13 +14,22 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_first_lst_init("\'\' ");
+	huy = bash_args_lst_lexer("<ls | cat >> abobus  ");
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
 	
 	
 	head = *huy;
 	lst_print(huy);
+//	lst_elem_free(lst_get_last(huy));
+	
+	printf("\n\n\n\n\n");
+//	lst_print(huy);
+//	head = lst_get_last(huy);
+	
+//	lst_elem_print(head);
+//	head = lst_get_first(head);
+//	lst_elem_print(head);
 //	printf("[[len = %d}}\n", lst_len(huy));
 //	lst_clear(huy);
 //	printf("{{{%d||||\n", head->key);
@@ -64,3 +73,4 @@ int main(int argc, char **argv, char **env)
 //"aboba >>" strncmp сегу выдает
 //разобраться с " '' "
 //дальше писать парсер
+//пробелы вообще не нужны ls|cat>aboba
