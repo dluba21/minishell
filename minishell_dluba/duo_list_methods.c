@@ -36,6 +36,7 @@ int	lst_print_tokens(t_list **lst)
 		printf("[%d] key = %s\t\tval = %s\n", i++, tokens_array[head->key - 1], (char *)head->val);
 		head = head->next;
 	}
+	printf("\n\n\n\n\n\n");
 	return (0);
 }
 
@@ -73,7 +74,7 @@ int	lst_clear(t_list **lst)
 	return (0);
 }
 
-t_list	*lst_new_elem(void	*value, int	key) //void *key хочу
+t_list	*lst_elem_new(void	*value, int	key) //void *key хочу
 {
 	t_list	*node;
 
@@ -147,13 +148,17 @@ void	lst_push_front(t_list **lst, t_list *new_node) //вставить в кон
 	if (!head)
 	{
 		*lst = new_node;
+		new_node->next = NULL;
+		new_node->prev = NULL;
 		return ;
 	}
 	while (head->prev)
 		head = head->prev;
 	head->prev = new_node;
 	new_node->next = head;
-}
+	new_node->prev = NULL; //мб убрать, поставил так как бесконечный
+	*lst = new_node;
+} //основное - надо было поменять голову и первый элемент->prev = NULL
 
 t_list **lst_new(int n) //создает список длины n
 {
@@ -168,7 +173,7 @@ t_list **lst_new(int n) //создает список длины n
 	i = 0;
 	while (i < n)
 	{
-		node = lst_new_elem(NULL, 0);
+		node = lst_elem_new(NULL, 0);
 		if (!node)
 			return (NULL); //podpisat'
 		lst_push_back(lst, node);
@@ -216,7 +221,7 @@ t_list	**lst_env_copy(char **envp) //делает список состоящи�
 	temp = envp;
 	while (*envp)
 	{
-		node = lst_new_elem(*envp++, 0);
+		node = lst_elem_new(*envp++, 0);
 		if (!node)
 			return (NULL);
 		lst_push_back(lst, node);
@@ -265,7 +270,7 @@ t_list	*lst_elem_copy(t_list *elem)
 
 	if (!elem)
 		return (NULL);
-	new_elem = lst_new_elem(elem->val, elem->key);
+	new_elem = lst_elem_new(elem->val, elem->key);
 	if (!new_elem)
 		return (NULL);
 	return (new_elem);
@@ -278,3 +283,4 @@ t_list	*lst_elem_copy(t_list *elem)
 
 //надо сделать или двусвязный список чтобы удалять легко элементы или же добавить индексы порядка в элементы и сделать метод удаления по индексу
 
+//до этого закольцовывалось в push_back, потому что при добавлении первого элемнта в список, prev != NULL, поэтому он доходил до начала списка и закольцовывал

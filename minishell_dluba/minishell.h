@@ -93,7 +93,7 @@ int envp_init(t_vars *vars, char **envp);
 int	vars_initializing(t_vars *vars, char **envp);
 
 int	lst_clear(t_list **lst);
-t_list	*lst_new_elem(void	*value, int key);
+t_list	*lst_elem_new(void	*value, int key); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 t_list	*lst_elem_copy(t_list *elem);
 int big_str_len(char **big_str);
 int lst_len(t_list **lst);
@@ -132,7 +132,11 @@ int		lst_elem_free(t_list *node);
 
 
 
-t_list	**llst_elem_new(t_list **lst);
+//t_list	**llst_elem_new(t_list **lst);
+t_list	**llst_elem_new(t_list	*head_lst); 
+t_list	**llst_new(t_list	**lst); //список списков команд и пайпов
+
+
 
 
 #endif

@@ -169,7 +169,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 		return (NULL);
 //	printf("{%d}\n", *(bash_str + 13));
 	if (!*bash_str)
-		lst_push_back(lst, lst_new_elem("\0", WORD));
+		lst_push_back(lst, lst_elem_new("\0", WORD));
 	while (*bash_str)
 	{
 //		printf("cmp = %d\n", ft_strcmp_n(bash_str, ">>", 2));
@@ -181,7 +181,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 			if (ft_strchr(bash_str, "\'") == ft_strlen(bash_str))
 				exit(printf("error: no second single quote")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
 			str = quote_str_trim(++bash_str, "\'");
-			lst_push_back(lst, lst_new_elem(str, FIELD));
+			lst_push_back(lst, lst_elem_new(str, FIELD));
 
 			bash_str += ft_strchr(bash_str, "\'") + 1; // +1 чтобы выйти за кавычку
 		}
@@ -191,53 +191,53 @@ t_list **bash_args_lst_lexer(char *bash_str)
 			if (ft_strchr(bash_str, "\"") == ft_strlen(bash_str))
 				exit(printf("error: no second double quote")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
 			str = quote_str_trim(bash_str, "\"");
-			lst_push_back(lst, lst_new_elem(str, EXP_FIELD));
+			lst_push_back(lst, lst_elem_new(str, EXP_FIELD));
 			bash_str += ft_strchr(bash_str, "\"") + 1; //nado li +1??
 		}
 		else if (!ft_strcmp_n(bash_str, "<<", 2))
 		{
 			bash_str += 2;
-			lst_push_back(lst, lst_new_elem(NULL, REDIR_HEREDOC)); //типа потом уже добавлю delim при парсинге уже
+			lst_push_back(lst, lst_elem_new(NULL, REDIR_HEREDOC)); //типа потом уже добавлю delim при парсинге уже
 		}
 		else if (!ft_strcmp_n(bash_str, ">>", 2))
 		{
 			bash_str += 2;
 //			if (!*bash_str) //nahuy ne nado pohodu
 //				return (NULL);
-			lst_push_back(lst, lst_new_elem(NULL, REDIR_APPEND)); //типа потом уже добавлю delim при парсинге уже
+			lst_push_back(lst, lst_elem_new(NULL, REDIR_APPEND)); //типа потом уже добавлю delim при парсинге уже
 		}
 		else if (*bash_str == '<')
 		{
 			++bash_str;
-			lst_push_back(lst, lst_new_elem(NULL, REDIR_IN));
+			lst_push_back(lst, lst_elem_new(NULL, REDIR_IN));
 		}
 		else if (*bash_str == '>')
 		{
 			++bash_str;
-			lst_push_back(lst, lst_new_elem(NULL, REDIR_OUT));
+			lst_push_back(lst, lst_elem_new(NULL, REDIR_OUT));
 		}
 //		else if (!ft_strcmp_n(bash_str, "||", 2)) //для бонуса если что
 //		{
 //			bash_str += 2;
-//			lst_push_back(lst, lst_new_elem(NULL, OR));
+//			lst_push_back(lst, lst_elem_new(NULL, OR));
 //		}
 		else if (*bash_str == '|')
 		{
 			++bash_str;
-			lst_push_back(lst, lst_new_elem(NULL, PIPE));
+			lst_push_back(lst, lst_elem_new(NULL, PIPE));
 		}
 		else if (ft_isspace(*bash_str))
 		{
 			while (ft_isspace(*bash_str))
 				++bash_str;
-			lst_push_back(lst, lst_new_elem(NULL, SPACE));
+			lst_push_back(lst, lst_elem_new(NULL, SPACE));
 		}
 		else
 		{
 			str = quote_str_trim(bash_str, isspecial_arr);
 			if (!str)
 				return (NULL);
-			lst_push_back(lst, lst_new_elem(str, WORD));
+			lst_push_back(lst, lst_elem_new(str, WORD));
 			bash_str += ft_strchr(bash_str, isspecial_arr);
 			
 		}
@@ -253,7 +253,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 //str = quote_str_trim(++bash_str, '\'');
 //if (!str)
 //	return (NULL); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
-//lst_push_back(lst, lst_new_elem(str, FIELD));
+//lst_push_back(lst, lst_elem_new(str, FIELD));
 //*bash_str += ft_strchr(bash_str, '\'') + 1; // +1 чтобы выйти за кавычку
 //}
 
@@ -275,3 +275,4 @@ t_list **bash_args_lst_lexer(char *bash_str)
 
 
 //echo "huy" > lol kek
+//2|cat не обрабатывает

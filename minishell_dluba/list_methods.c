@@ -64,7 +64,7 @@
 //	return (0);
 //}
 //
-//t_list	*lst_new_elem(void	*value, int	key) //void *key хочу
+//t_list	*lst_elem_new(void	*value, int	key) //void *key хочу
 //{
 //	t_list	*node;
 //
@@ -136,7 +136,7 @@
 //	lst = (t_list **)(malloc(sizeof(n)));
 //	if (!lst)
 //		return (NULL);
-////	node = lst_new_elem(NULL, 0);
+////	node = lst_elem_new(NULL, 0);
 ////	if (!node)
 ////		return (NULL);
 ////	*lst = node;
@@ -144,7 +144,7 @@
 //	i = 0;
 //	while (i < n)
 //	{
-//		node = lst_new_elem(NULL, 0);
+//		node = lst_elem_new(NULL, 0);
 //		if (!node)
 //			return (NULL); //podpisat'
 //		lst_push_back(lst, node);
@@ -192,7 +192,7 @@
 //	temp = envp;
 //	while (*envp)
 //	{
-//		node = lst_new_elem(*envp++, 0);
+//		node = lst_elem_new(*envp++, 0);
 //		if (!node)
 //			return (NULL);
 //		lst_push_back(lst, node);
