@@ -46,6 +46,15 @@ int	lst_elem_print(t_list *node)
 	return (printf("key = %d\tval = %s\n", node->key, (char *)node->val));
 }
 
+int	lst_elem_print_token(t_list *node)
+{
+	char *tokens_array[9] = {"WORD", "FIELD", "EXP_FIELD", "REDIR_OUT", "REDIR_IN", "REDIR_APPEND", "REDIR_HEREDOC", "PIPE", "SPACE"};
+
+	if (!node)
+		return (printf("no node print error\n"));
+	return (printf("key = %s\tval = %s\n", tokens_array[node->key - 1], (char *)node->val));
+}
+
 int	lst_clear(t_list **lst)
 {
 	t_list *head;
@@ -126,6 +135,24 @@ void lst_push_back(t_list **lst, t_list *new_node) //вставить в кон�
 		head = head->next;
 	head->next = new_node;
 	new_node->prev = head;
+}
+
+void	lst_push_front(t_list **lst, t_list *new_node) //вставить в конце элемент
+{
+	t_list *head;
+	
+	if (!lst || !new_node)
+		return ;
+	head = *lst;
+	if (!head)
+	{
+		*lst = new_node;
+		return ;
+	}
+	while (head->prev)
+		head = head->prev;
+	head->prev = new_node;
+	new_node->next = head;
 }
 
 t_list **lst_new(int n) //создает список длины n
@@ -230,9 +257,19 @@ int	lst_elem_free(t_list *node)
 	if (node->next)
 		node->next->prev = node->prev;
 	return (0);
-		
 }
 
+t_list	*lst_elem_copy(t_list *elem)
+{
+	t_list	*new_elem;
+
+	if (!elem)
+		return (NULL);
+	new_elem = lst_new_elem(elem->val, elem->key);
+	if (!new_elem)
+		return (NULL);
+	return (new_elem);
+}
 
 //int main()
 //{

@@ -29,6 +29,8 @@
 #define PIPE 8
 #define SPACE 9
 
+//#define CMD 11
+
 //2) WORD  то есть слово без спецсимволов внутри
 //3) FIELD - (‘ ’)поле, которое надо будет потом раскрыть, например, ‘ ’ - обычные кавычки
 //Все виды токенов запихать в дефайны и преобразовать в числа 1, 2, 3...
@@ -57,6 +59,12 @@ typedef struct s_list
 }					t_list;
 
 
+//
+//typedef struct s_llist //logic list для пайпов и бонусов мб
+//{
+//	
+//}
+
 typedef	struct s_vars
 {
 	char *reserved_words[8];
@@ -71,19 +79,32 @@ typedef	struct s_vars
 
 }		t_vars;
 
+typedef	struct s_cmd
+{
+	struct s_list	**files_in;
+	struct s_list	**files_out;
+	struct s_list	**files_heredoc;
+	char			**cmd_args;
+	struct s_vars	*vars; //здесь переменные окружения
+	
+}				t_cmd;
 
 int envp_init(t_vars *vars, char **envp);
 int	vars_initializing(t_vars *vars, char **envp);
 
 int	lst_clear(t_list **lst);
 t_list	*lst_new_elem(void	*value, int key);
+t_list	*lst_elem_copy(t_list *elem);
 int big_str_len(char **big_str);
 int lst_len(t_list **lst);
-void lst_push_back(t_list **lst, t_list *new_node);
+void	lst_push_back(t_list **lst, t_list *new_node);
+void	lst_push_front(t_list **lst, t_list *new_node);
 t_list **lst_new(int n);
 t_list	**lst_env_copy(char **envp);
-int	lst_print(t_list **lst);
+
 int	lst_elem_print(t_list *node);
+int	lst_print(t_list **lst);
+int	lst_elem_print_token(t_list *node);
 int	lst_print_tokens(t_list **lst);
 
 int ft_strlen(char *str);
@@ -108,6 +129,10 @@ int	ft_strcmp_n(const char *str1, const char *str2, size_t n);
 t_list *lst_get_last(t_list **lst);
 t_list *lst_get_first(t_list *tale);
 int		lst_elem_free(t_list *node);
+
+
+
+t_list	**llst_elem_new(t_list **lst);
 
 
 #endif
