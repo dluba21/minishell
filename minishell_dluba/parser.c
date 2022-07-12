@@ -36,19 +36,40 @@ t_list	**llst_elem_new(t_list *head_lst)
 	t_list	*head_llst_elem;
 	t_list	*tmp;
 
+
 	if (!head_lst)
 		return (NULL);
 	llst_elem = lst_new(0);
-	while (head_lst && head_lst->key != PIPE)
-		head_lst = head_lst->next;
-//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-	if (head_lst) //если на пайп зашло к не конец
-		head_lst->next = NULL;
-//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-	while (head_lst)
+	
+//	head_lst->prev = NULL; //пробую
+	
+	while (head_lst->next) //next так как если в null то нельзя вернуться
 	{
+		if (head_lst->key == PIPE)
+			break;
+		head_lst = head_lst->next;
+	}
+//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
+	if (head_lst) //надо ли вообще?
+		head_lst->next = NULL;
+//	if (head_lst->key == PIPE) //а если два пайпа подряд? придется проверять все таки сначала
+	if (head_lst->key == PIPE)
+		head_lst = head_lst->prev; //плюс не работает если сначала пайп идет
+//	printf("head:\n");
+//	lst_elem_print_token(head_lst);
+	
+	
+//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
+//	printf("abobus\n");
+	while (head_lst && head_lst->key != PIPE)
+	{
+//		printf("abobus_1\n");
 		tmp = head_lst;
 		head_lst = head_lst->prev;
+
+//		printf("\n\n\n-------------->\n");
+//		lst_elem_print_token(tmp);
+//		printf("\n<--------------\n\n");
 		lst_push_front(llst_elem, tmp);
 	}
 	return (llst_elem);
@@ -61,7 +82,6 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 	t_list	**llst;
 	t_list	**llist_elem;
 	t_list	*head_lst;
-	t_list	*head_llst;
 	t_list	*tmp;
 	
 //	if (check_pipes == -1)
@@ -71,13 +91,11 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 	if (!head_lst)
 		return (NULL);
 	llst = lst_new(0);
-	head_llst = *llst;
 	while (head_lst)
 	{
 		tmp = head_lst; //сохраняю голову
-		while (head_lst && head_lst->key != PIPE)
+		while (head_lst->next && head_lst->key != PIPE)  //head_lst->next
 			head_lst = head_lst->next;
-//		head_llst->val = llst_elem_new(tmp);
 		lst_push_front(llst, lst_elem_new(llst_elem_new(tmp), 0));
 		if (head_lst) //если не конец еще и встретился пайп
 		{
@@ -85,7 +103,6 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 		}
 	}
 	//мб head_lst сразу ноль(проверка на один случай)
-	head_llst->next = NULL;
 	return (llst);
 }
 

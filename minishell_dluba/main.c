@@ -6,6 +6,7 @@ int main(int argc, char **argv, char **env)
 	t_list **huy; //udalit'
 	t_list *head;
 	t_list *head_2;
+	t_list *head_3;
 	t_list *tmp;
 	t_list	**llst;
 	t_list	**llst_elem;
@@ -18,7 +19,7 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_lst_lexer("<ls 2 | \"arbidol\" bruh lol | abobus  1");
+	huy = bash_args_lst_lexer("ls | \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
 	
@@ -26,64 +27,125 @@ int main(int argc, char **argv, char **env)
 	
 	lst_print_tokens(huy);
 	
+	printf("------------begin_list has written--------\n\n\n\n");
+	
 	head = *huy;
 	
 	
 	
-	llst = lst_new(0);
+	
 //	printf("pointer = {%p}\n", head->prev);
 	
 	
 	int i = 0;
-	while (i++ < 7)
-		head = head->next;
+	
+//	while (head->key != PIPE)
+//		head = head->next;
+//	head = head->next;
+//
+//	while (head->key != PIPE)
+//		head = head->next;
+//	head = head->next;
+	
+//	head->prev = NULL; //пробую
 	
 	
 	
-	lst_print_tokens(llst_elem_new(head));
+	//проверка работы llst_elem_new
+//	while (i++ < 24)
+//		head = head->next;
+////	head = head->next;
+//
+//
+//	printf("inserted head:\n");
+//	lst_elem_print_token(head);
+//
+//
+//	llst_elem = llst_elem_new(head);
+//
+//	printf("\n\nllst_elem:\n");
+//	lst_print_tokens(llst_elem);
+	
+	//конец проверки работы llst_elem_new
 	
 	
-	
-	
+//	llst = lst_new(0);
+	t_list **tmp_llst;
+	head_3 = *llst;
+	tmp_llst = head_3->val;
+	head_2 = *tmp_llst;
+	while (head_2)
+	{
+		i++;
+		head_2 = head_2->next;
+	}
+	printf("len = %d\n", i);
 	
 	
 //	head_2 = head;
-//	printf("\n\n\n->\n");
-//	lst_elem_print_token(head_2);
-//	printf("\n<-\n\n\n");
+////	printf("\n\n\n->\n");
+////	lst_elem_print_token(head_2);
+////	printf("\n<-\n\n\n");
 //	while (head && head->key != PIPE)
 //		head = head->next;
 //	head = head->next;
 ////
 //
-////	lst_push_front(llst, lst_elem_new(llst_elem_new(head_2), 0));
+//	lst_push_back(llst, lst_elem_new(llst_elem_new(head_2), 0));
 //	lst_print_tokens(llst_elem_new(head_2));
-//	head_2 = head;
 //
+//
+//
+//	head_2 = head;
 //	while (head->key != PIPE)
 //		head = head->next;
 //	head = head->next;
 //
+////	printf("\n\n\n->\n");
+////	lst_elem_print_token(head_2);
+////	printf("\n<-\n\n\n");
 //
-//
-//	printf("\n\n\n->\n");
-//	lst_elem_print_token(head_2);
-//	printf("\n<-\n\n\n");
-//
-//
-////	lst_push_front(llst, lst_elem_new(llst_elem_new(head_2), 0));
+//	lst_push_back(llst, lst_elem_new(llst_elem_new(head_2), 0));
 //	lst_print_tokens(llst_elem_new(head_2));
 //
 //
 //
+//	head_2 = head;
+//	while (head->key != PIPE)
+//		head = head->next;
+//	head = head->next;
+//
+////	printf("\n\n\n->\n");
+////	lst_elem_print_token(head_2);
+////	printf("\n<-\n\n\n");
+//
+//	lst_push_back(llst, lst_elem_new(llst_elem_new(head_2), 0));
+//	lst_print_tokens(llst_elem_new(head_2));
+//
+//
+//
+//	head_2 = head;
+//	while (head->next)
+//		head = head->next;
+////	head = head->next;
+//
+////	printf("\n\n\n->\n");
+////	lst_elem_print_token(head_2);
+////	printf("\n<-\n\n\n");
+//
+//	lst_push_back(llst, lst_elem_new(llst_elem_new(head_2), 0));
+//	lst_print_tokens(llst_elem_new(head_2));
+
+	
 //
 //
 //
 //
 //
 //	t_list *head_3 = *llst;
-//
-//	int i = 0;
+	
+
+//	i = 0;
 //	printf("-----------------------------------\n");
 //	while (head_3)
 //	{
@@ -96,8 +158,8 @@ int main(int argc, char **argv, char **env)
 //		i++;
 //	}
 //	printf("len_llst = %d\n", i);
-//
-//
+	
+////
 	
 	
 	
