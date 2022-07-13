@@ -29,6 +29,27 @@
 //
 //	return (llst_elem);
 //}
+int check_pipes(t_list **lst)
+{
+	t_list	*head;
+	int		pipe_f;
+
+	if (!lst)
+		return (-1);
+	head = *lst;
+	if (!head)
+		return (-1);
+	while (head->next)
+	{
+		if (head->key == PIPE !pipe_f)
+			pipe_f = 1;
+		else if (head->key == PIPE && pipe_f)
+			return (-1);
+		else
+			pipe_f = 0;
+		head = head->next;
+	}
+}
 
 t_list	**llst_elem_new(t_list *head_lst)
 {
@@ -40,43 +61,16 @@ t_list	**llst_elem_new(t_list *head_lst)
 	if (!head_lst)
 		return (NULL);
 	llst_elem = lst_new(0);
-	
-//	head_lst->prev = NULL; //пробую
-	
-	while (head_lst->next) //next так как если в null то нельзя вернуться
+	while (head_lst->next)
 	{
 		if (head_lst->key == PIPE)
 			break;
+		lst_push_back(llst_elem, lst_elem_copy(head_lst));
 		head_lst = head_lst->next;
-	}
-//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-	if (head_lst) //надо ли вообще?
-		head_lst->next = NULL;
-//	if (head_lst->key == PIPE) //а если два пайпа подряд? придется проверять все таки сначала
-	if (head_lst->key == PIPE)
-		head_lst = head_lst->prev; //плюс не работает если сначала пайп идет
-//	printf("head:\n");
-//	lst_elem_print_token(head_lst);
-	
-	
-//	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-//	printf("abobus\n");
-	while (head_lst && head_lst->key != PIPE)
-	{
-//		printf("abobus_1\n");
-		tmp = head_lst;
-		head_lst = head_lst->prev;
-
-//		printf("\n\n\n-------------->\n");
-//		lst_elem_print_token(tmp);
-//		printf("\n<--------------\n\n");
-		lst_push_front(llst_elem, tmp);
 	}
 	return (llst_elem);
 }
 
-
-//
 t_list	**llst_new(t_list	**lst) //список списков команд и пайпов
 {
 	t_list	**llst;
@@ -96,7 +90,7 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 		tmp = head_lst; //сохраняю голову
 		while (head_lst->next && head_lst->key != PIPE)  //head_lst->next
 			head_lst = head_lst->next;
-		lst_push_front(llst, lst_elem_new(llst_elem_new(tmp), 0));
+		lst_push_back(llst, lst_elem_new(llst_elem_new(tmp), 0));
 		if (head_lst) //если не конец еще и встретился пайп
 		{
 			head_lst = head_lst->next; //пропускаем пайп
@@ -186,3 +180,6 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 
 
 //алгос: запоминаю голову в начале, иду до пайпа, затем идет создание списка с головы до встреченного пайпа, затем пайп пропускается, снова запоминаю голову и иду до следующего пайпа... затем запомнил после последнего пайпа голову и иду до конца строки и снова делаю список их оставшегося до конца строки
+ 
+
+//мб просто легче втупую скопировать и идти последовательно зато, а не туда сюда
