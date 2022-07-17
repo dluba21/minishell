@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <unistd.h>
+# include <unistd.h>
 
 typedef struct s_cmd // структура для билтов 
 {
@@ -14,5 +14,7 @@ typedef struct s_cmd // структура для билтов
 void	ft_putstr_fd(char *s, int fd); // читать в utils_builtin.c
 int		ft_strcmp(char *s1, char *s2); // читать в utils_builtin.c
 size_t	ft_strlen(const char *s); // читать в utils_builtin.c
+char	*ft_strdup(const char *s); // читать в utils_builtin.c
+int	ft_strncmp(const char *s1, const char *s2, size_t n); // читать в utils_builtin.c
 
 # endif

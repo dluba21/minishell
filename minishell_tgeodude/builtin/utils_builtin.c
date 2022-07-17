@@ -35,3 +35,37 @@ size_t	ft_strlen(const char *s) // удалить и взять из libft
 		i++;
 	return (i);
 }
+
+char	*ft_strdup(const char *s) // удалить и взять из libft
+{
+	char	*s2;
+	size_t	i;
+
+	i = -1;
+	s2 = malloc(ft_strlen(s) + 1);
+	if (!s2)
+		return (NULL);
+	while (i++, s[i])
+		s2[i] = s[i];
+	s2[i] = '\0';
+	return (s2);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n) // удалить и взять из libft
+{
+	size_t	i;
+
+	i = -1;
+	if (!n)
+		return (0);
+	while (i++, (s1[i] != 0 || s2[i] != 0) && i < n)
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char) s1[i] - (unsigned char) s2[i]);
+		if (s1[i + 1] == 0 && s2[i + 1] != 0 && i != (n - 1))
+			return (0 - (unsigned char) s1[i]);
+		if (s1[i + 1] != 0 && s2[i + 1] == 0 && i != (n - 1))
+			return ((unsigned char) s1[i] - 0);
+	}
+	return (0);
+}
