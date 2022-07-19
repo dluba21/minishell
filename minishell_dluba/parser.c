@@ -1,77 +1,151 @@
 #include "minishell.h"
 
-//t_list	**llst_elem_new(t_list **lst) //найс работает отдельно
-//{
-//	t_list	**llst_elem;
-//	t_list	*head_llst_elem;
-//	t_list	*tmp;
-//	t_list	*head_lst;
-//
-//	if (!lst)
-//		return (NULL);
-//	head_lst = *lst;
-//	if (!head_lst)
-//		return (NULL);
-//	llst_elem = lst_new(0);
-//	while (head_lst && head_lst->key != PIPE)
-//		head_lst = head_lst->next;
-////	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-//	if (head_lst) //если на пайп зашло к не конец
-//		head_lst->next = NULL;
-////	printf("pointer_head_lst_do = {%p}\n", head_lst->next);
-//	while (head_lst)
-//	{
-//		tmp = head_lst;
-//		head_lst = head_lst->prev;
-//		lst_push_front(llst_elem, tmp);
-//	}
-//
-//
-//	return (llst_elem);
-//}
-int check_pipes(t_list **lst)
+t_list	*cmd_init(void)
 {
-	t_list	*head;
-	int		pipe_f;
+	t_list	*lst_elem;
+	t_cmd	*cmd;
 
-	if (!lst)
-		return (-1);
-	head = *lst;
-	if (!head)
-		return (-1);
-	while (head->next)
-	{
-		if (head->key == PIPE !pipe_f)
-			pipe_f = 1;
-		else if (head->key == PIPE && pipe_f)
-			return (-1);
-		else
-			pipe_f = 0;
-		head = head->next;
-	}
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->files_in = lst_new(0); //как их фришить если будет execve?
+	cmd->files_out = lst_new(0);
+	cmd->files_heredoc = lst_new(0);
+	cmd->args_lst = lst_new(0); //уже в execve сделаю char **
+	cmd->args_array = NULL; //потом сделать
+	cmd->vars = NULL; //потом прикрепить
+
+	//не совсем верно
+	if (!cmd->files_in || !cmd->files_out || \
+		!cmd->files_heredoc || !cmd->args_lst)
+		return (NULL);
+	lst_elem = lst_elem_new(cmd, 0);
+//	printf("lst_cmd: ");
+//	lst_print_tokens(cmd->files_out);
+	if (!lst_elem)
+		return (NULL);
+	return (lst_elem);
 }
 
-t_list	**llst_elem_new(t_list *head_lst)
+
+t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem) //двигает внутри голову дальше
+{ //мб еще сделать внутри структуры команды флаг - маску на heredoc и редиректы, а также права на append или trunc, короче int - как раз 4 бита
+	//поменяется ли после функции llst_elem?
+	t_cmd *cmd;
+
+	cmd = llst_elem->val;
+	if (head_lst->key == REDIR_IN)
+	{
+//		printf("kek_1\n");
+		head_lst = head_lst->next;
+		lst_push_back((t_list **)cmd->files_in, lst_elem_copy(head_lst));
+	}
+	else if (head_lst->key == REDIR_HEREDOC)
+	{
+		
+		head_lst = head_lst->next;
+		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD))
+		{ //переделать после снятия долларов все в WORD
+//			printf("kek_2\n");
+			lst_push_back(cmd->files_heredoc, lst_elem_copy(head_lst));
+			head_lst = head_lst->next;
+		}
+	}
+	else if (head_lst->key == REDIR_OUT)
+	{
+		head_lst = head_lst->next;
+		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD))
+		{ //переделать после снятия долларов все в WORD
+//			printf("kek_3\n");
+			lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
+			head_lst = head_lst->next;
+			
+			//posle vihoda ne ostayotsya pochemu to push back
+//			printf("---------->\n");
+//			lst_print_tokens(cmd->files_out);
+//			printf("<----------\n");
+		}
+
+	}
+	else if (head_lst->key == REDIR_APPEND) //сделать флаг
+	{
+		head_lst = head_lst->next;
+		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD))
+		{ //переделать после снятия долларов все в WORD
+			lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
+			head_lst = head_lst->next;
+		}
+
+	}
+//	printf("pointer_cmd === [%p]\n", cmd);
+//	printf("len_lst = %d\n", lst_len(cmd->files_out));
+//	lst_print_tokens(cmd->files_in);
+	if (head_lst && head_lst->key != PIPE) //переходим к следующему слову, если не конец и не пайп
+		head_lst = head_lst->next;
+//	printf("---------->\n");
+////	lst_print_tokens(cmd->files_out);
+//	printf("len_lst = %d\n", lst_len(cmd->files_out));
+//	printf("<----------\n");
+	
+	
+	//будто обновляется каждый раз cmd
+	return (head_lst);
+}
+
+t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 {
-	t_list	**llst_elem;
-	t_list	*head_llst_elem;
+	t_list	*llst_elem;
 	t_list	*tmp;
 
 
 	if (!head_lst)
 		return (NULL);
-	llst_elem = lst_new(0);
-	while (head_lst->next)
+	llst_elem = cmd_init();
+	while (head_lst)
 	{
 		if (head_lst->key == PIPE)
 			break;
-		lst_push_back(llst_elem, lst_elem_copy(head_lst));
-		head_lst = head_lst->next;
+		head_lst = cmd_parser(head_lst, llst_elem);
 	}
+	
+//	t_cmd *cmd = llst_elem->val;
+//	printf("---------->\n");
+////	lst_print_tokens(cmd->files_out);
+//	printf("len_lst = %d\n", lst_len(cmd->files_out));
+//	printf("<----------\n");
+//	printf("\n\n\n\n\n\n");
+
 	return (llst_elem);
 }
 
-t_list	**llst_new(t_list	**lst) //список списков команд и пайпов
+
+
+
+
+//
+//t_list	**llst_elem_new(t_list *head_lst) //задел на бонус
+//{
+//	t_list	**llst_elem;
+//	t_list	*head_llst_elem;
+//	t_list	*tmp;
+//
+//
+//	if (!head_lst)
+//		return (NULL);
+//	llst_elem = lst_new(0);
+//	while (head_lst)
+//	{
+//		if (head_lst->key == PIPE)
+//			break;
+//		lst_push_back(llst_elem, lst_elem_copy(head_lst));
+//		head_lst = head_lst->next;
+//	}
+////	if (head_lst && head_lst->key != PIPE) //не добавлял последний элемент раньше
+////		lst_push_back(llst_elem, lst_elem_copy(head_lst));
+//	return (llst_elem);
+//}
+
+t_list	**llst_new(t_list	**lst) //задел на бонус: список списков команд и пайпов
 {
 	t_list	**llst;
 	t_list	**llist_elem;
@@ -90,15 +164,55 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 		tmp = head_lst; //сохраняю голову
 		while (head_lst->next && head_lst->key != PIPE)  //head_lst->next
 			head_lst = head_lst->next;
+		if (head_lst->key == PIPE && !head_lst->next)
+			exit(printf("error: pipe at the end of the string\n")); //исправить от ликов надо
 		lst_push_back(llst, lst_elem_new(llst_elem_new(tmp), 0));
-		if (head_lst) //если не конец еще и встретился пайп
-		{
-			head_lst = head_lst->next; //пропускаем пайп
-		}
+//		if (head_lst) //если не конец еще и встретился пайп
+		head_lst = head_lst->next; //пропускаем пайп
 	}
+	
+//	t_list *head = *llst;
+//	t_cmd *cmd = head->val;
+//	t_list **kek = cmd->files_out;
+//	t_list	*head_2 = *kek;
+////	lst_elem_print_token(head_2);
+//	if (head_lst && head_lst->key == PIPE)
+//		printf("error\n");
 	//мб head_lst сразу ноль(проверка на один случай)
 	return (llst);
 }
+//
+//t_list	**llst_new(t_list	**lst) //задел на бонус: список списков команд и пайпов
+//{
+//	t_list	**llst;
+//	t_list	**llist_elem;
+//	t_list	*head_lst;
+//	t_list	*tmp;
+//	
+////	if (check_pipes == -1)
+////		exit(printf("pipe syntax error\n"));
+//	head_lst = *lst;
+//
+//	if (!head_lst)
+//		return (NULL);
+//	llst = lst_new(0);
+//	while (head_lst)
+//	{
+//		tmp = head_lst; //сохраняю голову
+//		while (head_lst->next && head_lst->key != PIPE)  //head_lst->next
+//			head_lst = head_lst->next;
+//		if (head_lst->key == PIPE && !head_lst->next)
+//			exit(printf("error: pipe at the end of the string\n")); //исправить от ликов надо
+//		lst_push_back(llst, lst_elem_new(llst_elem_new(tmp), 0));
+////		if (head_lst) //если не конец еще и встретился пайп
+//		head_lst = head_lst->next; //пропускаем пайп
+//	}
+////	if (head_lst && head_lst->key == PIPE)
+////		printf("error\n");
+//	//мб head_lst сразу ноль(проверка на один случай)
+//	return (llst);
+//}
+
 
 
 
@@ -140,31 +254,6 @@ t_list	**llst_new(t_list	**lst) //список списков команд и п
 
 
 
-
-
-//t_list **bash_args_lst_parser(t_list **lst)
-//{
-//	t_list	*head;
-//
-//	if (!lst)
-//	{
-//		printf("no lst in parser\n");
-//		return (NULL);
-//	}
-//	head = *lst;
-//	if (!head)
-//	{
-//		printf("no elem in parser\n");
-//		return (NULL);
-//	}
-//	while (head)
-//	{
-//		
-//		find_redirects_etc();
-//		head = head->next;
-//	}
-//	
-//}
 
 //логический список состоит из голов списков команд (все что между пайпами)
 //нельзя головы, походу придется копировать списки и маллочить все заново и делать структуру логического списка, где списик в составе

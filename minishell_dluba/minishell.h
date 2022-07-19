@@ -83,8 +83,9 @@ typedef	struct s_cmd
 {
 	struct s_list	**files_in;
 	struct s_list	**files_out;
-	struct s_list	**files_heredoc;
-	char			**cmd_args;
+	struct s_list	**files_heredoc; //иду по списку и открываю
+	struct s_list	**args_lst;
+	char			**args_array;
 	struct s_vars	*vars; //здесь переменные окружения
 	
 }				t_cmd;
@@ -133,7 +134,8 @@ int		lst_elem_free(t_list *node);
 
 
 //t_list	**llst_elem_new(t_list **lst);
-t_list	**llst_elem_new(t_list	*head_lst); 
+//t_list	**llst_elem_new(t_list	*head_lst);
+t_list	*llst_elem_new(t_list *head_lst);
 t_list	**llst_new(t_list	**lst); //список списков команд и пайпов
 
 

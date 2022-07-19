@@ -19,7 +19,13 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_lst_lexer("ls | \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+	huy = bash_args_lst_lexer("> ls norm azaz | \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat>aboba");
+//	huy = bash_args_lst_lexer("12345"); //inf cycle
+//	huy = bash_args_lst_lexer("\'ls\'\"12345\" cat"); //
+	
+//	huy = bash_args_lst_lexer("2|cat");
+//	huy = bash_args_lst_lexer("ls|cat>aboba");
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
 	
@@ -49,7 +55,7 @@ int main(int argc, char **argv, char **env)
 	
 //	head->prev = NULL; //пробую
 	
-	
+//	printf("ok\n");
 	
 //	проверка работы llst_elem_new
 	
@@ -72,14 +78,31 @@ int main(int argc, char **argv, char **env)
 	
 	
 //	проверка работы llst_new
+	
+	
 	llst = llst_new(huy);
+	
+	
 	head_3 = *llst;
-//	llst_elem = head_3->next->next->next->next->next;
-//	printf("llst_elem_pointer = [%d]\n", );
+	t_cmd *cmd = head_3->val;
+	printf("len_lst_file_out = %d\n", lst_len(cmd->files_out));
+	printf("len_lst_file_in = %d\n", lst_len(cmd->files_in));
+	
+	tmp = cmd->files_out;
+	printf("pointer_out = [%p]\n", tmp);
+//	lst_print_tokens(cmd->files_out);
+//	head_3 = *llst;
+//	llst_elem = head_3->val;
+	
+	
 //	head_2 = *llst_elem;
+//	printf("llst_elem_pointer = [%p]\n", head_2);
+//	printf("\n\n\n");
+//	lst_elem_print_token(head_2);
+//	printf("\n\n\n");
 //	lst_print_tokens(llst_elem);
 //	printf("len = %d\n", lst_len(llst));
-	
+//
 	
 	
 //	конец проверки работы llst_new
@@ -116,7 +139,7 @@ int main(int argc, char **argv, char **env)
 ////	head = *huy;
 //	lst_print(huy);
 ////	test = lst_new(10);
-//	
+//
 ////	printf("[[len = %d}}\n", lst_len(huy));
 ////	lst_clear(huy);
 ////	printf("{{{%d||||\n", head->key);
@@ -136,4 +159,14 @@ int main(int argc, char **argv, char **env)
 //разобраться с " '' "
 //дальше писать парсер
 //пробелы вообще не нужны ls|cat>aboba
+//huy = bash_args_lst_lexer("aboba"); под это не работает парсер на пайпы
+
+//13.06 17:28 переделать parser, чтобы сплитило по пробелам
+
+//"\'ls\'\"aboba\"|cat>aboba" не робит начало
+
+
+// "echo "aboba"" не робит
+
+//cat "abo<ba" не робит
 

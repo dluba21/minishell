@@ -8,75 +8,24 @@
 //# include <string.h>
 ////#include "minishell.h"
 //
-//
-//
-//int ft_strchr(char *str, char *c) //длина пути до нужного символа (если пустая строка или не маллок то -1)
-//{//сделать по не char c, а массив символов
-//	char	*temp;
-//	int		i;
-//
-//	i = 0;
-//	while (str[i])
-//	{
-//		while (*temp)
-//		{
-//			if (str[i] == *temp++)
-//				return (i);
-//		}
-//		temp = c;
-//		i++;
-//	}
-//	return (-1);
-//}
-//
-//char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать char **bash_str, то можно сократить код и будет двигаться указатель срапзу по обрезании
+//int ft_strlen(char *str)
 //{
-//	int		len;
-//	int		i;
-//	char	*trimmed_str;
-//	char	*temp; //так как strchr выдает сегу, если не маллочить статическую строку
-//	temp = strdup(sym_arr);
-//	len = ft_strchr(bash_str, temp);
-//	free(temp);
-//	if (len == -1)
-//		return (NULL);
-//	trimmed_str = (char *)(malloc(len + 1));
-//	if (!trimmed_str)
-//		return (NULL);
+//	int	i;
+//
 //	i = 0;
-//	while (i < len)
-//		trimmed_str[i++] = *bash_str++;
-//	trimmed_str[i] = 0;
-//	return (trimmed_str);
+//	if (!str)
+//		return (-1);
+//	while (str[i])
+//		i++;
+//	return (i);
 //}
-//
-//
-//
-////char            *readline(const char *);
-//
-////int	ft_strcmp_n(char *s1, char *s2, int n) //сравнивает строки на n символов вперед вперед
-////{
-////	if (!s1 || !s2 || n < 0)
-////		return (-1);
-////	printf("%c = %d\t%c = %d\n", *s1, *s1, *s2, *s2);
-////	while (*s1 == *s2 && *s1++ && *s2++ && n--)
-//////	printf("ok");
-////	printf("%c\t%c\n", *s1, *s2);
-////	return (*s1 - *s2);
-////}
-//
-////void ft_abobus(char **str)
-////{
-////	*str += 2;
-////}
-//
 //
 //char	*ft_strdup(char *str)
 //{
 //	char	*ret_str;
 //	char	*temp;
 //
-//	ret_str = (char *)(malloc(strlen(str) + 1));
+//	ret_str = (char *)(malloc(ft_strlen(str) + 1));
 //	if (!ret_str)
 //		return (NULL);
 //	temp = ret_str;
@@ -86,23 +35,59 @@
 //	return (ret_str);
 //}
 //
-//int	ft_strcmp_n(const char *str1, const char *str2, size_t n)
-//{
-//	size_t	i;
+//
+//int ft_strchr(char *str, char *c) //длина пути до нужного символа (если пустая строка или не маллок то -1)
+//{//сделать по не char c, а массив символов
+////	char	*temp;
+//	int		i;
+//	int		j;
 //
 //	i = 0;
-//	while (i < n)
+//	while (str[i])
 //	{
-//		if (str1[i] != str2[i] || !str1[i] || !str2[i])
-//			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+//		j = 0;
+//		while (c[j])
+//		{
+//			if (str[i] == c[j++])
+//				return (i);
+//		}
 //		i++;
 //	}
-//	return (0);
+//	return (i); //это исправитьб вдруг нет символов
+//	//хз как реализовать через индексы а не укказатели, так как в оригинале при пустой строке и поиске не конца строки выдает NULL
+//	//вот начал возвращать i, такое себе
 //}
 //
+//char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать char **bash_str, то можно сократить код и будет двигаться указатель срапзу по обрезании
+//{
+//	int		len;
+//	int		i;
+//	char	*trimmed_str;
+//	char	*temp; //так как strchr выдает сегу, если не маллочить статическую строку
+//	temp = ft_strdup(sym_arr);
+//	len = ft_strchr(bash_str, temp);
+////	printf("len = %d\n", len);
+//	free(temp);
+////	if (len == -1) //nado li voobshe? esli net iz etogo spiska znachit eto konec stroki, chto normalno
+//	//net, nado, tak kak eto znachit chto vtoroy kavichki net
+////		return (NULL);
+////	printf("len(strchr) = %d\n", len);
+//	trimmed_str = (char *)(malloc(len + 1));
+//	if (!trimmed_str)
+//		return (NULL);
+//	i = 0;
+//	while (i < len)
+//		trimmed_str[i++] = *bash_str++;
+//	trimmed_str[i] = 0;
+//	return (trimmed_str);
+//}
 //int main()
 //{
-//	char	isspecial_arr[7] = {'\'', '\"', '\t', '\n', '\v', '\f', ' '}; //там слэш ноль должен добавить?
+//	char *str = ft_strdup("12345");
+//	char	isspecial_arr[10] = "\'\"\t\n\v\f |<>";
+//	char *str_2 = quote_str_trim(str, isspecial_arr);
+//	printf("%s\n", str_2);
+////	char	isspecial_arr[7] = {'\'', '\"', '\t', '\n', '\v', '\f', ' '}; //там слэш ноль должен добавить?
 ////	char s[6] = "abcdef";
 ////	char *aboba[7];
 ////	aboba = {"REDIR_APPNED", "cd", "pwd", "export", "unset", "env", "exit"};
@@ -144,4 +129,6 @@
 ////	printf("[%s]\n", str);
 ////	printf("%d\n", '\"');
 ////	printf("ok\n");
+////	int i = 0100000;
+////	printf("%d", i);
 //}

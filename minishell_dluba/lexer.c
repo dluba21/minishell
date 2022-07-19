@@ -138,11 +138,9 @@ char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать 
 	int		len;
 	int		i;
 	char	*trimmed_str;
-	char	*temp; //так как strchr выдает сегу, если не маллочить статическую строку
-	temp = ft_strdup(sym_arr);
-	len = ft_strchr(bash_str, temp);
-	printf("len = %d\n", len);
-	free(temp);
+
+	len = ft_strchr(bash_str, sym_arr);
+//	printf("len = %d\n", len);
 //	if (len == -1) //nado li voobshe? esli net iz etogo spiska znachit eto konec stroki, chto normalno
 	//net, nado, tak kak eto znachit chto vtoroy kavichki net
 //		return (NULL);
@@ -161,7 +159,8 @@ t_list **bash_args_lst_lexer(char *bash_str)
 	t_list	*temp; //стереть
 	t_list	**lst;
 	char	*str;
-	char	isspecial_arr[7] = "\'\"\t\n\v\f ";
+	char	*isspecial_arr =  ft_strdup("\'\"\t\n\v\f |<>");
+
 //	{'\'', '\"', '\t', '\n', '\v', '\f', ' '}; //там слэш ноль должен добавить?
 
 	lst = lst_new(0);
@@ -230,7 +229,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 		{
 			while (ft_isspace(*bash_str))
 				++bash_str;
-			lst_push_back(lst, lst_elem_new(NULL, SPACE));
+//			lst_push_back(lst, lst_elem_new(NULL, SPACE));
 		}
 		else
 		{
@@ -239,10 +238,12 @@ t_list **bash_args_lst_lexer(char *bash_str)
 				return (NULL);
 			lst_push_back(lst, lst_elem_new(str, WORD));
 			bash_str += ft_strchr(bash_str, isspecial_arr);
+			printf("char = %c\n", *bash_str);
 			
 		}
 	}
 	printf("\n\n\n\nresult:\n");
+	free(isspecial_arr); //также фришить при ошибках надо
 	return (lst);
 }
 
@@ -276,3 +277,5 @@ t_list **bash_args_lst_lexer(char *bash_str)
 
 //echo "huy" > lol kek
 //2|cat не обрабатывает
+
+//<<ls|cat>aboba
