@@ -25,7 +25,7 @@ char	*ft_strdup(char *str)
 
 int ft_isspace(char c)
 {
-	if (c >= 9 && c <= 13 || c == 32)
+	if ((c >= 9 && c <= 13) || c == 32)
 		return (1);
 	return (0);
 }
@@ -238,7 +238,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 				return (NULL);
 			lst_push_back(lst, lst_elem_new(str, WORD));
 			bash_str += ft_strchr(bash_str, isspecial_arr);
-			printf("char = %c\n", *bash_str);
+//			printf("char = %c\n", *bash_str);
 			
 		}
 	}

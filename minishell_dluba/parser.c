@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_list	*cmd_init(void)
+t_list	*cmd_init(void) //мб возвращать cmd а внешне присваивать уже lst_elem_val = cmd?
 {
 	t_list	*lst_elem;
 	t_cmd	*cmd;
@@ -20,20 +20,17 @@ t_list	*cmd_init(void)
 		!cmd->files_heredoc || !cmd->args_lst)
 		return (NULL);
 	lst_elem = lst_elem_new(cmd, 0);
-//	printf("lst_cmd: ");
-//	lst_print_tokens(cmd->files_out);
 	if (!lst_elem)
 		return (NULL);
 	return (lst_elem);
 }
 
 
-t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem) //двигает внутри голову дальше
+t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem) //двигает внутри голову дальше и заносит элементы в список
 { //мб еще сделать внутри структуры команды флаг - маску на heredoc и редиректы, а также права на append или trunc, короче int - как раз 4 бита
 	//поменяется ли после функции llst_elem?
-	t_cmd *cmd;
 
-	cmd = llst_elem->val;
+	t_cmd *cmd = llst_elem->val; //мб подать в ф-цию cmd? //или же добавить структуру с cmd чтобы список напрямую составлять
 	if (head_lst->key == REDIR_IN)
 	{
 //		printf("kek_1\n");
@@ -109,12 +106,13 @@ t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 	}
 	
 //	t_cmd *cmd = llst_elem->val;
-//	printf("---------->\n");
-////	lst_print_tokens(cmd->files_out);
+
+//	lst_print_tokens(cmd->files_out);
 //	printf("len_lst = %d\n", lst_len(cmd->files_out));
 //	printf("<----------\n");
 //	printf("\n\n\n\n\n\n");
-
+		printf("---------->\n");
+	lst_elem_print_token(llst_elem);
 	return (llst_elem);
 }
 

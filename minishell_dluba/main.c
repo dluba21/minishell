@@ -8,7 +8,7 @@ int main(int argc, char **argv, char **env)
 	t_list *head_2;
 	t_list *head_3;
 	t_list	**llst;
-	t_list	**llst_elem;
+	t_list	*llst_elem;
 	t_list	**tmp;
 
 //	if (vars_initializing(&vars, env))
@@ -35,7 +35,7 @@ int main(int argc, char **argv, char **env)
 	
 	printf("------------begin_list has written--------\n\n\n\n");
 	
-	head = *huy;
+//	head = *huy;
 	
 	
 	
@@ -80,16 +80,31 @@ int main(int argc, char **argv, char **env)
 //	проверка работы llst_new
 	
 	
-	llst = llst_new(huy);
+//	llst = llst_new(huy);
+	head = *huy;
 	
+	llst_elem = cmd_init();
+
+	t_cmd *cmd = (*llst_elem).val;
+	tmp = cmd->files_in;
+//	t_cmd *cmd =
+
+//	is_null(NULL);
+	lst_print_tokens(tmp); //то есть push_back не работает при выходе из функции почему-то!!!!
+
 	
-	head_3 = *llst;
-	t_cmd *cmd = head_3->val;
-	printf("len_lst_file_out = %d\n", lst_len(cmd->files_out));
-	printf("len_lst_file_in = %d\n", lst_len(cmd->files_in));
-	
-	tmp = cmd->files_out;
-	printf("pointer_out = [%p]\n", tmp);
+//	printf("a = %d", *a);
+//	cmd_parser(head, &llst_elem);
+//	lst_elem_print_token(llst_elem);
+//
+//
+//	head_3 = *llst;
+//	t_cmd *cmd = head_3->val;
+//	printf("len_lst_file_out = %d\n", lst_len(cmd->files_out));
+//	printf("len_lst_file_in = %d\n", lst_len(cmd->files_in));
+//
+//	tmp = cmd->files_out;
+//	printf("pointer_out = [%p]\n", tmp);
 //	lst_print_tokens(cmd->files_out);
 //	head_3 = *llst;
 //	llst_elem = head_3->val;

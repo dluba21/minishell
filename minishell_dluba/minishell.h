@@ -125,6 +125,7 @@ t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
 //int	ft_strcmp_n(char *s1, char *s2, int n);
 int	ft_strcmp_n(const char *str1, const char *str2, size_t n);
+void	is_null(void *ptr);
 
 
 t_list *lst_get_last(t_list **lst);
@@ -138,6 +139,8 @@ int		lst_elem_free(t_list *node);
 t_list	*llst_elem_new(t_list *head_lst);
 t_list	**llst_new(t_list	**lst); //список списков команд и пайпов
 
+t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem);
+t_list	*cmd_init(void);
 
 
 

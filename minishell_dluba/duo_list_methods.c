@@ -165,19 +165,18 @@ t_list **lst_new(int n) //создает список длины n
 	int	i;
 	t_list	**lst;
 	t_list	*node;
-//	t_list	*head;
 
 	lst = (t_list **)(malloc(sizeof(n)));
+	*lst = NULL;
 	if (!lst)
 		return (NULL);
-	i = 0;
-	while (i < n)
+	i = -1;
+	while (++i < n)
 	{
 		node = lst_elem_new(NULL, 0);
 		if (!node)
 			return (NULL); //podpisat'
 		lst_push_back(lst, node);
-		i++;
 	}
 	return (lst);
 }
@@ -284,3 +283,11 @@ t_list	*lst_elem_copy(t_list *elem)
 //надо сделать или двусвязный список чтобы удалять легко элементы или же добавить индексы порядка в элементы и сделать метод удаления по индексу
 
 //до этого закольцовывалось в push_back, потому что при добавлении первого элемнта в список, prev != NULL, поэтому он доходил до начала списка и закольцовывал
+
+void	is_null(void *ptr)
+{
+	if (!ptr)
+		printf("ptr = NULL\n");
+	else
+		printf("ptr = [%p]", ptr);
+}

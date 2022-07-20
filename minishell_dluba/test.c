@@ -58,35 +58,46 @@
 //	//вот начал возвращать i, такое себе
 //}
 //
-//char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать char **bash_str, то можно сократить код и будет двигаться указатель срапзу по обрезании
-//{
-//	int		len;
-//	int		i;
-//	char	*trimmed_str;
-//	char	*temp; //так как strchr выдает сегу, если не маллочить статическую строку
-//	temp = ft_strdup(sym_arr);
-//	len = ft_strchr(bash_str, temp);
-////	printf("len = %d\n", len);
-//	free(temp);
-////	if (len == -1) //nado li voobshe? esli net iz etogo spiska znachit eto konec stroki, chto normalno
-//	//net, nado, tak kak eto znachit chto vtoroy kavichki net
+////char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать char **bash_str, то можно сократить код и будет двигаться указатель срапзу по обрезании
+////{
+////	int		len;
+////	int		i;
+////	char	*trimmed_str;
+////	char	*temp; //так как strchr выдает сегу, если не маллочить статическую строку
+////	temp = ft_strdup(sym_arr);
+////	len = ft_strchr(bash_str, temp);
+//////	printf("len = %d\n", len);
+////	free(temp);
+//////	if (len == -1) //nado li voobshe? esli net iz etogo spiska znachit eto konec stroki, chto normalno
+////	//net, nado, tak kak eto znachit chto vtoroy kavichki net
+//////		return (NULL);
+//////	printf("len(strchr) = %d\n", len);
+////	trimmed_str = (char *)(malloc(len + 1));
+////	if (!trimmed_str)
 ////		return (NULL);
-////	printf("len(strchr) = %d\n", len);
-//	trimmed_str = (char *)(malloc(len + 1));
-//	if (!trimmed_str)
-//		return (NULL);
-//	i = 0;
-//	while (i < len)
-//		trimmed_str[i++] = *bash_str++;
-//	trimmed_str[i] = 0;
-//	return (trimmed_str);
-//}
+////	i = 0;
+////	while (i < len)
+////		trimmed_str[i++] = *bash_str++;
+////	trimmed_str[i] = 0;
+////	return (trimmed_str);
+////}
 //int main()
 //{
 //	char *str = ft_strdup("12345");
 //	char	isspecial_arr[10] = "\'\"\t\n\v\f |<>";
-//	char *str_2 = quote_str_trim(str, isspecial_arr);
-//	printf("%s\n", str_2);
+////	char *str_2 = quote_str_trim(str, isspecial_arr);
+////	printf("%s\n", str_2);
+//	
+//	
+//	
+//	
+//	int i = 0;
+//	
+//	while (i < 10)
+//	{
+//		printf("aboba\n");
+//		i++;
+//	}
 ////	char	isspecial_arr[7] = {'\'', '\"', '\t', '\n', '\v', '\f', ' '}; //там слэш ноль должен добавить?
 ////	char s[6] = "abcdef";
 ////	char *aboba[7];

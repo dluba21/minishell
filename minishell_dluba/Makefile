@@ -1,2 +1,2 @@
 all:
-	gcc *.c -o minishell
+	gcc -g *.c -o minishell
