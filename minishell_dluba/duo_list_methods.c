@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int l_print_tokens()
+//int l_print_tokens()
 
 int	lst_print(t_list **lst)
 {
@@ -245,13 +245,13 @@ t_list *lst_get_last(t_list **lst) //хз зачем, просто написа�
 	return (head);
 }
 
-t_list *lst_get_first(t_list *tale)  //хз зачем, просто написал
+t_list *lst_get_first(t_list *tail)  //хз зачем, просто написал
 {
-	if (!tale)
+	if (!tail)
 		return (NULL);
-	while (tale->prev)
-		tale = tale->prev;
-	return (tale);
+	while (tail->prev)
+		tail = tail->prev;
+	return (tail);
 }
 
 int	lst_elem_free(t_list *node)
@@ -271,7 +271,7 @@ t_list	*lst_elem_copy(t_list *elem)
 
 	if (!elem)
 		return (NULL);
-	new_elem = lst_elem_new(elem->val, elem->key);
+	new_elem = lst_elem_new(elem->val, elem->key); //надо перемаллочить val
 	if (!new_elem)
 		return (NULL);
 	return (new_elem);
@@ -286,10 +286,106 @@ t_list	*lst_elem_copy(t_list *elem)
 
 //до этого закольцовывалось в push_back, потому что при добавлении первого элемнта в список, prev != NULL, поэтому он доходил до начала списка и закольцовывал
 
+void	llst_cmd_elem_print(t_list *llst_elem)
+{
+
+	if (!llst_elem)
+	{
+		printf("no llst elem!\n");
+		return ;
+	}
+	if (!llst_elem->val)
+	{
+		printf("no cmd!\n");
+		return ;
+	}
+	
+	printf("cmd and args:\n");
+	lst_print_tokens(((t_cmd *)(llst_elem->val))->args_lst);
+	
+	printf("files_in:\n");
+	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_in);
+
+	printf("\nfiles_out:\n");
+	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
+
+	printf("\nfiles_heredoc:\n");
+	lst_print_tokens(((t_cmd *)(llst_elem)->val)->files_heredoc);
+}
+
+	
+
+void	llst_cmd_n_elem_print(t_list **llst, int n)
+{
+	t_list	*head;
+
+	if (!llst)
+	{
+		printf("no llst!\n");
+		return ;
+	}
+	if (!(*llst))
+	{
+		printf("no llst elem!\n");
+		return ;
+	}
+	head = *llst;
+	while (head && n--)
+		head = head->next;
+	if (!head)
+	{
+		printf("n more than len of llst!\n");
+		return ;
+	}
+	llst_cmd_elem_print(head);
+}
+
+void	llst_cmd_print(t_list **llst)
+{
+	t_list	*head;
+	int		i;
+
+	if (!llst)
+	{
+		printf("no llst!\n");
+		return ;
+	}
+	if (!(*llst))
+	{
+		printf("no llst elem!\n");
+		return ;
+	}
+	head = *llst;
+	i = 0;
+	while (head)
+	{
+		printf("\n\tcmd = [%d]\n{\n", i);
+		llst_cmd_elem_print(head);
+		printf("}\n");
+		head = head->next;
+		i++;
+	}
+}
+	
+			
 void	is_null(void *ptr)
 {
 	if (!ptr)
 		printf("ptr = NULL\n");
 	else
 		printf("ptr = [%p]", ptr);
+}
+
+void	*ft_memcpy(void *src_0, int n)
+{
+	unsigned char	*dest;
+	unsigned char	*src;
+
+	src = src_0;
+	dest = malloc(n);
+	if (!src && !dest)
+		return (NULL);
+	while (n--)
+		dest[n] = src[n];
+	return (dest);
 }

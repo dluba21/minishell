@@ -84,7 +84,7 @@ typedef	struct s_cmd
 	struct s_list	**files_in;
 	struct s_list	**files_out;
 	struct s_list	**files_heredoc; //иду по списку и открываю
-	struct s_list	**args_lst;
+	struct s_list	**args_lst; //первый аргумент - сама программа(команда)!!! дальше аргументы команды
 	char			**args_array;
 	struct s_vars	*vars; //здесь переменные окружения
 	
@@ -125,7 +125,13 @@ t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
 //int	ft_strcmp_n(char *s1, char *s2, int n);
 int	ft_strcmp_n(const char *str1, const char *str2, size_t n);
+
+
 void	is_null(void *ptr);
+void	*ft_memcpy(void *src_0, int n); //вставить в lst_elem_cpy
+void	llst_cmd_elem_print(t_list *llst_elem);
+void	llst_cmd_n_elem_print(t_list **llst, int n);
+void	llst_cmd_print(t_list **llst);
 
 
 t_list *lst_get_last(t_list **lst);

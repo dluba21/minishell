@@ -19,7 +19,8 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_lst_lexer("> ls norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+	huy = bash_args_lst_lexer("ls > kek < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat>aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("\'ls\'\"12345\" cat"); //
@@ -126,17 +127,24 @@ int main(int argc, char **argv, char **env)
 
 
 
-	t_cmd *cmd = (*llst)->next->val;
-//	lst_elem_print_token(head);
-//	printf("len = %d\n", lst_len(tmp));
+//	t_cmd *cmd = (*llst)->next->val;
+////	lst_elem_print_token(head);
+////	printf("len = %d\n", lst_len(tmp));
+//
+//	tmp = cmd->files_in;
+//	printf("files_in:\n");
+//	lst_print_tokens(tmp);
+//
+//	tmp = cmd->files_out;
+//	printf("\nfiles_out:\n");
+//	lst_print_tokens(tmp);
+//
+//	tmp = cmd->files_heredoc;
+//	printf("\nfiles_heredoc:\n");
+//	lst_print_tokens(tmp);
+	
+	llst_cmd_n_elem_print(llst, 0);
 
-	tmp = cmd->files_in;
-	printf("files_in:\n");
-	lst_print_tokens(tmp);
-
-	tmp = cmd->files_out;
-	printf("\nfiles_out:\n");
-	lst_print_tokens(tmp);
 //	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
 	//конец теста на llst_new_______________
 
@@ -193,3 +201,9 @@ int main(int argc, char **argv, char **env)
 
 //cat "abo<ba" не робит
 
+//ls > ls > ls
+//at-f6% << lol << kek
+//>> aboba
+//	huy = bash_args_lst_lexer("<< | ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope"); //redirect posle paypa
+
+//ls >> aboba kek вывод в aboba "kek"
