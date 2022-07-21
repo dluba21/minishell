@@ -18,7 +18,7 @@
 //	struct s_list	*next:
 //}				t_vars;
 //int (* t_builtin_ptr)(struct s_list *, struct s_vars *); //????? как исправить?
-
+#define NILL 0
 #define WORD 1
 #define FIELD 2
 #define EXP_FIELD 3
@@ -139,7 +139,7 @@ int		lst_elem_free(t_list *node);
 t_list	*llst_elem_new(t_list *head_lst);
 t_list	**llst_new(t_list	**lst); //список списков команд и пайпов
 
-t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem);
+t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd);
 t_list	*cmd_init(void);
 
 

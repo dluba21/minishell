@@ -19,7 +19,7 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_lst_lexer("> ls norm azaz | \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+	huy = bash_args_lst_lexer("> ls norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat>aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("\'ls\'\"12345\" cat"); //
@@ -83,56 +83,64 @@ int main(int argc, char **argv, char **env)
 //	llst = llst_new(huy);
 	head = *huy;
 	
-	llst_elem = cmd_init();
-
-	t_cmd *cmd = (*llst_elem).val;
-	tmp = cmd->files_in;
-//	t_cmd *cmd =
-
-//	is_null(NULL);
-	lst_print_tokens(tmp); //то есть push_back не работает при выходе из функции почему-то!!!!
-
 	
-//	printf("a = %d", *a);
-//	cmd_parser(head, &llst_elem);
-//	lst_elem_print_token(llst_elem);
+	
+	
+	
+//	//начало теста на llst_elem_new и cmd_parser_______________
+//	llst_elem = cmd_init();
 //
 //
-//	head_3 = *llst;
-//	t_cmd *cmd = head_3->val;
-//	printf("len_lst_file_out = %d\n", lst_len(cmd->files_out));
-//	printf("len_lst_file_in = %d\n", lst_len(cmd->files_in));
+//
+////	is_null(NULL);
+////	head = cmd_parser(head, llst_elem, llst_elem->val);
+//	llst_elem = llst_elem_new(head);
+//
+//
+//
+//
+//	t_cmd *cmd = llst_elem->val;
+////	lst_elem_print_token(head);
+////	printf("len = %d\n", lst_len(tmp));
+//
+//	tmp = cmd->files_in;
+//	printf("files_in:\n");
+//	lst_print_tokens(tmp);
 //
 //	tmp = cmd->files_out;
-//	printf("pointer_out = [%p]\n", tmp);
-//	lst_print_tokens(cmd->files_out);
-//	head_3 = *llst;
-//	llst_elem = head_3->val;
+//	printf("files_out:\n");
+//	lst_print_tokens(tmp);
+////	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
+//	//конец теста на llst_elem_new и cmd_parser_______________
+
 	
 	
-//	head_2 = *llst_elem;
-//	printf("llst_elem_pointer = [%p]\n", head_2);
-//	printf("\n\n\n");
-//	lst_elem_print_token(head_2);
-//	printf("\n\n\n");
-//	lst_print_tokens(llst_elem);
-//	printf("len = %d\n", lst_len(llst));
-//
 	
 	
-//	конец проверки работы llst_new
 	
-//	llst = lst_new(0);
-//	t_list **tmp_llst;
-//	head_3 = *llst;
-//	tmp_llst = head_3->val;
-//	head_2 = *tmp_llst;
-//	while (head_2)
-//	{
-//		i++;
-//		head_2 = head_2->next;
-//	}
-//	printf("len = %d\n", i);
+	
+	
+	
+	//начало теста на llst_new_______________
+	llst = llst_new(huy);
+
+
+
+	t_cmd *cmd = (*llst)->next->val;
+//	lst_elem_print_token(head);
+//	printf("len = %d\n", lst_len(tmp));
+
+	tmp = cmd->files_in;
+	printf("files_in:\n");
+	lst_print_tokens(tmp);
+
+	tmp = cmd->files_out;
+	printf("\nfiles_out:\n");
+	lst_print_tokens(tmp);
+//	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
+	//конец теста на llst_new_______________
+
+
 	
 }
 

@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int l_print_tokens()
+
 int	lst_print(t_list **lst)
 {
 	t_list	*head;
@@ -24,7 +26,7 @@ int	lst_print_tokens(t_list **lst)
 	t_list	*head;
 	int		i;
 
-	char *tokens_array[9] = {"WORD", "FIELD", "EXP_FIELD", "REDIR_OUT", "REDIR_IN", "REDIR_APPEND", "REDIR_HEREDOC", "PIPE", "SPACE"};
+	char *tokens_array[10] = {"NILL", "WORD", "FIELD", "EXP_FIELD", "REDIR_OUT", "REDIR_IN", "REDIR_APPEND", "REDIR_HEREDOC", "PIPE", "SPACE"};
 	if (!lst)
 		return (printf("no lst print error\n"));
 	head = *lst;
@@ -33,7 +35,7 @@ int	lst_print_tokens(t_list **lst)
 	i = 0;
 	while (head)
 	{
-		printf("[%d] key = %s\t\tval = %s\n", i++, tokens_array[head->key - 1], (char *)head->val);
+		printf("[%d] key = %s\t\tval = %s\n", i++, tokens_array[head->key], (char *)head->val);
 		head = head->next;
 	}
 	printf("\n\n\n\n\n\n");
@@ -49,11 +51,11 @@ int	lst_elem_print(t_list *node)
 
 int	lst_elem_print_token(t_list *node)
 {
-	char *tokens_array[9] = {"WORD", "FIELD", "EXP_FIELD", "REDIR_OUT", "REDIR_IN", "REDIR_APPEND", "REDIR_HEREDOC", "PIPE", "SPACE"};
+	char *tokens_array[10] = {"NILL", "WORD", "FIELD", "EXP_FIELD", "REDIR_OUT", "REDIR_IN", "REDIR_APPEND", "REDIR_HEREDOC", "PIPE", "SPACE"};
 
 	if (!node)
 		return (printf("no node print error\n"));
-	return (printf("key = %s\tval = %s\n", tokens_array[node->key - 1], (char *)node->val));
+	return (printf("key = %s\tval = %s\n", tokens_array[node->key], (char *)node->val));
 }
 
 int	lst_clear(t_list **lst)

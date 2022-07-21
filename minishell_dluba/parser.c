@@ -26,16 +26,16 @@ t_list	*cmd_init(void) //мб возвращать cmd а внешне прис�
 }
 
 
-t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem) //двигает внутри голову дальше и заносит элементы в список
+t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двигает внутри голову дальше и заносит элементы в список
 { //мб еще сделать внутри структуры команды флаг - маску на heredoc и редиректы, а также права на append или trunc, короче int - как раз 4 бита
 	//поменяется ли после функции llst_elem?
 
-	t_cmd *cmd = llst_elem->val; //мб подать в ф-цию cmd? //или же добавить структуру с cmd чтобы список напрямую составлять
+//	t_cmd *cmd = llst_elem->val; //мб подать в ф-цию cmd? //или же добавить структуру с cmd чтобы список напрямую составлять
 	if (head_lst->key == REDIR_IN)
 	{
 //		printf("kek_1\n");
 		head_lst = head_lst->next;
-		lst_push_back((t_list **)cmd->files_in, lst_elem_copy(head_lst));
+		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_HEREDOC)
 	{
@@ -102,17 +102,17 @@ t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 	{
 		if (head_lst->key == PIPE)
 			break;
-		head_lst = cmd_parser(head_lst, llst_elem);
+		head_lst = cmd_parser(head_lst, llst_elem, llst_elem->val);
 	}
 	
-//	t_cmd *cmd = llst_elem->val;
+	t_cmd *cmd_1 = llst_elem->val;
 
 //	lst_print_tokens(cmd->files_out);
 //	printf("len_lst = %d\n", lst_len(cmd->files_out));
 //	printf("<----------\n");
 //	printf("\n\n\n\n\n\n");
-		printf("---------->\n");
-	lst_elem_print_token(llst_elem);
+//		printf("---------->\n");
+//	lst_print_tokens(cmd_1->files_out);
 	return (llst_elem);
 }
 
@@ -164,7 +164,10 @@ t_list	**llst_new(t_list	**lst) //задел на бонус: список сп�
 			head_lst = head_lst->next;
 		if (head_lst->key == PIPE && !head_lst->next)
 			exit(printf("error: pipe at the end of the string\n")); //исправить от ликов надо
-		lst_push_back(llst, lst_elem_new(llst_elem_new(tmp), 0));
+		
+
+		
+		lst_push_back(llst, llst_elem_new(tmp));
 //		if (head_lst) //если не конец еще и встретился пайп
 		head_lst = head_lst->next; //пропускаем пайп
 	}
