@@ -124,7 +124,9 @@ t_list **bash_args_lst_lexer(char *bash_str);
 t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
 //int	ft_strcmp_n(char *s1, char *s2, int n);
-int	ft_strcmp_n(const char *str1, const char *str2, size_t n);
+int		ft_strcmp_n(const char *str1, const char *str2, size_t n);
+char	*ft_substr(char *s, int start, int len);
+char	*ft_strjoin(char *s1, char *s2);
 
 
 void	is_null(void *ptr);

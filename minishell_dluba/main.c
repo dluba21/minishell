@@ -19,9 +19,9 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-//	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
-	huy = bash_args_lst_lexer("ls > kek < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
-//	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat>aboba");
+	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("ls > kek < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("\'ls\'\"12345\" cat"); //
 	
@@ -143,7 +143,7 @@ int main(int argc, char **argv, char **env)
 //	printf("\nfiles_heredoc:\n");
 //	lst_print_tokens(tmp);
 	
-	llst_cmd_n_elem_print(llst, 0);
+	llst_cmd_n_elem_print(llst, 1);
 
 //	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
 	//конец теста на llst_new_______________

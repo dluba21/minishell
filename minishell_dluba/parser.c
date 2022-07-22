@@ -33,7 +33,6 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 //	t_cmd *cmd = llst_elem->val; //мб подать в ф-цию cmd? //или же добавить структуру с cmd чтобы список напрямую составлять
 	if (head_lst->key == REDIR_IN)
 	{
-//		printf("kek_1\n");
 		head_lst = head_lst->next;
 		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
@@ -45,41 +44,16 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 	else if (head_lst->key == REDIR_OUT)
 	{
 		head_lst = head_lst->next;
-		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD)) //может быть редирект в куча файлов через пробел  //ls >> aboba kek
-		{ //переделать после снятия долларов все в WORD
-//			printf("kek_3\n");
-			lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
-			head_lst = head_lst->next;
-			
-			//posle vihoda ne ostayotsya pochemu to push back
-//			printf("---------->\n");
-//			lst_print_tokens(cmd->files_out);
-//			printf("<----------\n");
-		}
-
+		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_APPEND) //сделать флаг
 	{
 		head_lst = head_lst->next;
-		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD))
-		{ //переделать после снятия долларов все в WORD
-			lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
-			head_lst = head_lst->next;
-		}
-
+		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD) //команда и заполнение аргументов //чекуть как исправить ls >> aboba kek
-	{
-		while (head_lst && (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD))
-		{ //переделать после снятия долларов все в WORD
-			lst_push_back(cmd->args_lst, lst_elem_copy(head_lst));
-			head_lst = head_lst->next;
-		}
+		lst_push_back(cmd->args_lst, lst_elem_copy(head_lst));
 
-	}
-//	printf("pointer_cmd === [%p]\n", cmd);
-//	printf("len_lst = %d\n", lst_len(cmd->files_out));
-//	lst_print_tokens(cmd->files_in);
 	if (head_lst && head_lst->key != PIPE) //переходим к следующему слову, если не конец и не пайп
 		head_lst = head_lst->next;
 //	printf("---------->\n");
