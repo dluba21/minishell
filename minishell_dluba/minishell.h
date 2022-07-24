@@ -127,7 +127,9 @@ t_list **bash_args_lst_parser(t_list **lst);
 int		ft_strcmp_n(const char *str1, const char *str2, size_t n);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strjoin(char *s1, char *s2);
-
+int		ft_isalpha(int c);
+int		ft_isdigit(int c);
+int		find_spec_char(char *str);
 
 void	is_null(void *ptr);
 void	*ft_memcpy(void *src_0, int n); //вставить в lst_elem_cpy
@@ -151,6 +153,11 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd);
 t_list	*cmd_init(void);
 
 
+
+//void	dollar_expansion(char *str);
+char	*dollar_expansion(char *str);
+void	not_dollar_part(char **str, char **ret_str);
+void	expand_dollar_var(char **str, char **ret_str);
 
 #endif
 

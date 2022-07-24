@@ -174,14 +174,11 @@ t_list **bash_args_lst_lexer(char *bash_str)
 //		printf("cmp = %d\n", ft_strcmp_n(bash_str, ">>", 2));
 		if (*bash_str == '\'')
 		{
-//			printf("bash_str = [%s]\n", bash_str);
-//			printf("strchr = {%d}\n", ft_strchr(bash_str, "\'"));
 			++bash_str;
 			if (ft_strchr(bash_str, "\'") == ft_strlen(bash_str))
 				exit(printf("error: no second single quote")); //не нашел вторую кавчку, значит ошибку надо выдать и список зафришить созданный уже
-			str = quote_str_trim(++bash_str, "\'");
+			str = quote_str_trim(bash_str, "\'");
 			lst_push_back(lst, lst_elem_new(str, FIELD));
-
 			bash_str += ft_strchr(bash_str, "\'") + 1; // +1 чтобы выйти за кавычку
 		}
 		else if (*bash_str == '\"') //двойная кавычка

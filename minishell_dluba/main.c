@@ -15,15 +15,18 @@ int main(int argc, char **argv, char **env)
 //		return (0);
 	
 	
+//	dollar_expansion(ft_strdup("aboba$12354 $kek govno\n")); //убивает пробел между переменными куда-то
+	dollar_expansion(ft_strdup("aboba$12354 aas$? \n")); //убивает пробел между переменными куда-то
 //	while (!vars->exit_f)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+	
 //	huy = bash_args_lst_lexer("ls > kek < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
-//	huy = bash_args_lst_lexer("\'ls\'\"12345\" cat"); //
+//	huy = bash_args_lst_lexer("echo \"12345\"\'12345\'cat"); //
 	
 //	huy = bash_args_lst_lexer("2|cat");
 //	huy = bash_args_lst_lexer("ls|cat>aboba");
@@ -32,9 +35,9 @@ int main(int argc, char **argv, char **env)
 	
 	
 	
-	lst_print_tokens(huy);
+//	lst_print_tokens(huy);
 	
-	printf("------------begin_list has written--------\n\n\n\n");
+//	printf("------------begin_list has written--------\n\n\n\n");
 	
 //	head = *huy;
 	
@@ -44,7 +47,7 @@ int main(int argc, char **argv, char **env)
 //	printf("pointer = {%p}\n", head->prev);
 	
 	
-	int i = 0;
+//	int i = 0;
 	
 //	while (head->key != PIPE)
 //		head = head->next;
@@ -82,7 +85,7 @@ int main(int argc, char **argv, char **env)
 	
 	
 //	llst = llst_new(huy);
-	head = *huy;
+//	head = *huy;
 	
 	
 	
@@ -123,7 +126,7 @@ int main(int argc, char **argv, char **env)
 	
 	
 	//начало теста на llst_new_______________
-	llst = llst_new(huy);
+//	llst = llst_new(huy);
 
 
 
@@ -143,7 +146,7 @@ int main(int argc, char **argv, char **env)
 //	printf("\nfiles_heredoc:\n");
 //	lst_print_tokens(tmp);
 	
-	llst_cmd_n_elem_print(llst, 1);
+//	llst_cmd_n_elem_print(llst, 1);
 
 //	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
 	//конец теста на llst_new_______________

@@ -83,3 +83,29 @@ char	*ft_strjoin(char *s1, char *s2) //сделать free первой и вт�
 //	}
 //	return (NULL);
 //}
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+		return (1);
+	return (0);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c > 47 && c < 58)
+		return (1);
+	return (0);
+}
+
+int	find_spec_char(char *str) //ищет не цифрово-алфавитный символ
+{
+	int	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i] && (ft_isalpha(str[i]) || ft_isdigit(str[i])))
+		i++;
+	return (i);
+}
