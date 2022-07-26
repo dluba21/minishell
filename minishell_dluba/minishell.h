@@ -130,6 +130,10 @@ char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		find_spec_char(char *str);
+char	*ft_strset(int n);
+void	big_str_print(char **big_str);
+int		ft_strcmp(char *str1, char *str2);
+
 
 void	is_null(void *ptr);
 void	*ft_memcpy(void *src_0, int n); //вставить в lst_elem_cpy
@@ -155,9 +159,13 @@ t_list	*cmd_init(void);
 
 
 //void	dollar_expansion(char *str);
-char	*dollar_expansion(char *str);
+char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
-void	expand_dollar_var(char **str, char **ret_str);
+void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);
+char	*find_env_var(char *str, char **env);
+
+void	env_var_trimmer(char *env_elem, char **buffer);
+char	*env_key_trimmer(char *env_elem);
 
 #endif
 

@@ -30,15 +30,6 @@ int ft_isspace(char c)
 	return (0);
 }
 
-int	ft_strcmp(char *s1, char *s2) //сравнивает строки
-{
-	if (!s1 || !s2)
-		return (-1);
-	while (*s1 == *s2 && *s1++ && *s2++)
-		;
-	return (*s1 - *s2);
-}
-
 int	ft_strcmp_n(const char *str1, const char *str2, size_t n)
 {
 	size_t	i;

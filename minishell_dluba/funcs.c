@@ -109,3 +109,52 @@ int	find_spec_char(char *str) //ищет не цифрово-алфавитны�
 		i++;
 	return (i);
 }
+
+char	*ft_strset(int n)
+{
+	char	*str;
+
+	str = malloc(n + 1);
+	if (!str)
+		return (NULL);
+	while (n-- >= 0)
+		str[n] = 0;
+	return (str);
+}
+
+void big_str_print(char **big_str)
+{
+	char **tmp;
+
+//	tmp = big_str;
+	if (!big_str)
+	{
+		printf("no big_str\n");
+		return ;
+	}
+	while (*big_str)
+		printf("%s\n", *big_str++);
+}
+//
+//int	ft_strcmp(char *str1, char *str2)
+//{
+//	int	i;
+//
+//	i = 0;
+//	while (str1[i])
+//	{
+//		if (str1[i] != str2[i] || !str1[i] || !str2[i])
+//			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+//		i++;
+//	}
+//	return (0);
+//}
+
+int	ft_strcmp(char *s1, char *s2) //сравнивает строки
+{
+	if (!s1 || !s2)
+		return (-1);
+	while (*s1 == *s2 && *s1++ && *s2++)
+		;
+	return (*s1 - *s2);
+}

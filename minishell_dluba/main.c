@@ -10,13 +10,39 @@ int main(int argc, char **argv, char **env)
 	t_list	**llst;
 	t_list	*llst_elem;
 	t_list	**tmp;
+	char *buffer_1 = ft_strset(100);
+//	char *buffer_1;
 
-//	if (vars_initializing(&vars, env))
-//		return (0);
+	if (vars_initializing(&vars, env))
+		return (0);
 	
+	char *key;
+//	buffer_1 = env_trimmer(vars.envp[0], buffer_1);
+//	printf("str = {%s}", buffer_1);
+//	int i = 0;
+//	while (*vars.envp)
+//	{
+//		printf("[%d]\n", i);
+//		env_var_trimmer(vars.envp[0], &buffer_1);
+//		printf("str = [%s]\n", *vars.envp);
+//		printf("buffer = [%s]\n", buffer_1);
+//		key = env_key_trimmer(*vars.envp);
+//		printf("key = [%s]\n", key);
+//		printf("\n\n");
+//		vars.envp++;
+//		i++;
+//	}
+//	printf("len_env = %d\n", i);
 	
-//	dollar_expansion(ft_strdup("aboba$12354 $kek govno\n")); //убивает пробел между переменными куда-то
-	dollar_expansion(ft_strdup("aboba$12354 aas$? \n")); //убивает пробел между переменными куда-то
+//	TERM_PROGRAM=Apple_Terminal
+//	printf("d = %d\n", ft_strlen(buffer_1));
+//	printf("pointer = [%p]\n", buffer_1);
+//	printf("*pointer = [%p]\n", &buffer_1);
+//	buffer = ft_strset(100);
+//	big_str_print(vars.envp);
+
+	dollar_expansion(ft_strdup("aboba$LOGNAME $pop $zhopa govno\n"), &vars); //убивает пробел между переменными куда-то
+//	dollar_expansion(ft_strdup("aboba$12354aas$? \n"), &vars); //убивает пробел между переменными куда-то
 //	while (!vars->exit_f)
 //	{
 //	}
@@ -32,8 +58,6 @@ int main(int argc, char **argv, char **env)
 //	huy = bash_args_lst_lexer("ls|cat>aboba");
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
-	
-	
 	
 //	lst_print_tokens(huy);
 	

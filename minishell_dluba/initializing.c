@@ -28,6 +28,7 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 	int	j;
 	char **ret_str;
 
+	i = 0;
 	while (big_str[i])
 		i++;
 	ret_str = (char **)malloc(sizeof(char *) * (i + 1));

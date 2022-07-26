@@ -1,27 +1,90 @@
 #include "minishell.h"
 
-//char	*
-//char	*find_env_var(char *str, char **env) //ищет среди переменных окружения нужное или возвращает пустую строку если не нашло
-//{
-//
-//
-//	free(str);
-//}
 
-void	expand_dollar_var(char **str, char **ret_str)
+
+void	env_var_trimmer(char *env_elem, char **buffer) // записывает в буфер все до '='
 {
-	int	i;
+	char	*tmp;
 
+	tmp = *buffer;
+	while (*env_elem && *env_elem != '=')
+		*tmp++ = *env_elem++;
+	if (!*env_elem)
+		printf("no '=' in envp\n"); //удалить, такое не бывает, наверное
+	*tmp = 0;
+}
+
+char	*env_key_trimmer(char *env_elem)
+{
+	char	*key;
+	char	*tmp;
+	
+	while (*env_elem && *env_elem != '=')
+		env_elem++;
+	env_elem++; // перешел за '='
+	key =  (char *)malloc(ft_strlen(env_elem) + 1);
+	if (!key)
+		return (NULL);
+	tmp = key;
+	while (*env_elem)
+		*tmp++ = *env_elem++;
+	*tmp = 0;
+	return (key);
+}
+
+char	*find_env_var(char *str, char **env) //ищет среди переменных окружения нужное или возвращает пустую строку если не нашло
+{
+	char	*buffer;
+	char	*dollar_str;
+	int		i;
+
+	if (!env)
+	{
+		printf("error: no envp in dollar parser!\n");
+		return (NULL);
+	}
+	dollar_str = NULL;
+	buffer = ft_strset(100); // создает буфер
+	while (*env)
+	{
+		env_var_trimmer(*env, &buffer);
+		if (!ft_strcmp(str, buffer)) //если строки равны
+			dollar_str = env_key_trimmer(*env);
+		env++;
+	}
+	free(buffer);
+	free(str);
+	if (!dollar_str) //если в итоге не нашло такую переменную
+		return (NULL);
+	return (dollar_str);
+}
+
+void	expand_dollar_var(char **str, char **ret_str, t_vars *vars)
+{
+	int		i;
+	char	*tmp;
+
+	tmp = NULL;
 	i = find_spec_char(*str);
 	if (i == 0) //например пробел после доллара сразу
 	{
 		*ret_str = ft_strjoin(*ret_str, ft_strdup("$"));
-		(*str)++;
+		*str = *str + 1;
 		return ;
 	}
-//	*ret_str = ft_strjoin(*ret_str, find_env_var(char *str, char **env)); //нашел переменную или не нашел
-	*ret_str = ft_strjoin(*ret_str, ft_strdup("{env_var}"));
+	//нашел переменную или не нашел
+//	printf("dollar_word = {%s}\n", ft_substr(*ret_str, 0, i));
+//	char *kek = ft_substr(*str, 0, i);
+	tmp = find_env_var(ft_substr(*str, 0, i), vars->envp); //здесь ошибка!!!
 	*str += i; //мб доллар следующий найдет
+	if (!tmp) //если не нашло переменную то ничего не меняем вроде //
+		return ;
+	*ret_str = ft_strjoin(*ret_str, tmp);
+//	*ret_str = ft_strjoin(*ret_str, ft_strdup("{env_var}"));
+	
+	
+	//ЕСЛИ ПЕРЕМЕННАЯ ЕСТЬ ТО ЗБС, ПРОВЕРИТЬ 80 СТРОЧКУ!!!
+	
 }
 
 void	not_dollar_part(char **str, char **ret_str) //сюда подалась строка с частью до доллара - обычное слово, надо все занести как слово до доллара первого
@@ -33,7 +96,7 @@ void	not_dollar_part(char **str, char **ret_str) //сюда подалась с�
 	end = ft_strchr(*str, "$");
 	if (end != 0) //если не "$" один
 	{
-		*ret_str = ft_strjoin(*ret_str, ft_substr(*str, start, end - 1)); //все до доллара копируем,надо поменять -1!!!!
+		*ret_str = ft_strjoin(*ret_str, ft_substr(*str, start, end)); //все до доллара копируем,надо поменять -1!!!!
 		*str += end; //останавлиаемся на первом долларе
 	}
 	//что делать если сразу доллар?
@@ -42,7 +105,7 @@ void	not_dollar_part(char **str, char **ret_str) //сюда подалась с�
 
 //мне надо заносить всю строку до доллара сразу и сдвигать по-любому строку, потихонбку строку слева
 //void	dollar_expansion(t_list *head)
-char *dollar_expansion(char *str) //free старую строку
+char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 {
 //	char	*str;
 	char	*tmp;
@@ -78,7 +141,7 @@ char *dollar_expansion(char *str) //free старую строку
 //		else if (*str == ' ') // искать переменую окружения
 		else //
 		{
-			expand_dollar_var(&str, &ret_str); //после этого в ret_str найденная переменная и str сдвинулось сразу до не алфавитно-цифрового символа (мб до доллара сразу)
+			expand_dollar_var(&str, &ret_str, vars); //после этого в ret_str найденная переменная и str сдвинулось сразу до не алфавитно-цифрового символа (мб до доллара сразу)
 			not_dollar_part(&str, &ret_str);
 		}
 		
@@ -91,7 +154,7 @@ char *dollar_expansion(char *str) //free старую строку
 }
 
 
-int	dollar_parser(t_list **lst)
+int	dollar_parser(t_list **lst, t_vars *vars)
 {
 	t_list	*head;
 
