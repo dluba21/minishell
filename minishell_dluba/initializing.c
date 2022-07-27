@@ -29,6 +29,7 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 	char **ret_str;
 
 	i = 0;
+    ret_str = NULL;
 	while (big_str[i])
 		i++;
 	ret_str = (char **)malloc(sizeof(char *) * (i + 1));
@@ -37,7 +38,7 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 	i = 0;
 	while (big_str[i])
 	{
-		ret_str[i] = (char *)malloc(sizeof(ft_strlen(big_str[i]))); //leaks mb
+		ret_str[i] = (char *)malloc(sizeof(ft_strlen(big_str[i]))); //leaks mb with exit
 		if (!ret_str[i])
 			return (NULL);
 		j = 0;

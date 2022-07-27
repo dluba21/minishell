@@ -145,7 +145,7 @@ char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать 
 	return (trimmed_str);
 }
 
-t_list **bash_args_lst_lexer(char *bash_str)
+t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars)
 {
 	t_list	*temp; //стереть
 	t_list	**lst;
@@ -232,6 +232,7 @@ t_list **bash_args_lst_lexer(char *bash_str)
 	}
 	printf("\n\n\n\nresult:\n");
 	free(isspecial_arr); //также фришить при ошибках надо
+//    dollar_parser(lst, vars);
 	return (lst);
 }
 

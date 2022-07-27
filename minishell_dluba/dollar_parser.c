@@ -59,6 +59,22 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 	return (dollar_str);
 }
 
+void    expand_dollar_var_in_brace(char **str, char **ret_str, t_vars *vars)
+{
+    int        i;
+    char    *tmp;
+
+    tmp = NULL;
+    i = ft_strchr(++(*str), "}");
+    if (i == ft_strlen(*str))
+        exit(printf("error: no second brace in dollar_parser\n"));
+    tmp = find_env_var(ft_substr(*str, 0, i), vars->envp);
+    *str += i + 1; //мб доллар следующий найдет
+    if (!tmp) //если не нашло переменную то ничего не меняем вроде //
+        return ;
+    *ret_str = ft_strjoin(*ret_str, tmp);
+}
+
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars)
 {
 	int		i;
@@ -137,7 +153,11 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 			ret_str = ft_strjoin(ret_str, ft_strdup("{status_last_cmd}")); //статус дописать потом
 			str++;
 		}
-//		else if (*str == '{') //на кавычку потом обработка еще если париться
+		else if (*str == '{') //на кавычку потом обработка еще если париться
+        {
+            expand_dollar_var_in_brace(&str, &ret_str, vars);
+            not_dollar_part(&str, &ret_str);
+        }
 //		else if (*str == ' ') // искать переменую окружения
 		else //
 		{
@@ -164,7 +184,7 @@ int	dollar_parser(t_list **lst, t_vars *vars)
 	while (head)
 	{
 		if (head->key == EXP_FIELD || head->key == WORD)
-//			dollar_expansion();
+			head->val = (char *)dollar_expansion((char *)head->val, vars);
 		head = head->next;
 	}
 	return (0);

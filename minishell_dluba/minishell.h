@@ -27,7 +27,7 @@
 #define REDIR_APPEND 6
 #define REDIR_HEREDOC 7
 #define PIPE 8
-#define SPACE 9
+#define SPACEX 9
 
 //#define CMD 11
 
@@ -120,7 +120,7 @@ int	ft_strcmp(char *s1, char *s2);
 int pipe_len_and_check(char *bash_str);
 int ft_strchr(char *str, char *c);
 char *quote_str_trim(char *bash_str, char *sym_arr);
-t_list **bash_args_lst_lexer(char *bash_str);
+t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars);
 t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
 //int	ft_strcmp_n(char *s1, char *s2, int n);
@@ -158,7 +158,7 @@ t_list	*cmd_init(void);
 
 
 
-//void	dollar_expansion(char *str);
+int     dollar_parser(t_list **lst, t_vars *vars);
 char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);
