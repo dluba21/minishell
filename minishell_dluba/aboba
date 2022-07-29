@@ -1,11 +1,13 @@
-kek
+139
 Makefile
 a.out
 aboba
+dollar_parser.c
 duo_list_methods.c
 env_funcs.c
 file
 file.dSYM
+funcs.c
 initializing.c
 kek
 keks
@@ -17,9 +19,8 @@ minishell
 minishell.dSYM
 minishell.h
 parser.c
-saver_parser.c
+saver_parser
 test
 test.c
 test.dSYM
 tests
-kek

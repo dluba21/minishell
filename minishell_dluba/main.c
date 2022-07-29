@@ -13,11 +13,13 @@ int main(int argc, char **argv, char **env)
 //	char *buffer_1 = ft_strset(100);
 //	char *buffer_1;
 
-    char **pop = big_string_copy(env);
-    big_str_print(pop);
-//	if (vars_initializing(&vars, env)) //ОШИБКА - ИНОГДА ФРИШИТСЯ ВТОРОЙ РАЗ!!!!
-//		return (0);
+//    char **pop = big_string_copy(env);
+//	big_str_print(env);
 	
+	if (vars_initializing(&vars, env)) //ОШИБКА - ИНОГДА ФРИШИТСЯ ВТОРОЙ РАЗ!!!!
+		return (0);
+	
+
 //	char *key;
 //	buffer_1 = env_trimmer(vars.envp[0], buffer_1);
 //	printf("str = {%s}", buffer_1);
@@ -43,15 +45,18 @@ int main(int argc, char **argv, char **env)
 //	buffer = ft_strset(100);
 //	big_str_print(vars.envp);
 
-//	dollar_expansion(ft_strdup("aboba${LOGNAME}e $pop $zhopa govno\n"), &vars); //убивает пробел между переменными куда-то
+//	dollar_expansion(ft_strdup("aboba$LOGNAME $pop $zhopa govno\n"), &vars); //убивает пробел между переменными куда-то
 //	dollar_expansion(ft_strdup("aboba$12354aas$? \n"), &vars); //убивает пробел между переменными куда-то
+//	dollar_expansion(ft_strdup("ls > $? < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope"), &vars);
 //	while (!vars->exit_f)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
 //	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 	
-//	huy = bash_args_lst_lexer("ls > $? < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope", &vars);
+	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | > \"arbidol\" bruh $? | abobus  1 lol| denis no 3$$$ | pop durak dope", &vars);
+
+	huy = bash_args_lst_lexer("	ls >> pop >> kek | cat", &vars);
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("echo \"12345\"\'12345\'cat"); //
@@ -61,6 +66,12 @@ int main(int argc, char **argv, char **env)
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
 	
+	lst_print_tokens(huy);
+	printf("------------begin_list has written--------\n\n\n\n");
+	
+	dollar_parser(huy, &vars);
+	llst = llst_new(huy);
+	llst_cmd_print(llst);
 //	lst_print_tokens(huy);
 //
 //    big_str_print(env);
@@ -68,7 +79,7 @@ int main(int argc, char **argv, char **env)
 //    dollar_parser(lst, vars);
     
 //    printf("ret_str = %s", kek);
-//	printf("------------begin_list has written--------\n\n\n\n");
+
 	
 //	head = *huy;
 	

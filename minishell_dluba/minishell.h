@@ -158,7 +158,7 @@ t_list	*cmd_init(void);
 
 
 
-int     dollar_parser(t_list **lst, t_vars *vars);
+int    	 dollar_parser(t_list **lst, t_vars *vars);
 char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);

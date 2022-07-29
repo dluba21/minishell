@@ -49,7 +49,10 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 	{
 		env_var_trimmer(*env, &buffer);
 		if (!ft_strcmp(str, buffer)) //если строки равны
+		{
 			dollar_str = env_key_trimmer(*env);
+			break ;
+		}
 		env++;
 	}
 	free(buffer);
@@ -61,18 +64,18 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 
 void    expand_dollar_var_in_brace(char **str, char **ret_str, t_vars *vars)
 {
-    int        i;
-    char    *tmp;
+	int		i;
+    char	*tmp;
 
-    tmp = NULL;
-    i = ft_strchr(++(*str), "}");
-    if (i == ft_strlen(*str))
-        exit(printf("error: no second brace in dollar_parser\n"));
-    tmp = find_env_var(ft_substr(*str, 0, i), vars->envp);
-    *str += i + 1; //мб доллар следующий найдет
-    if (!tmp) //если не нашло переменную то ничего не меняем вроде //
-        return ;
-    *ret_str = ft_strjoin(*ret_str, tmp);
+	tmp = NULL;
+	i = ft_strchr(++(*str), "}");
+	if (i == ft_strlen(*str))
+		exit(printf("error: no second brace in dollar_parser\n"));
+	tmp = find_env_var(ft_substr(*str, 0, i), vars->envp);
+	*str += i + 1; //мб доллар следующий найдет
+	if (!tmp) //если не нашло переменную то ничего не меняем вроде //
+		return ;
+	*ret_str = ft_strjoin(*ret_str, tmp);
 }
 
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars)
@@ -154,10 +157,10 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 			str++;
 		}
 		else if (*str == '{') //на кавычку потом обработка еще если париться
-        {
-            expand_dollar_var_in_brace(&str, &ret_str, vars);
-            not_dollar_part(&str, &ret_str);
-        }
+		{
+			expand_dollar_var_in_brace(&str, &ret_str, vars);
+			not_dollar_part(&str, &ret_str);
+		}
 //		else if (*str == ' ') // искать переменую окружения
 		else //
 		{
@@ -169,7 +172,7 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 //	head->""
 	printf("ret_str = [%s]\n", ret_str);
 	free(tmp);
-	return (str);
+	return (ret_str);
 	
 }
 
@@ -184,7 +187,7 @@ int	dollar_parser(t_list **lst, t_vars *vars)
 	while (head)
 	{
 		if (head->key == EXP_FIELD || head->key == WORD)
-			head->val = (char *)dollar_expansion((char *)head->val, vars);
+			head->val = dollar_expansion(head->val, vars);
 		head = head->next;
 	}
 	return (0);
