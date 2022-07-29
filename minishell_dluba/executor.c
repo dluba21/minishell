@@ -1,6 +1,9 @@
 #include "minishell.h"
 
-char *compose_cmd_args
+char *compose_cmd_args()
+{
+	
+}
 
 char	*compose_path_and_find_cmd(t_vars *vars, char *cmd, int cmd_flag)
 {
