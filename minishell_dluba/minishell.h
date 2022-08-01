@@ -70,8 +70,8 @@ typedef	struct s_vars
 	char *reserved_words[8];
 //	t_builtin_ptr builtin_array[7];
 	
-	
-	char			**envp;
+	char	**root_paths;
+	char	**envp;
 	struct s_list **envp_lst;
 	char	envp_f;
 	char	exit_f;
@@ -123,8 +123,8 @@ char *quote_str_trim(char *bash_str, char *sym_arr);
 t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars);
 t_list **bash_args_lst_parser(t_list **lst);
 //int ft_strchr(char *str, char *c);
-//int	ft_strcmp_n(char *s1, char *s2, int n);
-int		ft_strcmp_n(const char *str1, const char *str2, size_t n);
+//int	ft_strncmp(char *s1, char *s2, int n);
+//int		ft_strcmp_n(const char *str1, const char *str2, size_t n);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalpha(int c);
@@ -133,6 +133,13 @@ int		find_spec_char(char *str);
 char	*ft_strset(int n);
 void	big_str_print(char **big_str);
 int		ft_strcmp(char *str1, char *str2);
+int		ft_strncmp(char *s1, char *s2, int n);
+char	**ft_split(char *s, char c);
+
+
+int	root_paths_init(t_vars *vars); //создает массив строк с путями к командам, надо зачиситить от ликов потом, это вызвать в дочернем процессе
+char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths);
+
 
 
 void	is_null(void *ptr);
@@ -158,7 +165,7 @@ t_list	*cmd_init(void);
 
 
 
-int    	 dollar_parser(t_list **lst, t_vars *vars);
+int		dollar_parser(t_list **lst, t_vars *vars);
 char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);

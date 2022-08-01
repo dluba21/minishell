@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 void	env_var_trimmer(char *env_elem, char **buffer) // записывает в буфер все до '='
 {
 	char	*tmp;
@@ -170,7 +168,7 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 		
 	}
 //	head->""
-	printf("ret_str = [%s]\n", ret_str);
+//	printf("ret_str = [%s]\n", ret_str);
 	free(tmp);
 	return (ret_str);
 	

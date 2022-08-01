@@ -158,3 +158,18 @@ int	ft_strcmp(char *s1, char *s2) //сравнивает строки
 		;
 	return (*s1 - *s2);
 }
+
+int	ft_strncmp(char *str_1, char *str_2, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (str_1[i] != str_2[i])
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+

@@ -66,6 +66,22 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 	return (head_lst);
 }
 
+int	check_pipes(t_list *head)
+{
+	while (head)
+	{
+		if (head->key == PIPE)
+		{
+			if (!head->prev || (head->prev && head->prev->key == PIPE))
+				return (1);
+			if (!head->next || (head->next && head->next->key == PIPE))
+				return (1);
+		}
+		head = head->next;
+	}
+	return (0);
+}
+
 t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 {
 	t_list	*llst_elem;
@@ -133,16 +149,17 @@ t_list	**llst_new(t_list	**lst) //задел на бонус: список сп�
 
 	if (!head_lst)
 		return (NULL);
+	if (check_pipes(head_lst)) //тут || и | | не различаются (без бонусов норм)
+	{
+		printf("pipe error\n");
+		return (NULL); //зафришить все говно
+	}
 	llst = lst_new(0);
 	while (head_lst)
 	{
 		tmp = head_lst; //сохраняю голову
 		while (head_lst->next && head_lst->key != PIPE)  //head_lst->next
 			head_lst = head_lst->next;
-		if (head_lst->key == PIPE && !head_lst->next)
-			exit(printf("error: pipe at the end of the string\n")); //исправить от ликов надо
-		
-
 		
 		lst_push_back(llst, llst_elem_new(tmp));
 //		if (head_lst) //если не конец еще и встретился пайп

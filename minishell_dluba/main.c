@@ -18,7 +18,8 @@ int main(int argc, char **argv, char **env)
 	
 	if (vars_initializing(&vars, env)) //ОШИБКА - ИНОГДА ФРИШИТСЯ ВТОРОЙ РАЗ!!!!
 		return (0);
-	
+//	big_str_print(env);
+	root_paths_init(&vars);
 
 //	char *key;
 //	buffer_1 = env_trimmer(vars.envp[0], buffer_1);
@@ -53,14 +54,14 @@ int main(int argc, char **argv, char **env)
 //	}
 //	printf("len = %d\n", big_str_len(env));
 //	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
-	
-	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | > \"arbidol\" bruh $? | abobus  1 lol| denis no 3$$$ | pop durak dope", &vars);
-
-	huy = bash_args_lst_lexer("	ls >> pop >> kek | cat", &vars);
+	//___________________________________________________________________________________________________________________________
+	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | > \"arbidol\" bruh $? || abobus  1 lol| denis no 3$$$ | pop durak dope ", &vars);
+//
+//	huy = bash_args_lst_lexer("	ls >> pop >> kek | cat", &vars);
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("echo \"12345\"\'12345\'cat"); //
-	
+//
 //	huy = bash_args_lst_lexer("2|cat");
 //	huy = bash_args_lst_lexer("ls|cat>aboba");
 //		huy = bash_args_first_lst_init(">>");
@@ -68,18 +69,26 @@ int main(int argc, char **argv, char **env)
 	
 	lst_print_tokens(huy);
 	printf("------------begin_list has written--------\n\n\n\n");
-	
+
 	dollar_parser(huy, &vars);
 	llst = llst_new(huy);
-	llst_cmd_print(llst);
-//	lst_print_tokens(huy);
+//	llst_cmd_print(llst);
+//	printf("%s\n", compose_cmd_args((*llst)->val, vars.root_paths));
+//	printf("i = %d\n", ft_strncmp("PATH=", "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/munki:/Library/Apple/usr/bin", 5));
 //
+//	printf("\n___________________________________________________________________________________________________________________________\n");
+//	lst_print_tokens(huy);
+//	big_str_print(vars.envp);
+//	printf("\n___________________________________________________________________________________________________________________________\n");
+	
+
+//	root_paths_init(&vars);
+//	big_str_print(vars.root_paths);
 //    big_str_print(env);
 //    char *kek = dollar_expansion(ft_strdup("ls > $a < aboba | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope"), &vars);
 //    dollar_parser(lst, vars);
     
 //    printf("ret_str = %s", kek);
-
 	
 //	head = *huy;
 	
