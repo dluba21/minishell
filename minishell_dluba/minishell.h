@@ -28,6 +28,8 @@
 #define REDIR_HEREDOC 7
 #define PIPE 8
 #define SPACEX 9
+#define TRUNC 10
+#define APPEND 11
 
 //#define CMD 11
 
@@ -67,26 +69,29 @@ typedef struct s_list
 
 typedef	struct s_vars
 {
-	char *reserved_words[8];
-//	t_builtin_ptr builtin_array[7];
+	char *reserved_words[8]; //массив с названиями функций билтинов
+//	t_builtin_ptr builtin_array[7]; //массив с указателяит на функции билтинов
 	
-	char	**root_paths;
-	char	**envp;
-	struct s_list **envp_lst;
-	char	envp_f;
-	char	exit_f;
-	int		status;
+	char	**root_paths; //массив строк с путями к execve (мб убрать куда-то?)
+	char	**envp; //массив скопированный переменныъ окружения (будет подаваться  execve)
+	struct s_list **envp_lst; //список для переменных окружения (легко изменять, в отличие от массива)
+	int		*pid_array; //массив пидов для закрытия их, мб запихать вотдельную структуру чисто для executor?
+	char	envp_f; //флаг на то,изменилась ли переменная окружения и нужно ли пересоздавать массив
+	char	exit_f; //флаг что нужен выход из ф-ции
+	int		status; //мб убрать так как можно переменную отдельную создать в функции executor
+	int		exit_status; //
+	char	*term_pid; //пид терминала для $$
 
 }		t_vars;
 
 typedef	struct s_cmd
 {
-	struct s_list	**files_in;
-	struct s_list	**files_out;
-	struct s_list	**files_heredoc; //иду по списку и открываю
+	struct s_list	**files_in; //файлы для считывания
+	struct s_list	**files_out; // файлы для вывода
+	struct s_list	**files_heredoc; //строки-разделители (нахуя?)
 	struct s_list	**args_lst; //первый аргумент - сама программа(команда)!!! дальше аргументы команды
-	char			**args_array;
-	struct s_vars	*vars; //здесь переменные окружения
+	char			**args_array; // первый аргумент - название команды, остальное - аргументы
+	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
 	
 }				t_cmd;
 
@@ -135,6 +140,7 @@ void	big_str_print(char **big_str);
 int		ft_strcmp(char *str1, char *str2);
 int		ft_strncmp(char *s1, char *s2, int n);
 char	**ft_split(char *s, char c);
+char	*ft_itoa(int n);
 
 
 int	root_paths_init(t_vars *vars); //создает массив строк с путями к командам, надо зачиситить от ликов потом, это вызвать в дочернем процессе

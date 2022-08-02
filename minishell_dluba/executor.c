@@ -49,6 +49,88 @@ char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths) //билтин точ
 	return (NULL);
 }
 
+
+
+
+
+
+
+int	child_process(t_list **llst, t_vars *vars, int pipe_fd[2], int i) //vars могу вытащить из cmd так что лишний аргум
+{
+	if (i == 0)
+	{
+		dup2()
+	}
+	
+		
+//	execve();
+}
+
+int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть билтин или нет и количество функций учесть(разная ситуация будет)
+{
+	int		pipe_fd[2];
+	int		*pid_array;
+	t_list	*llst_elem;
+	int		i;
+	int		n;
+	int		status;
+
+	if (!llst || !(*llst)) //потом убрать
+		return (printf("error: no llst or llst_elem in exec\n"));
+	llst_elem = *llst;
+	n = lst_len(llst); //количество функций
+	if (n == 1)
+	{
+		//выполнить одну команду(дописать);
+		printf("single cmd\n");
+		return (0); //убрать
+	}
+	i = 0;
+	pid_array = (int *)malloc(sizeof(int) * n); //leaks
+	while (i < n)
+	{
+		pipe(pipe_fd);
+		
+		pid_array[i] = fork();
+		if (pid_array[i] == 0)
+		{
+			child_process(llst, vars, i, pipe_fd);
+		}
+		if (pid_array[i] != 0) //мб лишняя проверка так как child точно завершится
+		{
+//			dup2
+			llst_elem = llst_elem->next;
+			i++;
+		}
+	}
+	while (i--)
+	{ //вроде тоже нужен WTERMSIG(status)
+//		ret_pid = waitpid(-1, &status, 0); //-1  или 0 первый аргумент?
+		if (waitpid(-1, &status, 0) == pid_array[n - 1] && WIFEXITED(status)) //нам нужен статус последней команды
+			vars->exit_status = WEXITSTATUS(status); //вытаскивает статус выхода последней команды для $?
+		//надо ли чистить статус каждый раз?
+		
+	}
+		//сначала открыть пайп
+		//не найдена команда уже по ходу дела
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //t_builtin_ptr *choose_built_in(char *cmd, t_vars *vars) //подать cmd->args[0], возврат указателя на ф-цию
 //{
 //	int	i;

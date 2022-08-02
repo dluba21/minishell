@@ -135,7 +135,7 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 	tmp = str; //free в конце
 	ret_str = ft_strdup(""); //нет доллара или ничего после доллара, дальше ? $ или переменная или кавычки
 	//первый кусок до раскрытия (инициализция)
-	not_dollar_part(&str, &ret_str); //исправить, почему то обрезает одну букву перед долларом!!!!!
+	not_dollar_part(&str, &ret_str);
 	while (*str)
 	{
 //		end = ft_strchr(str + 1, "$"); // нашел доллар
@@ -146,12 +146,13 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 		}
 		else if (*str == '?')
 		{
-			ret_str = ft_strjoin(ret_str, ft_strdup("{status_terminal}")); //статус терминала дописать потом
+			ret_str = ft_strjoin(ret_str, ft_itoa(vars->exit_status));
+			
 			str++;
 		}
 		else if (*str == '$')
 		{
-			ret_str = ft_strjoin(ret_str, ft_strdup("{status_last_cmd}")); //статус дописать потом
+			ret_str = ft_strjoin(ret_str, vars->term_pid)); //статус терминала дописать потом
 			str++;
 		}
 		else if (*str == '{') //на кавычку потом обработка еще если париться
@@ -186,6 +187,8 @@ int	dollar_parser(t_list **lst, t_vars *vars)
 	{
 		if (head->key == EXP_FIELD || head->key == WORD)
 			head->val = dollar_expansion(head->val, vars);
+		if (head->key == EXP_FIELD || head->key == WORD || head->key == FIELD)
+			head->key = WORD; //чтобы потом не делать кучу строчек на условия
 		head = head->next;
 	}
 	return (0);

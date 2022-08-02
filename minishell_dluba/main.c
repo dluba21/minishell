@@ -55,7 +55,7 @@ int main(int argc, char **argv, char **env)
 //	printf("len = %d\n", big_str_len(env));
 //	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
 	//___________________________________________________________________________________________________________________________
-	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | > \"arbidol\" bruh $? || abobus  1 lol| denis no 3$$$ | pop durak dope ", &vars);
+	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
 //
 //	huy = bash_args_lst_lexer("	ls >> pop >> kek | cat", &vars);
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");

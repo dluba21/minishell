@@ -44,14 +44,16 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 	else if (head_lst->key == REDIR_OUT)
 	{
 		head_lst = head_lst->next;
+		head_lst->key = TRUNC; //ключ теперь - флаг на права!!!!!
 		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_APPEND) //сделать флаг
 	{
 		head_lst = head_lst->next;
+		head_lst->key = APPEND; //ключ теперь - флаг на права!!!!!
 		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
 	}
-	else if (head_lst->key == WORD || head_lst->key == EXP_FIELD || head_lst->key == FIELD) //команда и заполнение аргументов //чекуть как исправить ls >> aboba kek
+	else if (head_lst->key == WORD) //уже раскрыл все доллары и поменял слова на WORD все //команда и заполнение аргументов //чекуть как исправить ls >> aboba kek
 		lst_push_back(cmd->args_lst, lst_elem_copy(head_lst));
 
 	if (head_lst && head_lst->key != PIPE) //переходим к следующему слову, если не конец и не пайп
@@ -66,17 +68,21 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 	return (head_lst);
 }
 
-int	check_pipes(t_list *head)
+int	check_pipes_redir(t_list *head)
 {
 	while (head)
 	{
 		if (head->key == PIPE)
 		{
-			if (!head->prev || (head->prev && head->prev->key == PIPE))
+			if (!head->prev || head->prev->key == PIPE)
 				return (1);
-			if (!head->next || (head->next && head->next->key == PIPE))
+			if (!head->next | head->next->key == PIPE)
 				return (1);
 		}
+		if ((head->key == REDIR_APPEND || head->key == REDIR_OUT) && (!head->next || head->next->key != WORD))
+			return (1);
+		if ((head->key == REDIR_HEREDOC || head->key == REDIR_OUT) && (!head->next || head->next->key != WORD))
+			return (1);
 		head = head->next;
 	}
 	return (0);
@@ -97,7 +103,6 @@ t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 			break;
 		head_lst = cmd_parser(head_lst, llst_elem, llst_elem->val);
 	}
-	
 	t_cmd *cmd_1 = llst_elem->val;
 
 //	lst_print_tokens(cmd->files_out);
@@ -109,32 +114,6 @@ t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 	return (llst_elem);
 }
 
-
-
-
-
-//
-//t_list	**llst_elem_new(t_list *head_lst) //задел на бонус
-//{
-//	t_list	**llst_elem;
-//	t_list	*head_llst_elem;
-//	t_list	*tmp;
-//
-//
-//	if (!head_lst)
-//		return (NULL);
-//	llst_elem = lst_new(0);
-//	while (head_lst)
-//	{
-//		if (head_lst->key == PIPE)
-//			break;
-//		lst_push_back(llst_elem, lst_elem_copy(head_lst));
-//		head_lst = head_lst->next;
-//	}
-////	if (head_lst && head_lst->key != PIPE) //не добавлял последний элемент раньше
-////		lst_push_back(llst_elem, lst_elem_copy(head_lst));
-//	return (llst_elem);
-//}
 
 t_list	**llst_new(t_list	**lst) //задел на бонус: список списков команд и пайпов
 {
@@ -149,9 +128,9 @@ t_list	**llst_new(t_list	**lst) //задел на бонус: список сп�
 
 	if (!head_lst)
 		return (NULL);
-	if (check_pipes(head_lst)) //тут || и | | не различаются (без бонусов норм)
+	if (check_pipes_redir(head_lst)) //тут || и | | не различаются (без бонусов норм)
 	{
-		printf("pipe error\n");
+		printf("pipe or redir syntax error\n");
 		return (NULL); //зафришить все говно
 	}
 	llst = lst_new(0);

@@ -29,7 +29,7 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 	char **ret_str;
 
 	i = 0;
-    ret_str = NULL;
+	ret_str = NULL;
 	while (big_str[i])
 		i++;
 	ret_str = (char **)malloc(sizeof(char *) * (i + 1));
@@ -55,7 +55,7 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 
 //int envp_init(t_vars *vars, char **envp)
 
-int envp_init(t_vars *vars, char **envp)
+int envp_init(t_vars *vars, char **envp) //инициализация переменных оркжуения в структуре
 {
 	int	i;
 	int	j;
@@ -76,12 +76,13 @@ int envp_init(t_vars *vars, char **envp)
 	
 	return (0);
 }
-
-void builtin_array_creator(t_vars *vars)
-{
-	
+//
+//void builtin_array_creator(t_vars *vars) //инициализация массива с указателями на функции в структуре
+//{
 //	vars->builtin_array = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
-}
+//{
+	
+
 //◦ echo with option -n
 //◦ cd with only a relative or absolute path
 //◦ pwd with no options
@@ -94,6 +95,9 @@ int	vars_initializing(t_vars *vars, char **envp)
 {
 //	builtin_array_creator(vars);
 	envp_init(vars, envp);
+	vars->exit_status = 0;
+	vars->status = 0;
+	vars->term_pid= ft_itoa(1234); //leaks и дописать
 //	lst_print(vars->envp_lst);
 	
 	
