@@ -20,29 +20,29 @@ int	root_paths_init(t_vars *vars) //создает массив строк с п
 	return (printf("error: no paths in env!\n") - 25);
 }
 
-char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths) //билтин точно нет уже, отсею выше !!!!ПОСЛЕ ЭТОГО ЗАФРИШИТЬ ROOT_PATHS снаружи!!!
+char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает путь к команде для execve(билтин точно нет уже, отсею выше !!!!ПОСЛЕ ЭТОГО ЗАФРИШИТЬ ROOT_PATHS снаружи!!!)
 {
 	char	*tmp;
 	char	*path;
-	char	*cmd;
+	char	*cmd_name;
 	int		i;
 
-	cmd = (char *)(*(cmd_elem->args_lst))->val;
-	if (!cmd) //убрать так как проверка на нулл выше
+	cmd_name = (char *)(*(cmd_elem->args_lst))->val; //первый элемент
+	if (!cmd_name) //убрать так как проверка на нулл выше
 	{
 		printf("error: cmd is null!\n");
 		return (NULL);
 	}
-	if (access(cmd, X_OK | F_OK) != -1)
-		return (ft_strdup(cmd));
+	if (access(cmd_name, X_OK | F_OK) != -1)
+		return (ft_strdup(cmd_name)); //leaks
 	i = 0;
 	while (root_paths[i])
 	{
 		tmp = ft_strjoin(root_paths[i++], "/"); //leaks тут точно
-		path = ft_strjoin(tmp, cmd);
+		path = ft_strjoin(tmp, cmd_name);
 		free(tmp);
 		if (access(path, X_OK | F_OK) != -1)
-			return (path);
+			return (path); //leaks
 		free(path);
 	}
 	printf("error: command not found!\n");
@@ -55,13 +55,25 @@ char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths) //билтин точ
 
 
 
-int	child_process(t_list **llst, t_vars *vars, int pipe_fd[2], int i) //vars могу вытащить из cmd так что лишний аргум
+
+
+
+int	child_process(t_list *llst_elem, t_vars *vars, int i) //vars могу вытащить из cmd так что лишний аргум
 {
-	if (i == 0)
-	{
-		dup2()
-	}
-	
+	char	*path_to_cmd;
+	t_cmd	*cmd;
+
+//	if (i == 0)
+//	{
+//		dup2()
+//	}
+	cmd = (t_cmd *)llst_elem->val;
+	path_to_cmd = compose_cmd_path(cmd, vars->root_paths);
+	if (!path_to_cmd)
+		printf("command not found: %s\n", *(cmd->args_lst->val)); //исправить на ретерн
+	if (env_f)
+		vars->envp = env_new();
+	//закрыть все лишние пайпы
 		
 //	execve();
 }
@@ -74,6 +86,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	int		i;
 	int		n;
 	int		status;
+	int		**pipe_array;
 
 	if (!llst || !(*llst)) //потом убрать
 		return (printf("error: no llst or llst_elem in exec\n"));
@@ -87,6 +100,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	}
 	i = 0;
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks
+	pipe_array = (int **)malloc(sizeof(int *) * );
 	while (i < n)
 	{
 		pipe(pipe_fd);

@@ -122,6 +122,26 @@ char	*ft_strset(int n)
 	return (str);
 }
 
+char	*ft_strcpy(char *src)
+{
+	char	*str;
+	int		n;
+	int		i;
+
+	n = ft_strlen(src);
+	str = malloc(n + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		str[i] = src[i];
+		i++;
+	}
+	str[n] = 0;
+	return (str);
+}
+
 void big_str_print(char **big_str)
 {
 	char **tmp;

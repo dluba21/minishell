@@ -22,6 +22,37 @@ void free_big_str(char **big_str) //освобождает массив стро
 	free(temp);
 }
 
+//char **big_string_copy(char **big_str) //копирует массив строк //старая версия
+//{
+//	int	i;
+//	int	j;
+//	char **ret_str;
+//
+//	i = 0;
+//	ret_str = NULL;
+//	while (big_str[i])
+//		i++;
+//	ret_str = (char **)malloc(sizeof(char *) * (i + 1));
+//	if (!ret_str) //mozhno udalit'  esle chto dlya normi
+//		return (NULL);
+//	i = 0;
+//	while (big_str[i])
+//	{
+//		ret_str[i] = (char *)malloc(ft_strlen(big_str[i])); //leaks mb with exit
+//		if (!ret_str[i])
+//			return (NULL);
+//		j = 0;
+//		while (big_str[i][j])
+//		{
+//			ret_str[i][j] = big_str[i][j];
+//			j++;
+//		}
+//		i++;
+//	}
+//	ret_str[i] = NULL;
+//	return (ret_str);
+//}
+
 char **big_string_copy(char **big_str) //копирует массив строк
 {
 	int	i;
@@ -38,20 +69,17 @@ char **big_string_copy(char **big_str) //копирует массив стро�
 	i = 0;
 	while (big_str[i])
 	{
-		ret_str[i] = (char *)malloc(ft_strlen(big_str[i])); //leaks mb with exit
+		ret_str[i] = ft_strcpy(big_str[i]);
 		if (!ret_str[i])
 			return (NULL);
-		j = 0;
-		while (big_str[i][j])
-		{
-			ret_str[i][j] = big_str[i][j];
-			j++;
-		}
 		i++;
 	}
 	ret_str[i] = NULL;
 	return (ret_str);
 }
+
+
+
 
 //int envp_init(t_vars *vars, char **envp)
 
@@ -66,7 +94,7 @@ int envp_init(t_vars *vars, char **envp) //инициализация перем
 	vars->envp = big_string_copy(envp);
 	if (!vars->envp)
 		return (write(2, "envp malloc error\n", 18) - 19);
-	vars->envp_lst = lst_env_copy(envp);
+	vars->envp_lst = lst_env_copy(envp); 
 	if (!vars->envp_lst)
 		return (write(2, "envp_lst malloc error\n", 18) - 23);
 	

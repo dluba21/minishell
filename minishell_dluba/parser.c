@@ -54,7 +54,7 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == WORD) //уже раскрыл все доллары и поменял слова на WORD все //команда и заполнение аргументов //чекуть как исправить ls >> aboba kek
-		lst_push_back(cmd->args_lst, lst_elem_copy(head_lst));
+		lst_push_back(cmd->args_lst, lst_elem_copy(head_lst)); 
 
 	if (head_lst && head_lst->key != PIPE) //переходим к следующему слову, если не конец и не пайп
 		head_lst = head_lst->next;

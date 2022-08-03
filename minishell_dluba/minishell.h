@@ -28,6 +28,8 @@
 #define REDIR_HEREDOC 7
 #define PIPE 8
 #define SPACEX 9
+
+
 #define TRUNC 10
 #define APPEND 11
 
@@ -54,7 +56,6 @@
 typedef struct s_list
 {
 	void			*val;
-//	void			*key;
 	int				key;
 	struct s_list	*next;
 	struct s_list	*prev;
@@ -88,37 +89,44 @@ typedef	struct s_cmd
 {
 	struct s_list	**files_in; //файлы для считывания
 	struct s_list	**files_out; // файлы для вывода
-	struct s_list	**files_heredoc; //строки-разделители (нахуя?)
+	struct s_list	**files_heredoc; //строки-разделители (нахуя надо, если последний только разделитель нужен?)
 	struct s_list	**args_lst; //первый аргумент - сама программа(команда)!!! дальше аргументы команды
-	char			**args_array; // первый аргумент - название команды, остальное - аргументы
+	char			**args_array; // первый аргумент - название команды, остальное - аргументы к команде
 	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
 	
 }				t_cmd;
 
-int envp_init(t_vars *vars, char **envp);
-int	vars_initializing(t_vars *vars, char **envp);
+//функции иницализации
+int		envp_init(t_vars *vars, char **envp); //инициализирует и копирует в массив char **envp массив строк с аргумента main(..., char **env)
+t_list	**lst_env_copy(char **envp); //копирует char **env в список
+int		vars_initializing(t_vars *vars, char **envp); //делает верхние дев функции и зануляет остальное в структуре vars
 
-int	lst_clear(t_list **lst);
-t_list	*lst_elem_new(void	*value, int key); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-t_list	*lst_elem_copy(t_list *elem);
-int big_str_len(char **big_str);
-int lst_len(t_list **lst);
+//функции двусвязных списков
+int	lst_clear(t_list **lst); //фришит весь список
+t_list	*lst_elem_new(void	*value, int key); //создает элемент списка с ключом и значением
+t_list	*lst_elem_copy(t_list *elem); //копирует элемент списка и его ключ со значением (leaks), указатели prev и next равны NULL
+int		lst_len(t_list **lst);
 void	lst_push_back(t_list **lst, t_list *new_node);
 void	lst_push_front(t_list **lst, t_list *new_node);
-t_list **lst_new(int n);
-t_list	**lst_env_copy(char **envp);
+t_list	**lst_new(int n);
+int		lst_elem_print(t_list *node);
+int		lst_print(t_list **lst);
+int		lst_elem_print_token(t_list *node);
+int		lst_print_tokens(t_list **lst);
+t_list	*lst_get_last(t_list **lst);
+t_list	*lst_get_first(t_list *tale);
+int		lst_elem_free(t_list *node);
 
-int	lst_elem_print(t_list *node);
-int	lst_print(t_list **lst);
-int	lst_elem_print_token(t_list *node);
-int	lst_print_tokens(t_list **lst);
+//функции со списком команд
+void	llst_cmd_elem_print(t_list *llst_elem);  //вывести файлы и аргументы конкретной команды
+void	llst_cmd_n_elem_print(t_list **llst, int n); //вывести файлы и аргументы итой команды
+void	llst_cmd_print(t_list **llst); //вывести файлы и аргументы всех команд
 
-int ft_strlen(char *str);
-void free_big_str(char **big_str);
-char **big_string_copy(char **big_str);
-int envp_init(t_vars *vars, char **envp);
-int	vars_initializing(t_vars *vars, char **envp);
 
+//функции со строками и остальные
+int		ft_strlen(char *str);
+void	free_big_str(char **big_str);
+char	**big_string_copy(char **big_str);
 char	*ft_strdup(char *str);
 int ft_isspace(char c);
 int	ft_strcmp(char *s1, char *s2);
@@ -127,9 +135,6 @@ int ft_strchr(char *str, char *c);
 char *quote_str_trim(char *bash_str, char *sym_arr);
 t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars);
 t_list **bash_args_lst_parser(t_list **lst);
-//int ft_strchr(char *str, char *c);
-//int	ft_strncmp(char *s1, char *s2, int n);
-//int		ft_strcmp_n(const char *str1, const char *str2, size_t n);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalpha(int c);
@@ -141,44 +146,38 @@ int		ft_strcmp(char *str1, char *str2);
 int		ft_strncmp(char *s1, char *s2, int n);
 char	**ft_split(char *s, char c);
 char	*ft_itoa(int n);
-
-
-int	root_paths_init(t_vars *vars); //создает массив строк с путями к командам, надо зачиситить от ликов потом, это вызвать в дочернем процессе
-char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths);
-
-
-
-void	is_null(void *ptr);
+char	*ft_strcpy(char *src);
 void	*ft_memcpy(void *src_0, int n); //вставить в lst_elem_cpy
-void	llst_cmd_elem_print(t_list *llst_elem);
-void	llst_cmd_n_elem_print(t_list **llst, int n);
-void	llst_cmd_print(t_list **llst);
+void	is_null(void *ptr); //не ннужна потом
+int		big_str_len(char **big_str);
 
 
-t_list *lst_get_last(t_list **lst);
-t_list *lst_get_first(t_list *tale);
-int		lst_elem_free(t_list *node);
+//функции для сборки пути для execve
+int	root_paths_init(t_vars *vars); //создает массив строк со всеми путями из переменной окружения PATH, уже сделав сплит по ':', (надо зачиситить от ликов потом, это вызвать в дочернем процессе)
+char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths); //создает путь до команды используя root_paths
 
 
 
-//t_list	**llst_elem_new(t_list **lst);
-//t_list	**llst_elem_new(t_list	*head_lst);
-t_list	*llst_elem_new(t_list *head_lst);
+
+//создает логический список - это список llst, элементы которого - структура команд (t_cmd *), он лежит в head_llst->val; в cmd есть списки t_list ** с файлами на ввод,вывод, разделители heredoc, список с командой и аргументами (то есть голова последнего списка - сама команда, остальное - аргументы)
+t_list	*llst_elem_new(t_list *head_lst); //составная функция внутри llst_elem - она добваляет новый элемент в llst и одновременно меняет голову в первоначальном списке токенов lst
 t_list	**llst_new(t_list	**lst); //список списков команд и пайпов
-
 t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd);
 t_list	*cmd_init(void);
 
 
-
+//раскрытие доллара
 int		dollar_parser(t_list **lst, t_vars *vars);
 char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);
 char	*find_env_var(char *str, char **env);
-
 void	env_var_trimmer(char *env_elem, char **buffer);
 char	*env_key_trimmer(char *env_elem);
+
+
+char **envp_new(t_vars **envp_lst);
+
 
 #endif
 
