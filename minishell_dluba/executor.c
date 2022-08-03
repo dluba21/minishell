@@ -51,18 +51,35 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 
 
 
+int	fd_array_new(t_cmd *cmd, int *fd_in_array, int *fd_out_array) //делает мега массив со всеми фдшниками, в нем занесены все фдшники включая пайпы и редиректы
+{
+	t_list	*head;
+
+	infile_array = NULL;
+	outfile_array = NULL;
+	if (cmd->files_in)
+	{
+		infile_array = (int *)malloc(sizeof(int) * )
+		while ()
+	}
+}
 
 
 
 
-
-
+//t_cmd 	*get_cmd_from_llst(t_list **llst)
+//{
+//	return ((llst->val))
+//}
 
 int	child_process(t_list *llst_elem, t_vars *vars, int i) //vars могу вытащить из cmd так что лишний аргум
 {
 	char	*path_to_cmd;
 	t_cmd	*cmd;
+	int		*in_fd;
+	int		*out_fd;
 
+	
 //	if (i == 0)
 //	{
 //		dup2()
@@ -72,7 +89,8 @@ int	child_process(t_list *llst_elem, t_vars *vars, int i) //vars могу выт
 	if (!path_to_cmd)
 		printf("command not found: %s\n", *(cmd->args_lst->val)); //исправить на ретерн
 	if (env_f)
-		vars->envp = env_new();
+		vars->envp = env_new(); //дописать пересоздание env_new в env_funcs
+	
 	//закрыть все лишние пайпы
 		
 //	execve();
@@ -87,6 +105,9 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	int		n;
 	int		status;
 	int		**pipe_array;
+	
+	int		*in_fd;
+	int		*out_fd;
 
 	if (!llst || !(*llst)) //потом убрать
 		return (printf("error: no llst or llst_elem in exec\n"));
@@ -100,10 +121,11 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	}
 	i = 0;
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks
-	pipe_array = (int **)malloc(sizeof(int *) * );
+//	pipe_array = (int **)malloc(sizeof(int *) * );
+	//создать массивы на ввод и вывод c пайпами и редиректами сразу для всех команд а анализировать буду открылось или нет уже внутри чайлда перед dup2 (проверять на -1 и если ошибка, nj ghtrhfofnm команду полностью) в том числе учесть heredoc, походу надо внести в один список с infile heredoc и в ключ занести heredoc он или нет
 	while (i < n)
 	{
-		pipe(pipe_fd);
+		
 		
 		pid_array[i] = fork();
 		if (pid_array[i] == 0)
@@ -116,6 +138,10 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 			llst_elem = llst_elem->next;
 			i++;
 		}
+		
+//		ft_close_all_fd();
+		free(in_fd);
+		free(out_fd);
 	}
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
@@ -145,19 +171,16 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 
 
 
-//t_builtin_ptr *choose_built_in(char *cmd, t_vars *vars) //подать cmd->args[0], возврат указателя на ф-цию
-//{
-//	int	i;
-//
-//	i = 0;
-//	while (vars->reserved_words[i])
-//	{
-//		if (strcmp(cmd, vars->reserved_words[i]))
-//			return (t_builtin_ptr builtin_array[i]);
-//		i++;
-//	}
-//	return (NULL);
-//}
+t_builtin_ptr *choose_built_in(char *cmd, t_vars *vars) //подать cmd->args[0], возврат указателя на ф-цию
+{
+	int	i;
+
+	i = -1;
+	while (i++, vars->reserved_words[i])
+		if (strcmp(cmd, vars->reserved_words[i]))
+			return (t_builtin_ptr builtin_array[i]);
+	return (NULL);
+}
 
 
 
