@@ -8,6 +8,8 @@
 # include <string.h> //ubrat'
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 //# include <>
 
 
@@ -29,9 +31,6 @@
 #define PIPE 8
 #define SPACEX 9
 
-
-#define TRUNC 10
-#define APPEND 11
 
 //#define CMD 11
 

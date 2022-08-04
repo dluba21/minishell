@@ -1,6 +1,10 @@
 //////#include <conio.h>
 //#include <stdio.h>
 //#include <unistd.h>
+//#include <sys/types.h>
+//#include <sys/wait.h>
+//#include <sys/types.h>
+//#include <unistd.h>
 ////
 //////enum Token
 //////{
@@ -48,7 +52,28 @@
 //	char *b = NULL;
 ////	if (!b || *a)
 //	int c;
-//	printf("str = {%d}", c);
+//	int d;
+////	printf("str = {%d}", c);
+//	int pid = fork();
+//	if (!pid)
+//	{
+////		printf("%d", getpid());
+////		sleep(1);
+////		close(0);
+////		close(1);
+//		sleep(1000);
+////		while (1)
+////		{
+////			scanf("%d", &c);
+////			printf("%d\n", c);
+////		}
+//
+//	}
+//	if (pid != 0)
+//	{
+//		printf("%d\n", pid);
+//		waitpid(-1, &d, 0);
+//	}
 ////	if (b || 1)
 ////		printf("ok!\n");
 //}

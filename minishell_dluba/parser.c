@@ -34,24 +34,26 @@ t_list	*cmd_parser(t_list *head_lst, t_list *llst_elem, t_cmd *cmd) //двига
 	if (head_lst->key == REDIR_IN)
 	{
 		head_lst = head_lst->next;
+		head_lst->key = REDIR_IN;
 		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_HEREDOC)
 	{
 		head_lst = head_lst->next;
-		lst_push_back(cmd->files_heredoc, lst_elem_copy(head_lst));
+		head_lst->key = REDIR_HEREDOC;
+		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_OUT)
 	{
 		head_lst = head_lst->next;
-		head_lst->key = TRUNC; //ключ теперь - флаг на права!!!!!
-		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
+		head_lst->key = REDIR_OUT; //ключ теперь - флаг на права!!!!!
+		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == REDIR_APPEND) //сделать флаг
 	{
 		head_lst = head_lst->next;
-		head_lst->key = APPEND; //ключ теперь - флаг на права!!!!!
-		lst_push_back(cmd->files_out, lst_elem_copy(head_lst));
+		head_lst->key = REDIR_APPEND; //ключ теперь - флаг на права!!!!!
+		lst_push_back(cmd->files_in, lst_elem_copy(head_lst));
 	}
 	else if (head_lst->key == WORD) //уже раскрыл все доллары и поменял слова на WORD все //команда и заполнение аргументов //чекуть как исправить ls >> aboba kek
 		lst_push_back(cmd->args_lst, lst_elem_copy(head_lst)); 

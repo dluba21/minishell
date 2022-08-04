@@ -39,6 +39,8 @@ int	pipes_len(t_list **llst) //количество всех файлов и т�
 	llst_elem = *llst;
 	while (llst_elem)
 	{
+		if (!lst_len((llst_elem->val)->files_in))
+			
 		cmd_files_len(llst_elem->val, i);
 		llst_elem = llst_elem->next;
 	}
