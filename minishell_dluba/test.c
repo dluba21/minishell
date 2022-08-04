@@ -5,6 +5,9 @@
 //#include <sys/wait.h>
 //#include <sys/types.h>
 //#include <unistd.h>
+//#include <fcntl.h>
+//# include <errno.h>
+//#include <string.h>
 ////
 //////enum Token
 //////{
@@ -45,6 +48,25 @@
 ////	printf("e = %d\n", e);
 ////	printf("%d", sizeof(enum Token));
 ////}
+//int ft_strlen(char *str)
+//{
+//	int	i;
+//
+//	i = 0;
+//	if (!str)
+//		return (-1);
+//	while (str[i])
+//		i++;
+//	return (i);
+//}
+//
+//int	ft_putstr_fd(char *s, int fd)
+//{
+//	if (s)
+//		return (write(fd, s, ft_strlen(s)));
+//}
+//
+//
 //
 //int main()
 //{
@@ -61,19 +83,32 @@
 ////		sleep(1);
 ////		close(0);
 ////		close(1);
+////				ft_putstr_fd("kek", 1);
+////		printf("kek");
 //		sleep(1000);
 ////		while (1)
 ////		{
-////			scanf("%d", &c);
+//////			scanf("%d", &c);
 ////			printf("%d\n", c);
 ////		}
 //
 //	}
 //	if (pid != 0)
 //	{
-//		printf("%d\n", pid);
+//
+//		
+////		errno = -1;
+//		
+////		perror("asfsaf");
+////		printf("%d\n", pid);
 //		waitpid(-1, &d, 0);
 //	}
+//
+////	int fd = open("asffsafa", O_RDONLY, 0644);
+////	printf("fd = %d\n", fd);
+//////	printf("%s", strerror(errno));
+////	errno = 1;
+////	perror("error");
 ////	if (b || 1)
 ////		printf("ok!\n");
 //}

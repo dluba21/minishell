@@ -36,6 +36,7 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 	if (access(cmd_name, X_OK | F_OK) != -1)
 		return (ft_strdup(cmd_name)); //leaks
 	i = 0;
+//	printf("cmd = %s\n", cmd_name);
 	while (root_paths[i])
 	{
 		tmp = ft_strjoin(root_paths[i++], "/"); //leaks тут точно
@@ -45,11 +46,10 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 			return (path); //leaks
 		free(path);
 	}
-	printf("error: command not found!\n");
 	return (NULL);
 }
 
-int *open_pipes(t_list **llst, int len) //создаю массив из пайпов, пайпов меньше на один чем команд как максимум
+int **open_pipes(t_list **llst, int len) //создаю массив из пайпов, пайпов меньше на один чем команд как максимум
 {
 	t_list	*head;
 	int		**pipe_array;
@@ -57,14 +57,14 @@ int *open_pipes(t_list **llst, int len) //создаю массив из пай�
 	int		i;
 
 	head = *llst;
-	i = 0;
+	
 	if (len < 2) //нет пайпов
 		return (NULL);
-	pipe_array = (int **)malloc(sizeof(int *) * len));
-	
+	pipe_array = (int **)malloc(sizeof(int *) * len); //leaks
+	i = 0;
 	while (head && head->next)
 	{
-		pipe_array[i] = (int *)(sizeof(int) * 2);
+		pipe_array[i] = (int *)malloc(sizeof(int) * 2); //leaks
 		pipe(pipe_fd);
 		pipe_array[i][0] = pipe_fd[0];
 		pipe_array[i][1] = pipe_fd[1];
@@ -72,6 +72,7 @@ int *open_pipes(t_list **llst, int len) //создаю массив из пай�
 		i++;
 	}
 	pipe_array[i] = NULL;
+	return (pipe_array);
 }
 
 //int	get_fd_in_from_file_lst(t_list **files_in, int *pipe_array) //возвращает, дескриптор, который внесем в массив и открывает другие файлы
@@ -127,7 +128,7 @@ int *open_pipes(t_list **llst, int len) //создаю массив из пай�
 //
 //		while ()
 //	}
-}
+//}
 
 
 
@@ -149,14 +150,14 @@ void	close_all_pipes(int **pipe_array)
 }
 
 
-int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i)
+int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int n, int *heredoc_f) //открывает файлы и делает dup2 с ними или с пайпами
 {
-	t_head	*head;
-	int		heredoc_f;
+	t_list	*head;
+//	int		heredoc_f;
 
 	*in_fd = 0; //закроется ли STDIN и STDOUT?
 	*out_fd = 1;
-//	heredoc_f = 0;
+	*heredoc_f = 0; //надо ли инициализировать?
 	head = *(cmd->files_in);
 	while (head)
 	{
@@ -164,63 +165,75 @@ int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i)
 		close(*out_fd);
 		if (head->key == REDIR_IN)
 		{
-			*in_fd = open(files_in->val, O_RDONLY, 0644);
-			heredoc_f = 0;
+			*in_fd = open(head->val, O_RDONLY, 0644);
+			*heredoc_f = 0;
 		}
 		else if (head->key == REDIR_OUT)
-			*in_fd = open(files_in->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+			*in_fd = open(head->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		else if (head->key == REDIR_APPEND)
-			*in_fd = open(files_in->val, O_WRONLY | O_APPEND | O_CREAT, 0644);
+			*in_fd = open(head->val, O_WRONLY | O_APPEND | O_CREAT, 0644);
 		else if (head->key == REDIR_HEREDOC)
-			heredoc_f = 1;
+			*heredoc_f = 1;
 		if (*in_fd == -1)
-			return (printf("%s: No such file or directory\n"), files_in->val);
+			return (ft_perror("error") - 1);
 		head = head->next;
 	}
-	if (!i && *in_fd == 0 && !heredoc_f)
+	if (!i && *in_fd == 0 && !(*heredoc_f))
 		*in_fd = pipe_array[i][0];
-	if (i != n && *out_fd == 1) //n добавить
+	if (i != n - 1 && *out_fd == 1) //n добавить
 		*out_fd = pipe_array[i][1];
-	dup2(*in_fd, 0);
-	dup2(*out_fd, 1);
-	close_all_pipes(pipe_array);
+	if (dup2(*in_fd, 0) == -1)
+		return (ft_perror("error") - 1);
+	if (dup2(*out_fd, 1) == -1)
+		return (ft_perror("error") - 1);
+	close_all_pipes(pipe_array); //закрыл все лишние пайпы
 	return (0);
 }
 
-int	open_and_dup(t_list *llst_elem, t_vars *vars, int **pipe_array, int i)
-{
-	int	in_fd;
-	int	out_fd;
+//int	open_and_dup(t_list *llst_elem, t_vars *vars, int **pipe_array, int i)
+//{
+//	int	in_fd;
+//	int	out_fd;
+//
+//	if (llst_elem->next)
+//	{
+//
+//	}
+//}
 
-	if (llst_elem->next)
-	{
-		
-	}
-}
 
-
-int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i) //vars могу вытащить из cmd так что лишний аргум
+int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int n) //vars могу вытащить из cmd так что лишний аргум
 {
 	char	*path_to_cmd;
 	t_cmd	*cmd;
-	int		*in_fd;
-	int		*out_fd;
+	int		in_fd;
+	int		out_fd;
+	char	**args_str;
+	int		heredoc_f;
 
 	
-//	if (i == 0)
-//	{
-//		dup2()
-//	}
-	cmd = (t_cmd *)llst_elem->val;
-	path_to_cmd = compose_cmd_path(cmd, vars->root_paths);
-	if (!path_to_cmd)
-		printf("command not found: %s\n", *(cmd->args_lst->val)); //исправить на ретерн
-	if (env_f)
-		vars->envp = env_new(); //дописать пересоздание env_new в env_funcs
+	printf("pid [%d] = {%d}\n", i, getpid());
 	
-	//закрыть все лишние пайпы
-		
-//	execve();
+	cmd = (t_cmd *)llst_elem->val;
+	open_files(cmd, &in_fd, &out_fd, pipe_array, i, n, &heredoc_f); //занести все переменные  в структуру
+	heredoc_parser(llst_elem->files_in); //heredoc парсит весь список файлов на поиск хердоков и открывает все, но только последний юзает
+	//НАДО ИСПРАВИТь - dup2 фдшника heredoc запихать в open_files
+	//еще в хердоке надо будет сделать отедльный хэндлер, так как там сигналы работают по-другому
+
+	if (vars->envp_f)
+		vars->envp = convert_lst_to_str(vars->envp_lst); //дописать пересоздание env_new в env_funcs
+
+	root_paths_init(vars);
+	path_to_cmd = compose_cmd_path(cmd, vars->root_paths);
+	args_str = convert_lst_to_str(cmd->args_lst);
+//	(const char *filename, char *const argv [], char *const envp[]);
+//	printf("path = %s\n", path_to_cmd);
+//	big_str_print(args_str);
+//	sleep(100)
+	if (!path_to_cmd)
+		return (printf("%s: command not found!\n", *args_str) * 0 - 1);
+	if (execve(path_to_cmd, args_str, vars->envp) == -1)
+		return (ft_perror("error") - 1);
 }
 
 int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть билтин или нет и количество функций учесть(разная ситуация будет)
@@ -235,6 +248,9 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	
 	int		*in_fd;
 	int		*out_fd;
+	
+	int ret;
+	int exit_mac;
 
 	if (!llst || !(*llst)) //потом убрать
 		return (printf("error: no llst or llst_elem in exec\n"));
@@ -247,29 +263,35 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 //		return (0); //убрать
 	}
 	i = 0;
-	pid_array = (int *)malloc(sizeof(int) * n); //leaks
-	pipe_array = pipes_open(llst, n);
-	//создать массивы на ввод и вывод c пайпами и редиректами сразу для всех команд а анализировать буду открылось или нет уже внутри чайлда перед dup2 (проверять на -1 и если ошибка, nj ghtrhfofnm команду полностью) в том числе учесть heredoc, походу надо внести в один список с infile heredoc и в ключ занести heredoc он или нет
+	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
+	pipe_array = open_pipes(llst, n); //массив с пайпами, их количество = количеству команд
 	while (i < n)
 	{
+		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому
 		pid_array[i] = fork();
 		if (pid_array[i] == 0)
-			child_process(llst, vars, pipe_array, i);
+			child_process(llst_elem, vars, pipe_array, i, n);
 		llst_elem = llst_elem->next;
 		i++;
 	}
-//		ft_close_all_fd();
 	close_all_pipes(pipe_array);
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
 //		ret_pid = waitpid(-1, &status, 0); //-1  или 0 первый аргумент?
-		if (waitpid(-1, &status, 0) == pid_array[n - 1] && WIFEXITED(status)) //нам нужен статус последней команды
-			vars->exit_status = WEXITSTATUS(status); //вытаскивает статус выхода последней команды для $?
-		//надо ли чистить статус каждый раз?
+		if (ret = waitpid(-1, &status, 0), ret == pid_array[n - 1])  //нам нужен статус последней команды
+			//НЕ РАБОТАЕТ ПОЧЕМУ_ТО УСЛОВИЕ(потому что WIFEXITED(status) показывает что неудачно завершилась команда - вернуть ошибку)
+		{
+			exit_mac = WIFEXITED(status);
+			vars->exit_status = WEXITSTATUS(status);
+//
+//			exit_mac = WIFSIGNALED(status);
+//			vars->exit_status = WTERMSIG(status);
+		}
+
+			//вытаскивает статус выхода последней команды для $?
 		
+		//надо ли чистить статус каждый раз?
 	}
-		//сначала открыть пайп
-		//не найдена команда уже по ходу дела
 }
 
 
@@ -288,16 +310,16 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 
 
 
-t_builtin_ptr *choose_built_in(char *cmd, t_vars *vars) //подать cmd->args[0], возврат указателя на ф-цию
-{
-	int	i;
-
-	i = -1;
-	while (i++, vars->reserved_words[i])
-		if (strcmp(cmd, vars->reserved_words[i]))
-			return (t_builtin_ptr builtin_array[i]);
-	return (NULL);
-}
+//t_builtin_ptr *choose_built_in(char *cmd, t_vars *vars) //подать cmd->args[0], возврат указателя на ф-цию
+//{
+//	int	i;
+//
+//	i = -1;
+//	while (i++, vars->reserved_words[i])
+//		if (strcmp(cmd, vars->reserved_words[i]))
+//			return (t_builtin_ptr builtin_array[i]);
+//	return (NULL);
+//}
 
 
 

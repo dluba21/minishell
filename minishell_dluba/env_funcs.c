@@ -1,19 +1,21 @@
 #include "minishell.h"
 
-char **envp_new(t_vars **envp_lst) //создает новый массив переменных окуржения если в envp_lst были произведены изенеия (envp_f = 1)
+char **convert_lst_to_str(t_list **lst) //создает новый массив переменных окуржения если в envp_lst были произведены изенеия (envp_f = 1)
 {
 	t_list	*head;
-	char	**envp;
+	char	**ret_str;
 	char	**tmp;
 
-	if (!envp_lst || !(*envp_lst))
+	if (!lst || !(*lst))
 		return (NULL);
-	envp = (char **)malloc(sizeof(char *) * (lst_len(envp_lst) + 1));
+	head = *lst;
+	ret_str = (char **)malloc(sizeof(char *) * (lst_len(lst) + 1));
+	tmp = ret_str;
 	while (head)
 	{
 		*tmp++ = ft_strcpy(head->val);
 		head = head->next;
 	}
 	*tmp = NULL;
-	return (envp);
+	return (ret_str);
 }

@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+int ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (-1);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+
 static char	*blank_kostyl(void)
 {
 	char	*s1;
@@ -193,3 +206,14 @@ int	ft_strncmp(char *str_1, char *str_2, int n)
 	return (0);
 }
 
+int	ft_putstr_fd(char *s, int fd)
+{
+	if (s)
+		return (write(fd, s, ft_strlen(s)));
+}
+
+int ft_perror(char *str)
+{
+	perror(str);
+	return (0);
+}

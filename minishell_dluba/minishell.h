@@ -10,6 +10,10 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <errno.h>
+# include <string.h>
+# include "get_next_line/get_next_line.h"
+
 //# include <>
 
 
@@ -115,6 +119,8 @@ int		lst_print_tokens(t_list **lst);
 t_list	*lst_get_last(t_list **lst);
 t_list	*lst_get_first(t_list *tale);
 int		lst_elem_free(t_list *node);
+char	**convert_lst_to_str(t_list **lst);
+
 
 //функции со списком команд
 void	llst_cmd_elem_print(t_list *llst_elem);  //вывести файлы и аргументы конкретной команды
@@ -149,6 +155,8 @@ char	*ft_strcpy(char *src);
 void	*ft_memcpy(void *src_0, int n); //вставить в lst_elem_cpy
 void	is_null(void *ptr); //не ннужна потом
 int		big_str_len(char **big_str);
+int		ft_perror(char *str); //возвращает int = 0 в отличие от perror, поэтому можно писать return(ft_perror)
+int		ft_putstr_fd(char *s, int fd);
 
 
 //функции для сборки пути для execve
@@ -175,7 +183,10 @@ void	env_var_trimmer(char *env_elem, char **buffer);
 char	*env_key_trimmer(char *env_elem);
 
 
-char **envp_new(t_vars **envp_lst);
+//executor часть
+int	exec_cmd(t_list **llst, t_vars *vars);
+int	root_paths_init(t_vars *vars);
+void	heredoc_parser(t_list **files);
 
 
 #endif

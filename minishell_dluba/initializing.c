@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-int ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (-1);
-	while (str[i])
-		i++;
-	return (i);
-}
-
 void free_big_str(char **big_str) //освобождает массив строк
 {
 	char	**temp;

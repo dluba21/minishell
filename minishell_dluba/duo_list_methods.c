@@ -303,14 +303,14 @@ void	llst_cmd_elem_print(t_list *llst_elem)
 	printf("cmd and args:\n");
 	lst_print_tokens(((t_cmd *)(llst_elem->val))->args_lst);
 	
-	printf("files_in:\n");
+	printf("files:\n");
 	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_in);
 
-	printf("\nfiles_out:\n");
-	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
-
-	printf("\nfiles_heredoc:\n");
-	lst_print_tokens(((t_cmd *)(llst_elem)->val)->files_heredoc);
+//	printf("\nfiles_out:\n");
+//	lst_print_tokens(((t_cmd *)(llst_elem->val))->files_out);
+//
+//	printf("\nfiles_heredoc:\n");
+//	lst_print_tokens(((t_cmd *)(llst_elem)->val)->files_heredoc);
 }
 
 	

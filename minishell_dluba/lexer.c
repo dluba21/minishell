@@ -232,7 +232,7 @@ t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars)
 	}
 	printf("\n\n\n\nresult:\n");
 	free(isspecial_arr); //также фришить при ошибках надо
-//    dollar_parser(lst, vars);
+	dollar_parser(lst, vars);
 	return (lst);
 }
 

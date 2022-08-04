@@ -19,7 +19,9 @@ int main(int argc, char **argv, char **env)
 	if (vars_initializing(&vars, env)) //ОШИБКА - ИНОГДА ФРИШИТСЯ ВТОРОЙ РАЗ!!!!
 		return (0);
 //	big_str_print(env);
-	root_paths_init(&vars);
+//	root_paths_init(&vars);
+	
+	
 
 //	char *key;
 //	buffer_1 = env_trimmer(vars.envp[0], buffer_1);
@@ -53,11 +55,11 @@ int main(int argc, char **argv, char **env)
 //	{
 //	}
 //	printf("len = %d\n", big_str_len(env));
-//	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope");
+//	huy = bash_args_lst_lexer("<< kek << ls << norm azaz | > \"arbidol\" bruh | abobus  1 lol| denis no 3 | pop durak dope", &vars);
 	//___________________________________________________________________________________________________________________________
-	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
+//	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
 //
-//	huy = bash_args_lst_lexer("	ls >> pop >> kek | cat", &vars);
+	huy = bash_args_lst_lexer("	ls >> pop >> kek | asfasf > lol", &vars);
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
 //	huy = bash_args_lst_lexer("12345"); //inf cycle
 //	huy = bash_args_lst_lexer("echo \"12345\"\'12345\'cat"); //
@@ -70,9 +72,16 @@ int main(int argc, char **argv, char **env)
 	lst_print_tokens(huy);
 	printf("------------begin_list has written--------\n\n\n\n");
 
-	dollar_parser(huy, &vars);
+	
 	llst = llst_new(huy);
-//	llst_cmd_print(llst);
+	llst_cmd_print(llst);
+	printf("------------cmd_lst has written--------\n\n\n\n");
+	exec_cmd(llst, &vars) ;
+//	big_str_print(vars.root_paths);
+//	t_cmd *cmd = (*llst)->val;
+//	char **args_str = convert_lst_to_str(cmd->args_lst);
+//	big_str_print(args_str);
+	
 //	printf("%s\n", compose_cmd_args((*llst)->val, vars.root_paths));
 //	printf("i = %d\n", ft_strncmp("PATH=", "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/munki:/Library/Apple/usr/bin", 5));
 //

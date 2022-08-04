@@ -152,7 +152,7 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 		}
 		else if (*str == '$')
 		{
-			ret_str = ft_strjoin(ret_str, vars->term_pid)); //статус терминала дописать потом
+			ret_str = ft_strjoin(ret_str, vars->term_pid); //статус терминала дописать потом
 			str++;
 		}
 		else if (*str == '{') //на кавычку потом обработка еще если париться
