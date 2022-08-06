@@ -1,13 +1,16 @@
 //////#include <conio.h>
-//#include <stdio.h>
-//#include <unistd.h>
-//#include <sys/types.h>
-//#include <sys/wait.h>
-//#include <sys/types.h>
-//#include <unistd.h>
-//#include <fcntl.h>
+//# include <stdio.h>
+//# include <unistd.h>
+//# include <stdlib.h>
+//# include <signal.h>
+//# include <fcntl.h>
+//# include <string.h> //ubrat'
+//# include <readline/readline.h>
+//# include <readline/history.h>
+//# include <sys/types.h>
+//# include <sys/wait.h>
 //# include <errno.h>
-//#include <string.h>
+//# include <string.h>
 ////
 //////enum Token
 //////{
@@ -76,33 +79,40 @@
 //	int c;
 //	int d;
 ////	printf("str = {%d}", c);
-//	int pid = fork();
-//	if (!pid)
-//	{
-////		printf("%d", getpid());
-////		sleep(1);
-////		close(0);
-////		close(1);
-////				ft_putstr_fd("kek", 1);
-////		printf("kek");
-//		sleep(1000);
-////		while (1)
-////		{
-//////			scanf("%d", &c);
-////			printf("%d\n", c);
-////		}
-//
-//	}
-//	if (pid != 0)
-//	{
-//
-//		
-////		errno = -1;
-//		
-////		perror("asfsaf");
-////		printf("%d\n", pid);
-//		waitpid(-1, &d, 0);
-//	}
+//	printf("%d\n", getpid());
+//	close(1);
+//	close(0);
+//	close(2);
+//	int fd = open ("kek", O_TRUNC);
+//	dup2(3, 0);
+//	sleep(1000);
+////	int pid = fork();
+////	if (!pid)
+////	{
+//////		printf("%d", getpid());
+//////		sleep(1);
+//////		close(0);
+//////		close(1);
+//////				ft_putstr_fd("kek", 1);
+//////		printf("kek");
+////		sleep(1000);
+//////		while (1)
+//////		{
+////////			scanf("%d", &c);
+//////			printf("%d\n", c);
+//////		}
+////
+////	}
+////	if (pid != 0)
+////	{
+////
+////
+//////		errno = -1;
+////
+//////		perror("asfsaf");
+//////		printf("%d\n", pid);
+////		waitpid(-1, &d, 0);
+////	}
 //
 ////	int fd = open("asffsafa", O_RDONLY, 0644);
 ////	printf("fd = %d\n", fd);

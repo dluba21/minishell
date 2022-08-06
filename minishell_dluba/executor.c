@@ -161,32 +161,42 @@ int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int
 	head = *(cmd->files_in);
 	while (head)
 	{
-		close(*in_fd);
-		close(*out_fd);
+//		close(*in_fd);
+//		close(*out_fd);
 		if (head->key == REDIR_IN)
 		{
 			*in_fd = open(head->val, O_RDONLY, 0644);
 			*heredoc_f = 0;
 		}
 		else if (head->key == REDIR_OUT)
-			*in_fd = open(head->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+			*out_fd = open(head->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		else if (head->key == REDIR_APPEND)
-			*in_fd = open(head->val, O_WRONLY | O_APPEND | O_CREAT, 0644);
+			*out_fd = open(head->val, O_WRONLY | O_APPEND | O_CREAT, 0644);
 		else if (head->key == REDIR_HEREDOC)
 			*heredoc_f = 1;
 		if (*in_fd == -1)
 			return (ft_perror("error") - 1);
 		head = head->next;
 	}
-	if (!i && *in_fd == 0 && !(*heredoc_f))
+
+//	sleep(1000);
+//	printf("ok(%d)\n", getpid());
+	if (i && *in_fd == 0 && !(*heredoc_f))
 		*in_fd = pipe_array[i][0];
+//	printf("%d, %d, %d\n", i, *in_fd, *heredoc_f);
+
 	if (i != n - 1 && *out_fd == 1) //n добавить
 		*out_fd = pipe_array[i][1];
+	
+//	printf("in_fd = %d, out_fd = %d\n", *in_fd, *out_fd);
 	if (dup2(*in_fd, 0) == -1)
 		return (ft_perror("error") - 1);
 	if (dup2(*out_fd, 1) == -1)
 		return (ft_perror("error") - 1);
+	
+
 	close_all_pipes(pipe_array); //закрыл все лишние пайпы
+//	sleep(1000);
 	return (0);
 }
 
@@ -213,10 +223,11 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 
 	
 	printf("pid [%d] = {%d}\n", i, getpid());
-	
 	cmd = (t_cmd *)llst_elem->val;
 	open_files(cmd, &in_fd, &out_fd, pipe_array, i, n, &heredoc_f); //занести все переменные  в структуру
-	heredoc_parser(llst_elem->files_in); //heredoc парсит весь список файлов на поиск хердоков и открывает все, но только последний юзает
+//	sleep(1000);
+
+//	heredoc_parser(cmd->files_in); //heredoc парсит весь список файлов на поиск хердоков и открывает все, но только последний юзает
 	//НАДО ИСПРАВИТь - dup2 фдшника heredoc запихать в open_files
 	//еще в хердоке надо будет сделать отедльный хэндлер, так как там сигналы работают по-другому
 
