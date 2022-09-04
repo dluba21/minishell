@@ -105,7 +105,7 @@ t_list	*llst_elem_new(t_list *head_lst) //задел на бонус
 			break;
 		head_lst = cmd_parser(head_lst, llst_elem, llst_elem->val);
 	}
-	t_cmd *cmd_1 = llst_elem->val;
+//	t_cmd *cmd_1 = llst_elem->val;
 
 //	lst_print_tokens(cmd->files_out);
 //	printf("len_lst = %d\n", lst_len(cmd->files_out));

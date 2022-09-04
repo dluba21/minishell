@@ -49,29 +49,26 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 	return (NULL);
 }
 
-int **open_pipes(t_list **llst, int len) //создаю массив из пайпов, пайпов меньше на один чем команд как максимум
+int **open_pipes(int len) //создаю массив из пайпов, пайпов меньше на один чем команд как максимум
 {
-	t_list	*head;
 	int		**pipe_array;
 	int		pipe_fd[2];
 	int		i;
 
-	head = *llst;
 	
-	if (len < 2) //нет пайпов
+	if (len == 0) //нет пайпов
 		return (NULL);
 	pipe_array = (int **)malloc(sizeof(int *) * len); //leaks
 	i = 0;
-	while (head && head->next)
+	while (i < len)
 	{
 		pipe_array[i] = (int *)malloc(sizeof(int) * 2); //leaks
 		pipe(pipe_fd);
 		pipe_array[i][0] = pipe_fd[0];
-		pipe_array[i][1] = pipe_fd[1];
-		head = head->next;
-		i++;
+		pipe_array[i++][1] = pipe_fd[1];
 	}
 	pipe_array[i] = NULL;
+//	pipe_print(pipe_array);
 	return (pipe_array);
 }
 
@@ -158,15 +155,18 @@ int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int
 	*in_fd = 0; //закроется ли STDIN и STDOUT?
 	*out_fd = 1;
 	*heredoc_f = 0; //надо ли инициализировать?
-	head = *(cmd->files_in);
+	head = *(cmd->files_in); //все файлы с разными токенами на ввод и ивывод следует переделать название на cmd->files
+
+//	if (i != 0)
+//		sleep(5);
 	while (head)
 	{
 //		close(*in_fd);
 //		close(*out_fd);
-		if (head->key == REDIR_IN)
+		if (head->key == REDIR_IN) //если встретил редирин то флаг хердок опустить и присво
 		{
 			*in_fd = open(head->val, O_RDONLY, 0644);
-			*heredoc_f = 0;
+			*heredoc_f = 0; //мб что есть heredoc, но он находится до другого ввода файла. То есть флаг показывает, надо ли считывать с heredoc
 		}
 		else if (head->key == REDIR_OUT)
 			*out_fd = open(head->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
@@ -178,25 +178,35 @@ int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int
 			return (ft_perror("error") - 1);
 		head = head->next;
 	}
+	
+	//в конце цикла есть фдшник точно (если редирект, то он остается, если хердок, то он остается, а мб ничего не поменялось)
 
-//	sleep(1000);
 //	printf("ok(%d)\n", getpid());
-	if (i && *in_fd == 0 && !(*heredoc_f))
-		*in_fd = pipe_array[i][0];
-//	printf("%d, %d, %d\n", i, *in_fd, *heredoc_f);
+	
 
-	if (i != n - 1 && *out_fd == 1) //n добавить
+//	printf("pipe[%d][0] = %d\n", i, pipe_array[i][0]);
+//	sleep(1000);
+	if (i != 0 && *in_fd == 0 && !(*heredoc_f)) //если не первая команда, если фдшник_ин не менялся и если нет флага хердок, значит ввода из другого места нет и там стоит спереди пайп
+		*in_fd = pipe_array[i - 1][0];
+//	write(2, "ok!\n", 4);
+//	sleep(1000);
+
+
+	if (i != n - 1 && *out_fd == 1)  //если не последняя команда, если фдшник_аут не менялся
 		*out_fd = pipe_array[i][1];
 	
 //	printf("in_fd = %d, out_fd = %d\n", *in_fd, *out_fd);
+	heredoc_parser(cmd->files_in, in_fd, *heredoc_f); //не забыть анлинк в конце команды, там если heredoc_f == 1, то in_fd заменяется
+//	write(2, "ok!\n", 4);
+//		printf("in_fd = %d, i = %d, *heredoc = %d\n", *in_fd, i, *heredoc_f);
 	if (dup2(*in_fd, 0) == -1)
 		return (ft_perror("error") - 1);
 	if (dup2(*out_fd, 1) == -1)
 		return (ft_perror("error") - 1);
-	
-
 	close_all_pipes(pipe_array); //закрыл все лишние пайпы
 //	sleep(1000);
+//	sleep(1000);
+//к этому моменту открыли файлы и заменили все фдшники
 	return (0);
 }
 
@@ -224,13 +234,14 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 	
 	printf("pid [%d] = {%d}\n", i, getpid());
 	cmd = (t_cmd *)llst_elem->val;
+	
 	open_files(cmd, &in_fd, &out_fd, pipe_array, i, n, &heredoc_f); //занести все переменные  в структуру
 //	sleep(1000);
-
+//	write(2, "ok!\n", 4);
 //	heredoc_parser(cmd->files_in); //heredoc парсит весь список файлов на поиск хердоков и открывает все, но только последний юзает
 	//НАДО ИСПРАВИТь - dup2 фдшника heredoc запихать в open_files
 	//еще в хердоке надо будет сделать отедльный хэндлер, так как там сигналы работают по-другому
-
+	
 	if (vars->envp_f)
 		vars->envp = convert_lst_to_str(vars->envp_lst); //дописать пересоздание env_new в env_funcs
 
@@ -240,9 +251,12 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 //	(const char *filename, char *const argv [], char *const envp[]);
 //	printf("path = %s\n", path_to_cmd);
 //	big_str_print(args_str);
-//	sleep(100)
 	if (!path_to_cmd)
 		return (printf("%s: command not found!\n", *args_str) * 0 - 1);
+//	sleep(100);
+//	write(2, "ok!\n", 4);
+//	if (i)
+//		sleep(7);
 	if (execve(path_to_cmd, args_str, vars->envp) == -1)
 		return (ft_perror("error") - 1);
 }
@@ -275,7 +289,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	}
 	i = 0;
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
-	pipe_array = open_pipes(llst, n); //массив с пайпами, их количество = количеству команд
+	pipe_array = open_pipes(n - 1); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
 	while (i < n)
 	{
 		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому

@@ -113,7 +113,7 @@ int	vars_initializing(t_vars *vars, char **envp)
 	envp_init(vars, envp);
 	vars->exit_status = 0;
 	vars->status = 0;
-	vars->term_pid= ft_itoa(1234); //leaks и дописать
+	vars->term_pid = ft_itoa(1234); //leaks и дописать
 //	lst_print(vars->envp_lst);
 	
 	

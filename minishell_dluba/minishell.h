@@ -159,6 +159,7 @@ int		ft_perror(char *str); //возвращает int = 0 в отличие от
 int		ft_putstr_fd(char *s, int fd);
 
 
+
 //функции для сборки пути для execve
 int	root_paths_init(t_vars *vars); //создает массив строк со всеми путями из переменной окружения PATH, уже сделав сплит по ':', (надо зачиситить от ликов потом, это вызвать в дочернем процессе)
 char	*compose_cmd_args(t_cmd *cmd_elem, char **root_paths); //создает путь до команды используя root_paths
@@ -186,8 +187,12 @@ char	*env_key_trimmer(char *env_elem);
 //executor часть
 int	exec_cmd(t_list **llst, t_vars *vars);
 int	root_paths_init(t_vars *vars);
-void	heredoc_parser(t_list **files);
+//void	heredoc_parser(t_list **files);
+void	heredoc_parser(t_list **files, int *in_fd, int heredoc_f);
 
+
+//лишние функции
+void pipe_print(int **big_array);
 
 #endif
 

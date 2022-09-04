@@ -168,6 +168,19 @@ void big_str_print(char **big_str)
 	while (*big_str)
 		printf("%s\n", *big_str++);
 }
+void pipe_print(int **pipe_array)
+{
+	int	i = 0;
+
+	printf("\t--->pipe_array<---\n");
+	while (pipe_array[i])
+	{
+		printf("\t[%d\t", pipe_array[i][0]);
+		printf("%d]\n", pipe_array[i][1]);
+		i++;
+	}
+	printf("\n\n");
+}
 //
 //int	ft_strcmp(char *str1, char *str2)
 //{

@@ -129,8 +129,10 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 	char	*ret_str;
 
 //	str = (char *)head->val;
-	if (!str || (ft_strchr(str, "$") == ft_strlen(str))) // дальше значит есть доллар и строка не равна нулю и ничего не меняли в строке
+
+	if (!str || (ft_strchr(str, "$") == ft_strlen(str)))	//проверка на отсутсвие доллара
 		return (str);
+	// дальше значит есть доллар и строка не равна нулю и ничего не меняли в строке
 //	if (ft_strchr(str, "$") == )
 	tmp = str; //free в конце
 	ret_str = ft_strdup(""); //нет доллара или ничего после доллара, дальше ? $ или переменная или кавычки
@@ -147,7 +149,6 @@ char *dollar_expansion(char *str, t_vars *vars) //free старую строку
 		else if (*str == '?')
 		{
 			ret_str = ft_strjoin(ret_str, ft_itoa(vars->exit_status));
-			
 			str++;
 		}
 		else if (*str == '$')
