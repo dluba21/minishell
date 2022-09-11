@@ -86,6 +86,7 @@ char	*get_next_line(int fd)
 		return (line);
 	if (reader(&line, &rem, fd) == 1)
 		return (line);
+	printf("ok\n");
 	free(line);
 	return (NULL);
 }

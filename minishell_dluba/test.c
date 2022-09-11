@@ -11,6 +11,8 @@
 //# include <sys/wait.h>
 //# include <errno.h>
 //# include <string.h>
+//# include "get_next_line/get_next_line.h"
+////#include "minishell.h"
 ////
 //////enum Token
 //////{
@@ -73,19 +75,40 @@
 //
 //int main()
 //{
-//	char *a;
-//	char *b = NULL;
-////	if (!b || *a)
-//	int c;
-//	int d;
-////	printf("str = {%d}", c);
-//	printf("%d\n", getpid());
-//	close(1);
-//	close(0);
-//	close(2);
-//	int fd = open ("kek", O_TRUNC);
-//	dup2(3, 0);
-//	sleep(1000);
+//	int in_fd;
+////	char buf[7];
+////
+//	in_fd = open("heredoc_file", O_RDWR | O_CREAT | O_APPEND, 0644);
+//////	ft_perror("write_error");
+////
+//	write(in_fd, "abobek\n", 7);
+////	close(in_fd);
+////	in_fd = open("heredoc_file", O_RDWR, 0644);
+//	
+////
+//////	read(in_fd, buf, 7);
+//////	printf("buf = {%s}\n", buf);
+//	printf("str = {%s}\n", get_next_line(in_fd));
+//	
+//	
+//	
+////	FILE *fp;
+////	char cc[256];
+////
+////
+////	if((fp= fopen("heredoc_file", "r")) == NULL)
+////	{
+////		perror("Error occured while opening file");
+////		return 1;
+////	}
+////
+////	while((fgets(cc, 256, fp))!=NULL)
+////	   {
+////		   printf("%s", cc);
+////	   }
+////	fclose(fp);
+////
+//	
 ////	int pid = fork();
 ////	if (!pid)
 ////	{

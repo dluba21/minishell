@@ -49,28 +49,7 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 	return (NULL);
 }
 
-int **open_pipes(int len) //создаю массив из пайпов, пайпов меньше на один чем команд как максимум
-{
-	int		**pipe_array;
-	int		pipe_fd[2];
-	int		i;
 
-	
-	if (len == 0) //нет пайпов
-		return (NULL);
-	pipe_array = (int **)malloc(sizeof(int *) * len); //leaks
-	i = 0;
-	while (i < len)
-	{
-		pipe_array[i] = (int *)malloc(sizeof(int) * 2); //leaks
-		pipe(pipe_fd);
-		pipe_array[i][0] = pipe_fd[0];
-		pipe_array[i++][1] = pipe_fd[1];
-	}
-	pipe_array[i] = NULL;
-//	pipe_print(pipe_array);
-	return (pipe_array);
-}
 
 //int	get_fd_in_from_file_lst(t_list **files_in, int *pipe_array) //возвращает, дескриптор, который внесем в массив и открывает другие файлы
 ////может вернуть дескриптор файла, 0 или 1 оставить, 0 если хердок (флаг менять при считывании команды)
@@ -134,81 +113,10 @@ int **open_pipes(int len) //создаю массив из пайпов, пай�
 //{
 //	return ((llst->val))
 //}
-void	close_all_pipes(int **pipe_array)
-{
-	int	i;
-
-	i = 0;
-	while (pipe_array[i])
-	{
-		close(pipe_array[i][0]);
-		close(pipe_array[i++][1]);
-	}
-}
 
 
-int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int n, int *heredoc_f) //открывает файлы и делает dup2 с ними или с пайпами
-{
-	t_list	*head;
-//	int		heredoc_f;
-
-	*in_fd = 0; //закроется ли STDIN и STDOUT?
-	*out_fd = 1;
-	*heredoc_f = 0; //надо ли инициализировать?
-	head = *(cmd->files_in); //все файлы с разными токенами на ввод и ивывод следует переделать название на cmd->files
-
-//	if (i != 0)
-//		sleep(5);
-	while (head)
-	{
-//		close(*in_fd);
-//		close(*out_fd);
-		if (head->key == REDIR_IN) //если встретил редирин то флаг хердок опустить и присво
-		{
-			*in_fd = open(head->val, O_RDONLY, 0644);
-			*heredoc_f = 0; //мб что есть heredoc, но он находится до другого ввода файла. То есть флаг показывает, надо ли считывать с heredoc
-		}
-		else if (head->key == REDIR_OUT)
-			*out_fd = open(head->val, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		else if (head->key == REDIR_APPEND)
-			*out_fd = open(head->val, O_WRONLY | O_APPEND | O_CREAT, 0644);
-		else if (head->key == REDIR_HEREDOC)
-			*heredoc_f = 1;
-		if (*in_fd == -1)
-			return (ft_perror("error") - 1);
-		head = head->next;
-	}
-	
-	//в конце цикла есть фдшник точно (если редирект, то он остается, если хердок, то он остается, а мб ничего не поменялось)
-
-//	printf("ok(%d)\n", getpid());
-	
-
-//	printf("pipe[%d][0] = %d\n", i, pipe_array[i][0]);
-//	sleep(1000);
-	if (i != 0 && *in_fd == 0 && !(*heredoc_f)) //если не первая команда, если фдшник_ин не менялся и если нет флага хердок, значит ввода из другого места нет и там стоит спереди пайп
-		*in_fd = pipe_array[i - 1][0];
-//	write(2, "ok!\n", 4);
-//	sleep(1000);
 
 
-	if (i != n - 1 && *out_fd == 1)  //если не последняя команда, если фдшник_аут не менялся
-		*out_fd = pipe_array[i][1];
-	
-//	printf("in_fd = %d, out_fd = %d\n", *in_fd, *out_fd);
-	heredoc_parser(cmd->files_in, in_fd, *heredoc_f); //не забыть анлинк в конце команды, там если heredoc_f == 1, то in_fd заменяется
-//	write(2, "ok!\n", 4);
-//		printf("in_fd = %d, i = %d, *heredoc = %d\n", *in_fd, i, *heredoc_f);
-	if (dup2(*in_fd, 0) == -1)
-		return (ft_perror("error") - 1);
-	if (dup2(*out_fd, 1) == -1)
-		return (ft_perror("error") - 1);
-	close_all_pipes(pipe_array); //закрыл все лишние пайпы
-//	sleep(1000);
-//	sleep(1000);
-//к этому моменту открыли файлы и заменили все фдшники
-	return (0);
-}
 
 //int	open_and_dup(t_list *llst_elem, t_vars *vars, int **pipe_array, int i)
 //{
@@ -234,6 +142,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 	
 	printf("pid [%d] = {%d}\n", i, getpid());
 	cmd = (t_cmd *)llst_elem->val;
+	
 	
 	open_files(cmd, &in_fd, &out_fd, pipe_array, i, n, &heredoc_f); //занести все переменные  в структуру
 //	sleep(1000);
@@ -279,8 +188,10 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 
 	if (!llst || !(*llst)) //потом убрать
 		return (printf("error: no llst or llst_elem in exec\n"));
+//	llst_cmd_print(llst);
 	llst_elem = *llst;
 	n = lst_len(llst); //количество функций
+//	printf("n = %d\n", n);
 	if (n == 1)
 	{
 		//выполнить одну команду(дописать);
@@ -289,7 +200,8 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	}
 	i = 0;
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
-	pipe_array = open_pipes(n - 1); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
+	if (n > 1)
+		pipe_array = open_pipes(n - 1); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
 	while (i < n)
 	{
 		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому
@@ -299,7 +211,8 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 		llst_elem = llst_elem->next;
 		i++;
 	}
-	close_all_pipes(pipe_array);
+	if (n > 1)
+		close_all_pipes(pipe_array);
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
 //		ret_pid = waitpid(-1, &status, 0); //-1  или 0 первый аргумент?

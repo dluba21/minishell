@@ -191,6 +191,11 @@ int	root_paths_init(t_vars *vars);
 void	heredoc_parser(t_list **files, int *in_fd, int heredoc_f);
 
 
+//открытие файлов и пайпы
+int **open_pipes(int len);
+int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int n, int *heredoc_f);
+void	close_all_pipes(int **pipe_array);
+
 //лишние функции
 void pipe_print(int **big_array);
 

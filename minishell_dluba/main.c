@@ -59,7 +59,10 @@ int main(int argc, char **argv, char **env)
 	//___________________________________________________________________________________________________________________________
 //	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
 //
-	huy = bash_args_lst_lexer("<< stop cat | wc -l", &vars);
+//	huy = bash_args_lst_lexer("<< stop cat | cat | cat", &vars);
+//	huy = bash_args_lst_lexer("ls | cat | cat | << stop", &vars);
+	huy = bash_args_lst_lexer("yes | cat | cat", &vars);
+//	huy = bash_args_lst_lexer("< heredoc_file cat | cat | cat", &vars);
 //	huy = bash_args_lst_lexer("ls | wc -l", &vars);
 //	huy = bash_args_lst_lexer("	ls | cat", &vars);
 //	huy = bash_args_lst_lexer("\'ls\'\"aboba\"|cat -l >aboba");
