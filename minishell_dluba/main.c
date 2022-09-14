@@ -10,18 +10,41 @@ int main(int argc, char **argv, char **env)
 	t_list	**llst;
 	t_list	*llst_elem;
 	t_list	**tmp;
+	char *str;
 //	char *buffer_1 = ft_strset(100);
 //	char *buffer_1;
 
 //    char **pop = big_string_copy(env);
 //	big_str_print(env);
+	 //while (!exit_f)
+//	if (argc == 100)
+//		printf("Error");
+//	if (!*argv)
+//		printf("Error");
 	
 	if (vars_initializing(&vars, env)) //ОШИБКА - ИНОГДА ФРИШИТСЯ ВТОРОЙ РАЗ!!!!
 		return (0);
+	
+//	while (1) //while (!vars->exit_f)
+//	{
+//		str = ft_readline(); //
+//		huy = bash_args_lst_lexer(str, &vars);
+//		llst = llst_new(huy);
+//		exec_cmd(llst, &vars);
+//		if (str)
+//			free(str);
+////		rl_clear_history();
+//	}
+////	free_all;
+	
+	
+	
+	
+	
 //	big_str_print(env);
 //	root_paths_init(&vars);
-	
-	
+
+
 
 //	char *key;
 //	buffer_1 = env_trimmer(vars.envp[0], buffer_1);
@@ -40,7 +63,7 @@ int main(int argc, char **argv, char **env)
 //		i++;
 //	}
 //	printf("len_env = %d\n", i);
-	
+
 //	TERM_PROGRAM=Apple_Terminal
 //	printf("d = %d\n", ft_strlen(buffer_1));
 //	printf("pointer = [%p]\n", buffer_1);
@@ -59,9 +82,15 @@ int main(int argc, char **argv, char **env)
 	//___________________________________________________________________________________________________________________________
 //	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
 //
-//	huy = bash_args_lst_lexer("<< stop cat | cat | cat", &vars);
-//	huy = bash_args_lst_lexer("ls | cat | cat | << stop", &vars);
-	huy = bash_args_lst_lexer("yes | cat | cat", &vars);
+//	huy = bash_args_lst_lexer("<< stop cat | cat | ls", &vars);
+
+
+	huy = bash_args_lst_lexer(get_next_line(0), &vars);
+//	char *str = readline("minishell: ");
+//	huy = bash_args_lst_lexer("yes | cat | cat", &vars);
+
+//	huy = bash_args_lst_lexer(str, &vars);
+
 //	huy = bash_args_lst_lexer("< heredoc_file cat | cat | cat", &vars);
 //	huy = bash_args_lst_lexer("ls | wc -l", &vars);
 //	huy = bash_args_lst_lexer("	ls | cat", &vars);
@@ -73,15 +102,30 @@ int main(int argc, char **argv, char **env)
 //	huy = bash_args_lst_lexer("ls|cat>aboba");
 //		huy = bash_args_first_lst_init(">>");
 //	huy = bash_args_first_lst_init("aavabab\"asvasv\"");
-	
+
 //	lst_print_tokens(huy);
 	printf("------------begin_list has written--------\n\n\n\n");
 
-	
+
 	llst = llst_new(huy);
 //	llst_cmd_print(llst);
 	printf("------------cmd_lst has written--------\n\n\n\n");
 	exec_cmd(llst, &vars);
+//	printf("shell_pid = %d", getpid()); //если команда не найдена то почему то два процесса идут, типа после execve надо захватывать статус выхода и дальше ничего не делать
+	printf("\nall is made!!!\n");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 //	big_str_print(vars.root_paths);
 //	t_cmd *cmd = (*llst)->val;
 //	char **args_str = convert_lst_to_str(cmd->args_lst);

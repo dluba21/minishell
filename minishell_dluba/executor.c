@@ -166,6 +166,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 //	write(2, "ok!\n", 4);
 //	if (i)
 //		sleep(7);
+	sleep(1000);
 	if (execve(path_to_cmd, args_str, vars->envp) == -1)
 		return (ft_perror("error") - 1);
 }

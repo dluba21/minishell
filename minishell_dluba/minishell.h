@@ -129,6 +129,7 @@ void	llst_cmd_print(t_list **llst); //вывести файлы и аргуме�
 
 
 //функции со строками и остальные
+char	*ft_readline(void);
 int		ft_strlen(char *str);
 void	free_big_str(char **big_str);
 char	**big_string_copy(char **big_str);

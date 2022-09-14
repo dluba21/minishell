@@ -1,4 +1,4 @@
 all:
-	gcc -g *.c get_next_line/*.c -o minishell 
+	gcc -g *.c get_next_line/*.c -lreadline -o minishell 
 clean:
 	@rm -rf *.f heredoc_file

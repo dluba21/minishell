@@ -24,6 +24,7 @@ void	heredoc_parser(t_list **files, int *in_fd, int heredoc_f) //тупо зап
 	limiter = ft_strjoin(tmp->val, "\n");
 	while (1)
 	{
+		printf("insert:\n");
 		line = get_next_line(0);
 		if (!line)
 			printf("here_doc error: string is null\n");
