@@ -105,7 +105,7 @@ char	**ft_export(t_cmd *cmd, char **ev) // добавляет или измен�
 		if (find == 1)
 			ev = add_value(cmd->args[i], ev);
 		else if (find == 2)
-			ev = change_value();
+			ev = change_value(cmd->args[i], ev);
 	}
 	return (ev);
 }
