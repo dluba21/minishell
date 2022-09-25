@@ -80,6 +80,7 @@ typedef struct s_list
 //	
 //}
 
+
 typedef	struct s_vars
 {
 	char *reserved_words[8]; //массив с названиями функций билтинов
@@ -106,8 +107,19 @@ typedef	struct s_cmd
 	struct s_list	**args_lst; //первый аргумент - сама программа(команда)!!! дальше аргументы команды
 	char			**args_array; // первый аргумент - название команды, остальное - аргументы к команде
 	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
+	int		in_fd;
+	int		out_fd;
 	
 }				t_cmd;
+
+//typedef struct s_cmd_ // структура для билтов
+//{
+//	char	**args; // обьекты воздействия
+//	int		len_args; // колл-во обьектов
+//	int		out; // значение вывода
+//}			t_cmd_;
+
+typedef int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
 
 //typedef struct files
 //{
@@ -217,9 +229,20 @@ int	**open_pipes(int len);
 int	open_files(t_cmd *cmd, int **pipe_array, int i, int n);
 void	close_all_pipes(int **pipe_array);
 void	delete_heredocs(t_list **files_in);
+int		open_files_out(t_list **files_out);
 
 //лишние функции
 void pipe_print(int **big_array);
+
+//билтины
+int	ft_cd(t_vars *vars, t_cmd *cmd);
+int	ft_echo(t_vars *vars, t_cmd *cmd);
+int	t_env(t_vars *vars, t_cmd *cmd);
+int	ft_exit(t_vars *vars, t_cmd *cmd);
+int	ft_export(t_vars *vars, t_cmd *cmd);
+int	ft_pwd(t_vars *vars, t_cmd *cmd);
+int	ft_unset(t_vars *vars, t_cmd *cmd);
+
 
 //cигналы
 void	sig_init(void);

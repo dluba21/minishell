@@ -36,8 +36,10 @@ int main(int argc, char **argv, char **env)
 		exec_cmd(llst, &vars);
 		if (str)
 			free(str);
+//		break;
 //		rl_clear_history();
 	}
+//	sleep(1000);
 ////	free_all;
 	
 	

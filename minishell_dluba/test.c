@@ -13,77 +13,71 @@
 //# include <string.h>
 //# include "get_next_line/get_next_line.h"
 //# include <readline/readline.h>
-////#include "minishell.h"
+//typedef	struct s_vars
+//{
+//	char *reserved_words[8]; //массив с названиями функций билтинов
+////	t_builtin_ptr builtin_array[7]; //массив с указателяит на функции билтинов
+//	
+//	char	**root_paths; //массив строк с путями к execve (мб убрать куда-то?)
+//	char	**envp; //массив скопированный переменныъ окружения (будет подаваться  execve)
+//	struct s_list **envp_lst; //список для переменных окружения (легко изменять, в отличие от массива)
+//	int		*pid_array; //массив пидов для закрытия их, мб запихать вотдельную структуру чисто для executor?
+//	char	envp_f; //флаг на то,изменилась ли переменная окружения и нужно ли пересоздавать массив
+//	char	exit_f; //флаг что нужен выход из ф-ции
+//	int		status; //мб убрать так как можно переменную отдельную создать в функции executor
+//	int		exit_status; //
+//	char	*term_pid; //пид терминала для $$
+//	struct sigaction sig;
+//
+//}		t_vars;
+//
+//typedef	struct s_cmd
+//{
+//	struct s_list	**files_in; //файлы для считывания
+//	struct s_list	**files_out; // файлы для вывода
+//	struct s_list	**files_heredoc; //строки-разделители (нахуя надо, если последний только разделитель нужен?)
+//	struct s_list	**args_lst; //первый аргумент - сама программа(команда)!!! дальше аргументы команды
+//	char			**args_array; // первый аргумент - название команды, остальное - аргументы к команде
+//	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
+//	
+//}				t_cmd;
+//
 ////
-//////enum Token
-//////{
-//////	SYMBOL,         //0
-//////	NUMBER,         //1
-//////	EXPRESSION, //0
-//////	OPERATOR,       //1
-//////	UNDEFINED,       //2
-//////	D,
-////////	W,
-////////	E,
-////////	T,
-////////	Y,
-////////	U,
-////////	I,
-////////	O,
-////////	G,
-////////	P,
-////////	L,
-////////	N,
-////////	B,
-////////	V,
-////////	J
-////////};
-////////
-//////int main()
-//////{
-//////	enum Token a, b, c, d, e;
-//////	a = SYMBOL;
-//////	b = NUMBER;
-//////	c = EXPRESSION;
-//////	d = OPERATOR;
-//////	e = UNDEFINED;
-//////	printf("a = %d\n", a);
-//////	printf("b = %d\n", b);
-//////	printf("c = %d\n", c);
-//////	printf("d = %d\n", d);
-//////	printf("e = %d\n", e);
-//////	printf("%d", sizeof(enum Token));
-//////}
-////int ft_strlen(char *str)
-////{
-////	int	i;
-////
-////	i = 0;
-////	if (!str)
-////		return (-1);
-////	while (str[i])
-////		i++;
-////	return (i);
-////}
-////
-////int	ft_putstr_fd(char *s, int fd)
-////{
-////	if (s)
-////		return (write(fd, s, ft_strlen(s)));
-////}
-////
+////char (*pFun)(int)
+//
+//int a(t_vars *vars, t_cmd *cmd)
+//{
+//	printf("kek!\n");
+//	return (0);
+//}
+//int b(t_vars *vars, t_cmd *cmd)
+//{
+//	printf("lol!\n");
+//	return (0);
+//}
+//
+//typedef int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
 //
 //
 //int main()
 //{
-////	(void)sig;
-////	if (write(1, "\n", 1) == -1)
-////		return ;
+//	char	*reserved_words[8];
+//	t_builtin_ptr *aboba;
+//	t_cmd *cmd;
+//	t_vars *vars;
 //	
+//	reserved_words[0] = "lol";
+//	reserved_words[1] = "kek";
+//	
+//	aboba = (t_builtin_ptr *)malloc(sizeof(t_builtin_ptr) * 8);
+//	
+//	aboba[0] = a;
+//	
+//	aboba[0](vars, cmd);
 ////	readline("aboba");
 ////	rl_replace_line("", 0);
 ////	rl_on_new_line();
 ////	rl_redisplay();
-//	printf("{%s}\n", 	readline("aboba: "));
+////	printf("{%s}\n", 	readline("aboba: "));
 //	return (0);
 //}

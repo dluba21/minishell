@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+//t_cmd_	*compose_builtin_arg(t_cmd *cmd) //структура для вити
+//{
+//	t_cmd_	*new_cmd;
+//	int		out;
+//
+////	new_cmd = (t_cmd_ *)malloc(sizeof(t_cmd_));
+//	new_cmd->args = convert_lst_to_str(vars->args_lst);
+//	new_cmd->out = open_files_out(cmd->files_out);
+//	if (new_cmd->args_str && new_cmd->args_lst[1])
+//	{
+//		new_cmd->args++;
+//		new_cmd->len_args = big_str_len(new_cmd->args) - 1;
+//	}
+//}
+//
+//int	is_builtin(t_cmd *cmd, char	**envp)
+//{
+//	t_cmd_	*new_cmd;
+//
+//	if (ft_strcmp(cmd->args_str[0]), )
+//}
+
 int	root_paths_init(t_vars *vars) //создает массив строк с путями к командам, надо зачиситить от ликов потом, это вызвать в дочернем процессе
 //ф!!!дочерний процесс
 {
@@ -147,7 +169,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 	
 	open_files(cmd, pipe_array, i, n);
 	
-	if (vars->envp_f)
+	if (vars->envp_f) //nado soedinit'!!!
 		vars->envp = convert_lst_to_str(vars->envp_lst); //дописать пересоздание env_new в env_funcs
 
 	root_paths_init(vars);
