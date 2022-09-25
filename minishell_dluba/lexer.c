@@ -1,12 +1,5 @@
 #include "minishell.h"
 
-//int ft_readline(void) //ридайн применить и добавить в истории и проверить на нулл ридлайн
-//{
-//	
-//	return (0);
-//}
-
-
 
 char	*ft_strdup(char *str)
 {

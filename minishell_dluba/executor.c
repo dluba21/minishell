@@ -51,6 +51,7 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 
 
 
+
 //int	get_fd_in_from_file_lst(t_list **files_in, int *pipe_array) //возвращает, дескриптор, который внесем в массив и открывает другие файлы
 ////может вернуть дескриптор файла, 0 или 1 оставить, 0 если хердок (флаг менять при считывании команды)
 ////флаг - флаг на открытие O_CREAT например
@@ -144,12 +145,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 	cmd = (t_cmd *)llst_elem->val;
 	
 	
-	open_files(cmd, &in_fd, &out_fd, pipe_array, i, n, &heredoc_f); //занести все переменные  в структуру
-//	sleep(1000);
-//	write(2, "ok!\n", 4);
-//	heredoc_parser(cmd->files_in); //heredoc парсит весь список файлов на поиск хердоков и открывает все, но только последний юзает
-	//НАДО ИСПРАВИТь - dup2 фдшника heredoc запихать в open_files
-	//еще в хердоке надо будет сделать отедльный хэндлер, так как там сигналы работают по-другому
+	open_files(cmd, pipe_array, i, n);
 	
 	if (vars->envp_f)
 		vars->envp = convert_lst_to_str(vars->envp_lst); //дописать пересоздание env_new в env_funcs
@@ -161,14 +157,16 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 //	printf("path = %s\n", path_to_cmd);
 //	big_str_print(args_str);
 	if (!path_to_cmd)
-		return (printf("%s: command not found!\n", *args_str) * 0 - 1);
+		exit(printf("%s: command not found!\n", *args_str) * 0 - 1);
+//	printf("ok!\n");
 //	sleep(100);
 //	write(2, "ok!\n", 4);
 //	if (i)
 //		sleep(7);
-	sleep(1000);
+//	sleep(1000);
 	if (execve(path_to_cmd, args_str, vars->envp) == -1)
-		return (ft_perror("error") - 1);
+		return (ft_perror("error1") - 1);
+	return (0);
 }
 
 int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть билтин или нет и количество функций учесть(разная ситуация будет)
@@ -191,6 +189,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 		return (printf("error: no llst or llst_elem in exec\n"));
 //	llst_cmd_print(llst);
 	llst_elem = *llst;
+	open_heredocs(llst_elem);
 	n = lst_len(llst); //количество функций
 //	printf("n = %d\n", n);
 	if (n == 1)
@@ -201,8 +200,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	}
 	i = 0;
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
-	if (n > 1)
-		pipe_array = open_pipes(n - 1); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
+	pipe_array = open_pipes(n); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
 	while (i < n)
 	{
 		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому
@@ -212,7 +210,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 		llst_elem = llst_elem->next;
 		i++;
 	}
-	if (n > 1)
+	if (pipe_array)
 		close_all_pipes(pipe_array);
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
@@ -231,6 +229,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 		
 		//надо ли чистить статус каждый раз?
 	}
+	return (0);
 }
 
 

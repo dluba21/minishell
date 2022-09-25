@@ -14,8 +14,17 @@
 # include <string.h>
 # include "get_next_line/get_next_line.h"
 
+typedef void (*sighandler_t)(int);
+
+sighandler_t signal(int signum, sighandler_t handler);
+
+typedef struct sigaction t_sig;
 //# include <>
 
+//typedef struct s_sig
+//{
+//
+//}				t_sig;
 
 
 //typedef struct s_vars //в чем ошибка?
@@ -85,6 +94,7 @@ typedef	struct s_vars
 	int		status; //мб убрать так как можно переменную отдельную создать в функции executor
 	int		exit_status; //
 	char	*term_pid; //пид терминала для $$
+	struct sigaction sig;
 
 }		t_vars;
 
@@ -98,6 +108,15 @@ typedef	struct s_cmd
 	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
 	
 }				t_cmd;
+
+//typedef struct files
+//{
+//	int		in_fd;
+//	int		out_fd
+//	int		i;
+//	int		cmd_len;
+//	int		heredoc_f;
+//}				t_files;
 
 //функции иницализации
 int		envp_init(t_vars *vars, char **envp); //инициализирует и копирует в массив char **envp массив строк с аргумента main(..., char **env)
@@ -189,16 +208,21 @@ char	*env_key_trimmer(char *env_elem);
 int	exec_cmd(t_list **llst, t_vars *vars);
 int	root_paths_init(t_vars *vars);
 //void	heredoc_parser(t_list **files);
-void	heredoc_parser(t_list **files, int *in_fd, int heredoc_f);
+//void	heredoc_parser(t_list **files, int *in_fd, int heredoc_f);
 
 
 //открытие файлов и пайпы
-int **open_pipes(int len);
-int	open_files(t_cmd *cmd, int *in_fd, int *out_fd, int **pipe_array, int i, int n, int *heredoc_f);
+int	open_heredocs(t_list *llst_elem);
+int	**open_pipes(int len);
+int	open_files(t_cmd *cmd, int **pipe_array, int i, int n);
 void	close_all_pipes(int **pipe_array);
+void	delete_heredocs(t_list **files_in);
 
 //лишние функции
 void pipe_print(int **big_array);
+
+//cигналы
+void	sig_init(void);
 
 #endif
 
