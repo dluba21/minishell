@@ -31,12 +31,15 @@ void	close_all_pipes(int **pipe_array)
 {
 	int	i;
 
-	i = 0;
-	while (pipe_array[i])
+	i = -1;
+	while (pipe_array[++i])
 	{
 		close(pipe_array[i][0]);
-		close(pipe_array[i++][1]);
+		close(pipe_array[i][1]);
+		free(pipe_array[i]);
 	}
+	free(pipe_array);
+	pipe_array = NULL;
 }
 
 int	open_files_in(t_list **files_in) //unlink vseh heredocs!!!!
@@ -84,6 +87,8 @@ int	change_fd(int in_fd, int out_fd, int **pipe_array, int i, int n) //need stru
 		return (ft_perror("dup2") - 1);
 	if (dup2(out_fd, 1) == -1)
 		return (ft_perror("dup2") - 1);
+//	close(in_fd);
+//	close(out_fd);
 	return (0);
 }
 
@@ -92,15 +97,16 @@ int	open_files(t_cmd *cmd, int **pipe_array, int i, int n) //открывает 
 	int	in_fd;
 	int	out_fd;
 
-	in_fd = open_files_in(cmd->files_in);
-	out_fd = open_files_out(cmd->files_out);
-	change_fd(in_fd, out_fd, pipe_array, i, n);
+	cmd->in_fd = open_files_in(cmd->files_in);
+	cmd->out_fd = open_files_out(cmd->files_out);
+	change_fd(cmd->in_fd, cmd->out_fd, pipe_array, i, n);
 //	printf("proc[%d]\t\tin_fd = %d, out_fd = %d\n", i, in_fd, out_fd);
 //	write(2, "ok!\n", 4);
 //		printf("in_fd = %d, i = %d, *heredoc = %d\n", *in_fd, i, *heredoc_f);
 	delete_heredocs(cmd->files_in);
-	if (pipe_array)
-		close_all_pipes(pipe_array); //закрыл все лишние пайпы
+//	if (pipe_array)
+//		close_all_pipes(pipe_array); //закрыл все лишние пайпы
+	
 //	sleep(1000);
 //	sleep(1000);
 //к этому моменту открыли файлы и заменили все фдшники

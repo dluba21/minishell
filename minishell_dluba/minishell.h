@@ -65,6 +65,8 @@ typedef struct sigaction t_sig;
 //	struct s_list	*next;
 //}					t_list;
 
+
+
 typedef struct s_list
 {
 	void			*val;
@@ -73,7 +75,9 @@ typedef struct s_list
 	struct s_list	*prev;
 }					t_list;
 
-
+typedef	struct s_cmd t_cmd;
+typedef	struct s_vars t_vars;
+typedef int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
 //
 //typedef struct s_llist //logic list для пайпов и бонусов мб
 //{
@@ -81,10 +85,9 @@ typedef struct s_list
 //}
 
 
-typedef	struct s_vars
+struct s_vars
 {
-	char *reserved_words[8]; //массив с названиями функций билтинов
-//	t_builtin_ptr builtin_array[7]; //массив с указателяит на функции билтинов
+	
 	
 	char	**root_paths; //массив строк с путями к execve (мб убрать куда-то?)
 	char	**envp; //массив скопированный переменныъ окружения (будет подаваться  execve)
@@ -96,10 +99,14 @@ typedef	struct s_vars
 	int		exit_status; //
 	char	*term_pid; //пид терминала для $$
 	struct sigaction sig;
+	char *reserved_words[8]; //массив с названиями функций билтинов
+//	t_builtin_ptr builtin_array[7]; //массив с указателяит на функции билтинов
+//	int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
+	t_builtin_ptr builtin_ptr_arr[];
 
-}		t_vars;
+};
 
-typedef	struct s_cmd
+struct s_cmd
 {
 	struct s_list	**files_in; //файлы для считывания
 	struct s_list	**files_out; // файлы для вывода
@@ -109,8 +116,9 @@ typedef	struct s_cmd
 	struct s_vars	*vars; //отсюда переменные окруженя нужно вытащить
 	int		in_fd;
 	int		out_fd;
+	int		len_args;
 	
-}				t_cmd;
+};
 
 //typedef struct s_cmd_ // структура для билтов
 //{
@@ -119,7 +127,7 @@ typedef	struct s_cmd
 //	int		out; // значение вывода
 //}			t_cmd_;
 
-typedef int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
+
 
 //typedef struct files
 //{

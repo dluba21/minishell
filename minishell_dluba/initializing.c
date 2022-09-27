@@ -95,9 +95,17 @@ int envp_init(t_vars *vars, char **envp) //инициализация перем
 //
 //void builtin_array_creator(t_vars *vars) //инициализация массива с указателями на функции в структуре
 //{
-//	vars->builtin_array = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
-//{
-	
+//	vars->reserved_words = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
+//	vars->builtin_ptr_arr = {ft_echo, ft_cd, ft_pwd, ft_export, ft_unset, ft_env, ft_exit};
+//}
+////	int	ft_cd(t_vars *vars, t_cmd *cmd);
+//	int	ft_echo(t_vars *vars, t_cmd *cmd);
+//	int	t_env(t_vars *vars, t_cmd *cmd);
+//	int	ft_exit(t_vars *vars, t_cmd *cmd);
+//	int	ft_export(t_vars *vars, t_cmd *cmd);
+//	int	ft_pwd(t_vars *vars, t_cmd *cmd);
+//	int	ft_unset(t_vars *vars, t_cmd *cmd);
+
 
 //◦ echo with option -n
 //◦ cd with only a relative or absolute path
@@ -114,7 +122,8 @@ int	vars_initializing(t_vars *vars, char **envp)
 	vars->exit_status = 0;
 	vars->status = 0;
 	vars->term_pid = ft_itoa(1234); //leaks и дописать
-//	lst_print(vars->envp_lst);
+	vars->reserved_words[] = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
+	vars->builtin_ptr_arr[] = {ft_echo, ft_cd, ft_pwd, ft_export, ft_unset, ft_env, ft_exit};
 	
 	
 	return (0);

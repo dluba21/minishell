@@ -69,7 +69,7 @@ int	ft_unset(t_vars *vars, t_cmd *cmd)
 	while (vars->envp[env_count])
 		env_count++;
 	if (cmd->len_args == 1)
-		return (vars->envp);
+		return (0);
 	while (++i, cmd->len_args)
 	{
 		if (!unset_check(cmd->args_array[i + 1]))
@@ -78,7 +78,7 @@ int	ft_unset(t_vars *vars, t_cmd *cmd)
 			continue;
 		}
 		if (!(vars->envp = find_unset(cmd->args_array[i + 1], &env_count, vars->envp)))
-			return (NULL);
+			return (0);
 	}
-    return (vars->envp);
+    return (0);
 }

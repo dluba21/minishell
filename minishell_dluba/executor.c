@@ -8,19 +8,47 @@
 ////	new_cmd = (t_cmd_ *)malloc(sizeof(t_cmd_));
 //	new_cmd->args = convert_lst_to_str(vars->args_lst);
 //	new_cmd->out = open_files_out(cmd->files_out);
-//	if (new_cmd->args_str && new_cmd->args_lst[1])
+//	if (new_cmd->args_array && new_cmd->args_lst[1])
 //	{
 //		new_cmd->args++;
 //		new_cmd->len_args = big_str_len(new_cmd->args) - 1;
 //	}
 //}
 //
-//int	is_builtin(t_cmd *cmd, char	**envp)
-//{
-//	t_cmd_	*new_cmd;
-//
-//	if (ft_strcmp(cmd->args_str[0]), )
-//}
+int	is_builtin(t_vars *vars, t_cmd *cmd)
+{
+	int		i;
+
+	i = 8;
+	while (i--)
+		if (!ft_strcmp(cmd->args_array[i], vars->reserved_words[i]))
+			return (1);
+	return (0);
+}
+
+int	exec_builtin(t_vars *vars, t_cmd *cmd) //нахуя две функции учитывая вернюю? просто надо сравнить строки в is_builtin да еще и занести в exit_status, жалко, что нельзя делать присваивание в условии :(
+{
+	int		i;
+	int		ret;
+
+	i = 8;
+	while (i--)
+	{
+		if (!ft_strcmp(cmd->args_array[i], vars->reserved_words[i]))
+		{
+			if (vars->envp_f) //nado soedinit'!!!
+				vars->envp = convert_lst_to_str(vars->envp_lst);//recreate_envp()
+			cmd->len_args = lst_len(cmd->args_lst) - 1;
+			cmd->args_array = convert_lst_to_str(cmd->args_lst);
+			ret = vars->builtin_ptr_arr[i](vars, cmd);
+//			close(cmd->in_fd);
+//			close(cmd->out_fd);
+			return (ret);
+		}
+	}
+	return (0);
+}
+
 
 int	root_paths_init(t_vars *vars) //создает массив строк с путями к командам, надо зачиситить от ликов потом, это вызвать в дочернем процессе
 //ф!!!дочерний процесс
@@ -73,93 +101,13 @@ char	*compose_cmd_path(t_cmd *cmd_elem, char **root_paths) //создает пу
 
 
 
-
-//int	get_fd_in_from_file_lst(t_list **files_in, int *pipe_array) //возвращает, дескриптор, который внесем в массив и открывает другие файлы
-////может вернуть дескриптор файла, 0 или 1 оставить, 0 если хердок (флаг менять при считывании команды)
-////флаг - флаг на открытие O_CREAT например
-//{
-//	int		fd;
-////	int		len;
-//	t_list	*files_head;
-//
-//	files_head = *files_in;
-//	fd = 0;
-////	len = lst_len(files_in);
-//	while (files_head) //прохожу все элементы кроме последнего
-//	{
-//
-//		if (files_in->key == REDIR_IN)
-//			fd = open(files_in->val, O_RDONLY, 0644);
-//		else if (files_in->key == REDIR_HEREDOC)
-//			fd = 0;
-//		if (fd == -1) //до первого неоткрывшегося файла дошли
-//			return (-1);
-//		files_head = files_head->next;
-//	}
-//	return (fd);
-//}
-
-//int	fd_array_new(t_list **llst, int *fd_in_array, int *fd_out_array) //делает мега массив со всеми фдшниками, в нем занесены все фдшники включая пайпы и редиректы
-//{
-//	t_list	*head;
-//	int		i;
-//
-//	infile_array = (int *)malloc(sizeof(int) * lst_len(llst) + 1);
-//	outfile_array = (int *)malloc(sizeof(int) * lst_len(llst) + 1);
-//	head = *llst;
-//	i = 0;
-//	while (head)
-//	{
-//		infile_array[i] = ;
-//		outfile_array[i] = ;
-//		if (*((head->val)->files_in))
-//		{
-//			infile_array[i] = open()
-//		}
-//		else
-//
-//		if ()
-//		i++;
-//		head = head->next;
-//	}
-//	if (cmd->files_in)
-//	{
-//
-//		while ()
-//	}
-//}
-
-
-
-
-//t_cmd 	*get_cmd_from_llst(t_list **llst)
-//{
-//	return ((llst->val))
-//}
-
-
-
-
-
-//int	open_and_dup(t_list *llst_elem, t_vars *vars, int **pipe_array, int i)
-//{
-//	int	in_fd;
-//	int	out_fd;
-//
-//	if (llst_elem->next)
-//	{
-//
-//	}
-//}
-
-
 int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int n) //vars могу вытащить из cmd так что лишний аргум
 {
 	char	*path_to_cmd;
 	t_cmd	*cmd;
 	int		in_fd;
 	int		out_fd;
-	char	**args_str;
+//	char	**args_array;
 	int		heredoc_f;
 
 	
@@ -174,19 +122,21 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 
 	root_paths_init(vars);
 	path_to_cmd = compose_cmd_path(cmd, vars->root_paths);
-	args_str = convert_lst_to_str(cmd->args_lst);
+	cmd->args_array = convert_lst_to_str(cmd->args_lst);
 //	(const char *filename, char *const argv [], char *const envp[]);
 //	printf("path = %s\n", path_to_cmd);
-//	big_str_print(args_str);
+//	big_str_print(args_array);
 	if (!path_to_cmd)
-		exit(printf("%s: command not found!\n", *args_str) * 0 - 1);
+		exit(printf("%s: command not found!\n", *cmd->args_array) * 0 - 1);
 //	printf("ok!\n");
 //	sleep(100);
 //	write(2, "ok!\n", 4);
 //	if (i)
 //		sleep(7);
 //	sleep(1000);
-	if (execve(path_to_cmd, args_str, vars->envp) == -1)
+	if (pipe_array)
+		close_all_pipes(pipe_array);
+	if (execve(path_to_cmd, cmd->args_array, vars->envp) == -1)
 		return (ft_perror("error1") - 1);
 	return (0);
 }
@@ -201,8 +151,8 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	int		status;
 	int		**pipe_array;
 	
-	int		*in_fd;
-	int		*out_fd;
+//	int		*in_fd;
+//	int		*out_fd;
 	
 	int ret;
 	int exit_mac;
@@ -214,26 +164,36 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	open_heredocs(llst_elem);
 	n = lst_len(llst); //количество функций
 //	printf("n = %d\n", n);
-	if (n == 1)
+	if (n == 1) //ubrat'
 	{
 		//выполнить одну команду(дописать);
 		printf("single cmd\n");
 //		return (0); //убрать
 	}
-	i = 0;
+	
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
 	pipe_array = open_pipes(n); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
-	while (i < n)
+	i = -1;
+	while (++i < n)
 	{
 		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому
-		pid_array[i] = fork();
-		if (pid_array[i] == 0)
-			child_process(llst_elem, vars, pipe_array, i, n);
+		open_files((t_cmd *)(llst_elem->val), pipe_array, i, n);
+		if (is_builtin(vars, (t_cmd *)(llst_elem->val)))
+			vars->exit_status = exec_builtin(vars, (t_cmd *)(llst_elem->val));
+//			do_builtin(); ВЕРНУТЬ РЕТЕРН!!
+//			printf("builtin!\n");
+		else
+		{
+			pid_array[i] = fork();
+			if (pid_array[i] == 0)
+				child_process(llst_elem, vars, pipe_array, i, n);
+		}
+//		reset_fd();
 		llst_elem = llst_elem->next;
-		i++;
+		
 	}
 	if (pipe_array)
-		close_all_pipes(pipe_array);
+		close_all_pipes(pipe_array); // мб говно идея, так как блитны могут быть и закроются невовремя, так, что билтин не успеет принять инфу, если третьим по счету стоит, например, а мб и все норм
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
 //		ret_pid = waitpid(-1, &status, 0); //-1  или 0 первый аргумент?

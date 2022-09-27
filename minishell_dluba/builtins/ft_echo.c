@@ -7,19 +7,19 @@ int	ft_echo(t_vars *vars, t_cmd *cmd) //нужен фдшник
 
     i = -1;
 	status = 0;
-	if (!ft_strcmp_(cmd->args[1], "-n"))
+	if (!ft_strcmp_(cmd->args_array[1], "-n"))
 	{
 		status = 1;
 		++i;
 	}
-    while (++i, cmd->args[i + 1] && i < cmd->len_args)
+    while (++i, cmd->args_array[i + 1] && i < cmd->len_args)
 	{
-		ft_putstr_fd_(cmd->args[i + 1], cmd->out);
-		if (i != cmd->len_args - 1 && cmd->args[i + 2])
-			ft_putstr_fd_(" ", cmd->out);
+		ft_putstr_fd_(cmd->args_array[i + 1], cmd->out_fd);
+		if (i != cmd->len_args - 1 && cmd->args_array[i + 2])
+			ft_putstr_fd_(" ", cmd->out_fd);
 	}
 	if (!status)
-		write(cmd->out, "\n", 1);
+		write(cmd->out_fd, "\n", 1);
 	return (0);
 }
 

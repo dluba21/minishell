@@ -6,12 +6,12 @@
 # include <stdlib.h>
 # include "../minishell.h"
 
-typedef struct s_cmd_ // структура для билтов
-{
-    char	**args; // обьекты воздействия
-    int		len_args; // колл-во обьектов
-	int		out; // значение вывода
-}	t_cmd_;
+//typedef struct s_cmd_ // структура для билтов
+//{
+//    char	**args; // обьекты воздействия
+//    int		len_args; // колл-во обьектов
+//	int		out; // значение вывода
+//}	t_cmd_;
 
 void	ft_putstr_fd_(char *s, int fd); // читать в utils_builtin.c
 int		ft_strcmp_(char *s1, char *s2); // читать в utils_builtin.c
