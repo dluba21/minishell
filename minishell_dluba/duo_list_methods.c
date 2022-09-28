@@ -76,7 +76,7 @@ int	lst_clear(t_list **lst)
 	return (0);
 }
 
-t_list	*lst_elem_new(void	*value, int	key) //void *key хочу
+t_list	*lst_elem_new(void *value, int key) //void *key хочу
 {
 	t_list	*node;
 
@@ -275,6 +275,19 @@ t_list	*lst_elem_copy(t_list *elem)
 	if (!new_elem)
 		return (NULL);
 	return (new_elem);
+}
+
+int 	lst_del_elem(t_list **lst, int n)
+{
+	t_list	*head;
+
+	if (!lst && !(*lst))
+		return (printf("lst_del error: no lst\n"));
+	head = *lst;
+	while (head && n--)
+		head = head->next;
+	lst_elem_free(head);
+	return (0);
 }
 
 //int main()

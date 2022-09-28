@@ -1,45 +1,29 @@
 #include "minishell1.h"
 
-int	is_num_arg(char *str)
+
+int	is_number_arg(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	if (str[0] != '-' || !ft_isdigit(str[0]))
+		return (0);
+	while (str[++i])
 	{
-		if (str[i] != '-' && !ft_isdigit_(str[i]))
-		{
-			printf("minishell: exit: %s: numeric argument required\n", str);
-			return (-1);
-		}
-		i++;
+		if (!ft_isdigit(str[i]))
+			return (0);
 	}
-	return (0);
+	return (1);
 }
+
 
 int	ft_exit(t_vars *vars, t_cmd *cmd)
 {
-	size_t	len;
-    int status;
-
-	len = 0;
-	if (!cmd) //что?
-	{
-		ft_putendl_fd_("\nexit", 1);
-		exit(0);
-		return (0);
-	}
-	while (cmd->args_array[len + 1])
-		len++;
-	if (len == 2)
-	{
-		if (!is_num_arg(cmd->args_array[2]))
-			status = ft_atoi(cmd->args_array[2]);
-	}
-	if (len > 2)
-		ft_putstr_fd_("minishell: exit: too many arguments\n", 2);
-//	ft_free_mat(cmd->args_array); //?
-	ft_putstr_fd_("exit\n", 1);
-	exit(status);
-	return (status);
+	if (lst_len(cmd->args_lst) > 2)
+		return (ft_putstr_fd("exit: too many arguments\n", cmd->out_fd) * 0 + 1);
+	if (lst_len(cmd->args_lst) == 1)
+		exit (ft_putstr_fd("exit\n", cmd->out_fd) * 0);
+	if (!is_number_arg(*cmd->args_array))
+		exit (ft_putstr_fd("exit: %s numeric argument required\n", cmd->out_fd) * 0);
+	exit(ft_atoi(*cmd->args_array + 1)); //?
 }

@@ -81,7 +81,7 @@ typedef int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
 //
 //typedef struct s_llist //logic list для пайпов и бонусов мб
 //{
-//	
+//
 //}
 
 
@@ -99,10 +99,12 @@ struct s_vars
 	int		exit_status; //
 	char	*term_pid; //пид терминала для $$
 	struct sigaction sig;
-	char *reserved_words[8]; //массив с названиями функций билтинов
+	int		stdin_fd;
+	int		stdout_fd;
+	char	**reserved_words; //массив с названиями функций билтинов
 //	t_builtin_ptr builtin_array[7]; //массив с указателяит на функции билтинов
 //	int	(* t_builtin_ptr)(t_vars *vars, t_cmd *cmd);
-	t_builtin_ptr builtin_ptr_arr[];
+	t_builtin_ptr *builtin_ptr_arr;
 
 };
 
@@ -158,6 +160,7 @@ int		lst_print_tokens(t_list **lst);
 t_list	*lst_get_last(t_list **lst);
 t_list	*lst_get_first(t_list *tale);
 int		lst_elem_free(t_list *node);
+int 	lst_del_elem(t_list **lst, int n);
 char	**convert_lst_to_str(t_list **lst);
 
 
@@ -197,6 +200,8 @@ void	is_null(void *ptr); //не ннужна потом
 int		big_str_len(char **big_str);
 int		ft_perror(char *str); //возвращает int = 0 в отличие от perror, поэтому можно писать return(ft_perror)
 int		ft_putstr_fd(char *s, int fd);
+int		ft_putendl_fd(char *s, int fd);
+int		ft_atoi(const char *str);
 
 
 
@@ -222,6 +227,12 @@ void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);
 char	*find_env_var(char *str, char **env);
 void	env_var_trimmer(char *env_elem, char **buffer);
 char	*env_key_trimmer(char *env_elem);
+void	recreate_envp(t_vars *vars);
+char	*env_key_trimmer(char *env_elem);
+void	env_var_trimmer(char *env_elem, char **buffer);
+int		is_var_in_env(t_list **env_lst, char *key);
+void	add_env_value(t_vars *vars, char *key, char *value);
+void	change_env_val_key(t_vars *vars, char *old_key, char *new_key, char *value);
 
 
 //executor часть
@@ -245,7 +256,7 @@ void pipe_print(int **big_array);
 //билтины
 int	ft_cd(t_vars *vars, t_cmd *cmd);
 int	ft_echo(t_vars *vars, t_cmd *cmd);
-int	t_env(t_vars *vars, t_cmd *cmd);
+int	ft_env(t_vars *vars, t_cmd *cmd);
 int	ft_exit(t_vars *vars, t_cmd *cmd);
 int	ft_export(t_vars *vars, t_cmd *cmd);
 int	ft_pwd(t_vars *vars, t_cmd *cmd);
@@ -254,6 +265,10 @@ int	ft_unset(t_vars *vars, t_cmd *cmd);
 
 //cигналы
 void	sig_init(void);
+
+
+
+
 
 #endif
 

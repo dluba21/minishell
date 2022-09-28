@@ -1,17 +1,19 @@
 #include "minishell1.h"
-
+	
 int		ft_env(t_vars *vars, t_cmd *cmd)
 {
-	size_t i;
+	t_list	*head;
+	int		n;
 
-	i = 0; //i = -1??
-	if (!vars->envp)
+	if (!vars->envp_lst)
 		return (-1);
-	while (vars->envp[i])
+	head = *vars->envp_lst;
+	while (head)
 	{
-		if (ft_strchr_(vars->envp[i], '='))
-			ft_putendl_fd_(vars->envp[i], cmd->out_fd);
-		i++;
+//		n = ft_strchr((char *)head->val, '=');
+//		if (n != ft_strlen((char *)head->val))
+		ft_putendl_fd((char *)head->val + n, cmd->out_fd); //?
+//		head = head->next;
 	}
 	return (0);
 }

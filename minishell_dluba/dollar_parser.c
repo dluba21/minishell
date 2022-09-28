@@ -1,66 +1,8 @@
 #include "minishell.h"
 
-void	env_var_trimmer(char *env_elem, char **buffer) // записывает в буфер все до '='
-{
-	char	*tmp;
 
-	tmp = *buffer;
-	while (*env_elem && *env_elem != '=')
-		*tmp++ = *env_elem++;
-	if (!*env_elem)
-		printf("no '=' in envp\n"); //удалить, такое не бывает, наверное
-	*tmp = 0;
-}
 
-char	*env_key_trimmer(char *env_elem)
-{
-	char	*key;
-	char	*tmp;
-	
-	while (*env_elem && *env_elem != '=')
-		env_elem++;
-	env_elem++; // перешел за '='
-	key =  (char *)malloc(ft_strlen(env_elem) + 1);
-	if (!key)
-		return (NULL);
-	tmp = key;
-	while (*env_elem)
-		*tmp++ = *env_elem++;
-	*tmp = 0;
-	return (key);
-}
-
-char	*find_env_var(char *str, char **env) //ищет среди переменных окружения нужное или возвращает пустую строку если не нашло
-{
-	char	*buffer;
-	char	*dollar_str;
-	int		i;
-
-	if (!env)
-	{
-		printf("error: no envp in dollar parser!\n");
-		return (NULL);
-	}
-	dollar_str = NULL;
-	buffer = ft_strset(100); // создает буфер
-	while (*env)
-	{
-		env_var_trimmer(*env, &buffer);
-		if (!ft_strcmp(str, buffer)) //если строки равны
-		{
-			dollar_str = env_key_trimmer(*env);
-			break ;
-		}
-		env++;
-	}
-	free(buffer);
-	free(str);
-	if (!dollar_str) //если в итоге не нашло такую переменную
-		return (NULL);
-	return (dollar_str);
-}
-
-void    expand_dollar_var_in_brace(char **str, char **ret_str, t_vars *vars)
+void	expand_dollar_var_in_brace(char **str, char **ret_str, t_vars *vars)
 {
 	int		i;
     char	*tmp;

@@ -103,7 +103,7 @@ int	open_files(t_cmd *cmd, int **pipe_array, int i, int n) //открывает 
 //	printf("proc[%d]\t\tin_fd = %d, out_fd = %d\n", i, in_fd, out_fd);
 //	write(2, "ok!\n", 4);
 //		printf("in_fd = %d, i = %d, *heredoc = %d\n", *in_fd, i, *heredoc_f);
-	delete_heredocs(cmd->files_in);
+	delete_heredocs(cmd->files_in); //удаляются зердоки только данной команды
 //	if (pipe_array)
 //		close_all_pipes(pipe_array); //закрыл все лишние пайпы
 	

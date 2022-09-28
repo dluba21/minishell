@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv, char **env)
 {
+	
 	t_vars	vars;
 	t_list **huy; //udalit'
 	t_list *head;
@@ -31,19 +32,22 @@ int main(int argc, char **argv, char **env)
 		printf("main proc = %d\n", getpid());
 		sig_init();
 		str = ft_readline(); //
-		huy = bash_args_lst_lexer(str, &vars);
-		llst = llst_new(huy);
-		exec_cmd(llst, &vars);
+		if (*str)
+		{
+			huy = bash_args_lst_lexer(str, &vars);
+			llst = llst_new(huy);
+			exec_cmd(llst, &vars);
+		}
 		if (str)
 			free(str);
 //		break;
 //		rl_clear_history();
 	}
-//	sleep(1000);
-////	free_all;
-	
-	
+////	sleep(1000);
+//////	free_all;
 //
+//
+////
 //
 ////	huy = bash_args_lst_lexer("ls > $LOGNAME < aboba | a > \"arbidol\" bruh $? | abobus  1 << lol | denis no 3$$$ | pop durak dope ", &vars);
 ////
@@ -51,7 +55,7 @@ int main(int argc, char **argv, char **env)
 //
 //
 ////	huy = bash_args_lst_lexer("<< stop cat | << kek cat | cat", &vars);
-////	huy = bash_args_lst_lexer("< file_1.f cat | cat | cat", &vars);
+////	huy = bash_args_lst_lexer("echo aboba | cat", &vars);
 //	huy = bash_args_lst_lexer(get_next_line(0), &vars);
 //
 //
@@ -81,6 +85,8 @@ int main(int argc, char **argv, char **env)
 //	printf("------------cmd_lst has written--------\n\n\n\n");
 //	exec_cmd(llst, &vars);
 ////	printf("shell_pid = %d", getpid()); //если команда не найдена то почему то два процесса идут, типа после execve надо захватывать статус выхода и дальше ничего не делать
+	close(vars.stdin_fd);
+	close(vars.stdout_fd);
 	printf("\nall is made!!!\n");
 
 }

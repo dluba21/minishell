@@ -127,7 +127,7 @@ char	*ft_strset(int n)
 {
 	char	*str;
 
-	str = malloc(n + 1);
+	str = (char *)malloc(n + 1);
 	if (!str)
 		return (NULL);
 	while (n-- >= 0)
@@ -212,12 +212,26 @@ int	ft_strncmp(char *str_1, char *str_2, int n)
 	i = 0;
 	while (i < n)
 	{
-		if (str_1[i] != str_2[i])
-			return (-1);
+		if (str_1[i] != str_2[i] || !str_1[i] || !str_2[i])
+			return ((unsigned char)str_1[i] - (unsigned char)str_2[i]);
 		i++;
 	}
 	return (0);
 }
+
+//int	ft_strcmp_n(const char *str1, const char *str2, size_t n)
+//{
+//	size_t	i;
+//
+//	i = 0;
+//	while (i < n)
+//	{
+//		if (str1[i] != str2[i] || !str1[i] || !str2[i])
+//			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+//		i++;
+//	}
+//	return (0);
+//}
 
 int	ft_putstr_fd(char *s, int fd)
 {
@@ -231,3 +245,136 @@ int ft_perror(char *str)
 	perror(str);
 	return (0);
 }
+
+
+int		ft_putendl_fd(char *s, int fd)
+{
+	int	ret;
+
+	if (s)
+	{
+		ret = write(fd, s, ft_strlen(s)) + 1;
+		write(fd, "\n", 1);
+	}
+	return (ret);
+}
+
+char	*ft_strdup(char *str)
+{
+	char	*ret_str;
+	char	*temp;
+
+	ret_str = (char *)(malloc(ft_strlen(str) + 1));
+	if (!ret_str)
+		return (NULL);
+	temp = ret_str;
+	while (*str)
+		*temp++ = *str++;
+	*temp = 0;
+	return (ret_str);
+}
+
+int ft_isspace(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
+
+int	ft_strcmp_n(const char *str1, const char *str2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (str1[i] != str2[i] || !str1[i] || !str2[i])
+			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+		i++;
+	}
+	return (0);
+}
+
+
+
+int	ft_strchr(char *str, char *c) //длина пути до нужного символа (если пустая строка или не маллок то -1)
+{//сделать по не char c, а массив символов
+//	char	*temp;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (str[i])
+	{
+		j = 0;
+		while (c[j])
+		{
+			if (str[i] == c[j++])
+				return (i);
+		}
+		i++;
+	}
+	return (i); //это исправитьб вдруг нет символов
+	//хз как реализовать через индексы а не укказатели, так как в оригинале при пустой строке и поиске не конца строки выдает NULL
+	//вот начал возвращать i, такое себе
+}
+
+
+
+
+
+static int	sign_checker(char c)
+{
+	if (c == '-')
+		return (-1);
+	return (1);
+}
+
+static int	long_checker(const char *str, int i, int sign)
+{
+	int			len;
+	long int	mod;
+
+	mod = 0;
+	len = 0;
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	{
+		if (sign == -1 && ((mod == 922337203685477580 && \
+		(str[i] - '0' >= 8)) || len >= 19))
+			return (0);
+		if (sign == 1 && ((mod == 922337203685477580 \
+		&& (str[i] - '0' >= 7)) || len >= 19))
+			return (-1);
+		mod = mod * 10 + str[i++] - '0';
+		len++;
+	}
+	return (1);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	j;
+	int	sign;
+	int	mod;
+
+	i = 0;
+	j = 0;
+	mod = 0;
+	sign = 1;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
+		i++;
+	while (str[i] == '+' || str[i] == '-')
+	{
+		if (j > 0)
+			return (0);
+		sign = sign_checker(str[i++]);
+		j++;
+	}
+	if (long_checker(str, i, sign) < 1)
+		return (long_checker(str, i, sign));
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+		mod = mod * 10 + str[i++] - '0';
+	return (mod * sign);
+}
+

@@ -15,13 +15,18 @@
 //	}
 //}
 //
+//void	reset_fd(t_vars *vars, t_cmd *cmd)
+//{
+//	
+//}
+
 int	is_builtin(t_vars *vars, t_cmd *cmd)
 {
 	int		i;
 
 	i = 8;
 	while (i--)
-		if (!ft_strcmp(cmd->args_array[i], vars->reserved_words[i]))
+		if (!ft_strcmp((*cmd->args_lst)->val, vars->reserved_words[i]))
 			return (1);
 	return (0);
 }
@@ -34,11 +39,11 @@ int	exec_builtin(t_vars *vars, t_cmd *cmd) //нахуя две функции у
 	i = 8;
 	while (i--)
 	{
-		if (!ft_strcmp(cmd->args_array[i], vars->reserved_words[i]))
+		if (!ft_strcmp((*cmd->args_lst)->val, vars->reserved_words[i]))
 		{
 			if (vars->envp_f) //nado soedinit'!!!
 				vars->envp = convert_lst_to_str(vars->envp_lst);//recreate_envp()
-			cmd->len_args = lst_len(cmd->args_lst) - 1;
+			cmd->len_args = lst_len(cmd->args_lst);
 			cmd->args_array = convert_lst_to_str(cmd->args_lst);
 			ret = vars->builtin_ptr_arr[i](vars, cmd);
 //			close(cmd->in_fd);
@@ -110,12 +115,14 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 //	char	**args_array;
 	int		heredoc_f;
 
-	
+//	printf("ok!\n");
 	printf("pid [%d] = {%d}\n", i, getpid());
+//	write(2, "oke!\n", 5);
+//	fprintf(stderr, "pid [%d] = {%d}\n",  i, getpid(), 30);
 	cmd = (t_cmd *)llst_elem->val;
 	
 	
-	open_files(cmd, pipe_array, i, n);
+//	open_files(cmd, pipe_array, i, n);
 	
 	if (vars->envp_f) //nado soedinit'!!!
 		vars->envp = convert_lst_to_str(vars->envp_lst); //дописать пересоздание env_new в env_funcs
@@ -133,7 +140,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 //	write(2, "ok!\n", 4);
 //	if (i)
 //		sleep(7);
-//	sleep(1000);
+	
 	if (pipe_array)
 		close_all_pipes(pipe_array);
 	if (execve(path_to_cmd, cmd->args_array, vars->envp) == -1)
@@ -150,6 +157,7 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	int		n;
 	int		status;
 	int		**pipe_array;
+	
 	
 //	int		*in_fd;
 //	int		*out_fd;
@@ -174,26 +182,38 @@ int	exec_cmd(t_list **llst, t_vars *vars) //тут надо учесть бил�
 	pid_array = (int *)malloc(sizeof(int) * n); //leaks массив с пидами процессов
 	pipe_array = open_pipes(n); //массив с пайпами, их количество = количеству команд - 1 (для стдина и аута не нужен пайп, просто дуп2)
 	i = -1;
+	printf("main proc = %d\n", getpid());
 	while (++i < n)
 	{
 		//ВСТАВИТЬ БИЛТИНЫ + поработать с фдшниками по-особому
+		
 		open_files((t_cmd *)(llst_elem->val), pipe_array, i, n);
+//		write(2, "ok!\n", 4);
 		if (is_builtin(vars, (t_cmd *)(llst_elem->val)))
 			vars->exit_status = exec_builtin(vars, (t_cmd *)(llst_elem->val));
 //			do_builtin(); ВЕРНУТЬ РЕТЕРН!!
 //			printf("builtin!\n");
 		else
 		{
+			
 			pid_array[i] = fork();
 			if (pid_array[i] == 0)
 				child_process(llst_elem, vars, pipe_array, i, n);
+			
 		}
-//		reset_fd();
+//		sleep(1000);
+
+		dup2(vars->stdin_fd, 0);
+		dup2(vars->stdout_fd, 1);
 		llst_elem = llst_elem->next;
 		
 	}
+	
+//	sleep(1000);
 	if (pipe_array)
 		close_all_pipes(pipe_array); // мб говно идея, так как блитны могут быть и закроются невовремя, так, что билтин не успеет принять инфу, если третьим по счету стоит, например, а мб и все норм
+
+//	sleep(1000);
 	while (i--)
 	{ //вроде тоже нужен WTERMSIG(status)
 //		ret_pid = waitpid(-1, &status, 0); //-1  или 0 первый аргумент?

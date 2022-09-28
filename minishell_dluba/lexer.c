@@ -1,121 +1,7 @@
 #include "minishell.h"
 
 
-char	*ft_strdup(char *str)
-{
-	char	*ret_str;
-	char	*temp;
 
-	ret_str = (char *)(malloc(ft_strlen(str) + 1));
-	if (!ret_str)
-		return (NULL);
-	temp = ret_str;
-	while (*str)
-		*temp++ = *str++;
-	*temp = 0;
-	return (ret_str);
-}
-
-int ft_isspace(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
-
-int	ft_strcmp_n(const char *str1, const char *str2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		if (str1[i] != str2[i] || !str1[i] || !str2[i])
-			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
-		i++;
-	}
-	return (0);
-}
-
-
-//int	ft_strcmp_n(char *s1, char *s2, int n) //сравнивает строки на n символов вперед вперед
-////я каждый раз проверяю после его вызова, есть ли конец строки после символа, мб вывести -1, если конец строки?
-////и еще мб передвигать указатель, если и правда нашло символы
-//{
-//	int	i;
-//
-//	if (!s1 || !s2 || n < 0)
-//		return (-1);
-//	i = 0;
-//	while (i < n)
-//	{
-//		if (!s1[i] || !s2[i] || s1[i] == s2[i])
-//			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-//		i++;
-//	}
-//	return (0);
-//}
-//char *
-//	  readline (const char *prompt);
-
-
-
-//int pipe_len_and_check(char *bash_str) //чекает длину пайпов и синтакис его (а вообще переписать, так как говно)
-//{ //лучше сначала внести токены в список и потом уже проверять синтаксис
-//	int		i;
-//	int		n_pipes;
-//	int		isspace_f;
-//
-//	i = 0;
-//	isspace_f = 0;
-////	temp = bash_str
-//	while (*bash_str)
-//	{
-//		if (ft_isspace(*bash_str)) //чекаю есть ли пробелы вообще, важно для синтаксиса
-//			isspace_f = 1;
-//		else if (*bash_str == "|" && !ft_strcmp_n(bash_str, "||", 2) \
-//			&& *(bash_str + 1)); //последнее если aboba |
-//		{
-//			bash_str += 2;
-//			isspace_f = 0;
-//			n_pipes++;
-//			if (!ft_isspace(*(bash_str + 2))) //проверка на синтаксис, есть ли пробел после слова
-//				return (-1); //выдать в верхней функции ошибку и написать
-//		}
-//		else
-//			isspace_f = 0;
-//		bash_str++;
-//	}
-//}
-
-
-
-//int	bash_args_len(char **argv) //считает количество элементов в списке токенов
-//{
-//
-//}
-
-int ft_strchr(char *str, char *c) //длина пути до нужного символа (если пустая строка или не маллок то -1)
-{//сделать по не char c, а массив символов
-//	char	*temp;
-	int		i;
-	int		j;
-
-	i = 0;
-	while (str[i])
-	{
-		j = 0;
-		while (c[j])
-		{
-			if (str[i] == c[j++])
-				return (i);
-		}
-		i++;
-	}
-	return (i); //это исправитьб вдруг нет символов
-	//хз как реализовать через индексы а не укказатели, так как в оригинале при пустой строке и поиске не конца строки выдает NULL
-	//вот начал возвращать i, такое себе
-}
 
 char *quote_str_trim(char *bash_str, char *sym_arr) //если подавать char **bash_str, то можно сократить код и будет двигаться указатель срапзу по обрезании
 {
@@ -174,12 +60,12 @@ t_list **bash_args_lst_lexer(char *bash_str, t_vars *vars)
 			lst_push_back(lst, lst_elem_new(str, EXP_FIELD));
 			bash_str += ft_strchr(bash_str, "\"") + 1; //nado li +1??
 		}
-		else if (!ft_strcmp_n(bash_str, "<<", 2))
+		else if (!ft_strncmp(bash_str, "<<", 2))
 		{
 			bash_str += 2;
 			lst_push_back(lst, lst_elem_new(NULL, REDIR_HEREDOC)); //типа потом уже добавлю delim при парсинге уже
 		}
-		else if (!ft_strcmp_n(bash_str, ">>", 2))
+		else if (!ft_strncmp(bash_str, ">>", 2))
 		{
 			bash_str += 2;
 //			if (!*bash_str) //nahuy ne nado pohodu
