@@ -1,5 +1,4 @@
-#include "minishell1.h"
-
+#include "../minishell.h"
 
 int	is_number_arg(char *str)
 {
@@ -16,14 +15,15 @@ int	is_number_arg(char *str)
 	return (1);
 }
 
-
 int	ft_exit(t_vars *vars, t_cmd *cmd)
 {
+	(void)vars;
 	if (lst_len(cmd->args_lst) > 2)
 		return (ft_putstr_fd("exit: too many arguments\n", cmd->out_fd) * 0 + 1);
 	if (lst_len(cmd->args_lst) == 1)
 		exit (ft_putstr_fd("exit\n", cmd->out_fd) * 0);
 	if (!is_number_arg(*cmd->args_array))
-		exit (ft_putstr_fd("exit: %s numeric argument required\n", cmd->out_fd) * 0);
-	exit(ft_atoi(*cmd->args_array + 1)); //?
+		exit (ft_putstr_fd("exit: %s numeric argument required\n", \
+									cmd->out_fd) * 0);
+	exit(ft_atoi(*cmd->args_array + 1));
 }

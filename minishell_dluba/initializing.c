@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void free_big_str(char **big_str)
+void	free_big_str(char **big_str)
 {
 	char	**temp;
 
@@ -10,11 +10,10 @@ void free_big_str(char **big_str)
 	free(temp);
 }
 
-char **big_string_copy(char **big_str)
+char	**big_string_copy(char **big_str)
 {
-	int	i;
-	int	j;
-	char **ret_str;
+	int		i;
+	char	**ret_str;
 
 	i = 0;
 	ret_str = NULL;
@@ -35,22 +34,18 @@ char **big_string_copy(char **big_str)
 	return (ret_str);
 }
 
-int envp_init(t_vars *vars, char **envp)
+int	envp_init(t_vars *vars, char **envp)
 {
-	int	i;
-	int	j;
-
-	i = 0;
 	vars->envp = big_string_copy(envp);
 	if (!vars->envp)
 		return (write(2, "envp malloc error\n", 18) - 19);
-	vars->envp_lst = lst_env_copy(envp); 
+	vars->envp_lst = lst_env_copy(envp);
 	if (!vars->envp_lst)
 		return (write(2, "envp_lst malloc error\n", 18) - 23);
 	return (0);
 }
 
-void builtin_array_creator(t_vars *vars)
+void	builtin_array_creator(t_vars *vars)
 {
 	vars->reserved_words = (char **)malloc(sizeof(char *) * 7);
 	vars->builtin_ptr_arr = (t_builtin_ptr *)malloc(sizeof(t_builtin_ptr) * 7);

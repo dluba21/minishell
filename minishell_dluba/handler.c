@@ -13,6 +13,5 @@ void	ft_sig_int(int sig)
 void	sig_init(void)
 {
 	signal(SIGINT, ft_sig_int);
-	
 	signal(SIGQUIT, SIG_IGN);
 }

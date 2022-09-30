@@ -1,6 +1,6 @@
-#include "minishell1.h"
-	
-int		ft_env(t_vars *vars, t_cmd *cmd)
+#include "../minishell.h"
+
+int	ft_env(t_vars *vars, t_cmd *cmd)
 {
 	t_list	*head;
 
@@ -9,7 +9,7 @@ int		ft_env(t_vars *vars, t_cmd *cmd)
 	head = *vars->envp_lst;
 	while (head)
 	{
-		ft_putendl_fd((char *)head->val, cmd->out_fd); //?
+		ft_putendl_fd((char *)head->val, cmd->out_fd);
 		head = head->next;
 	}
 	return (0);

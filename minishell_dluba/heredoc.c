@@ -15,7 +15,15 @@ void	delete_heredocs(t_list **files_in)
 	}
 }
 
-void	heredoc_parser(t_list *file_in, int i)
+int	free_all_gnl(char **line, char **limiter, int *fd)
+{
+	free(*line);
+	free(*limiter);
+	close(*fd);
+	return (0);
+}
+
+int	heredoc_parser(t_list *file_in, int i)
 {
 	char	*line;
 	char	*limiter;
@@ -29,20 +37,13 @@ void	heredoc_parser(t_list *file_in, int i)
 	{
 		line = get_next_line(0);
 		if (!line)
-		{
-			free(line);
-			free(limiter);
-			close(fd);
-			return ;
-		}
+			return (free_all_gnl(&line, &limiter, &fd));
 		if (!ft_strcmp(line, limiter))
 		{
-			free(line);
-			free(limiter);
-			close(fd);
+			free_all_gnl(&line, &limiter, &fd);
 			free(file_in->val);
 			file_in->val = heredoc_name;
-			return ;
+			return (0);
 		}
 		if (write(fd, line, ft_strlen(line)) == -1)
 			printf("here_doc error: can't write");
@@ -68,7 +69,6 @@ int	open_heredocs(t_list *llst_elem)
 				head = head->next;
 			}
 		}
-		
 		llst_elem = llst_elem->next;
 	}
 	return (0);
