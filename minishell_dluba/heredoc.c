@@ -15,35 +15,18 @@ void	delete_heredocs(t_list **files_in)
 	}
 }
 
-void	heredoc_parser(t_list *file_in, int i) //тупо записывает в файл что ввел
+void	heredoc_parser(t_list *file_in, int i)
 {
 	char	*line;
 	char	*limiter;
-//	t_list	*head;
-//	t_list	*tmp;
 	char	*heredoc_name;
 	int		fd;
 
-
-//	head = *files;
-//	while (head)
-//	{
-//		if (head->key == REDIR_HEREDOC)
-//			tmp = head;
-//		head = head->next;
-//	}
-
 	heredoc_name = ft_strjoin("/tmp/heredoc_file_", ft_itoa(i));
-
-//	printf("name = %s\n", heredoc_name);
-	
-//	if (!tmp) //не нашел heredoc
-//		return ;
 	fd = open(heredoc_name, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	limiter = ft_strjoin(file_in->val, "\n");
 	while (1)
 	{
-		printf("insert:\n");
 		line = get_next_line(0);
 		if (!line)
 		{
@@ -57,9 +40,6 @@ void	heredoc_parser(t_list *file_in, int i) //тупо записывает в �
 			free(line);
 			free(limiter);
 			close(fd);
-//			if (heredoc_f) //хердоки надо открыть по-любомуб если есть но мб не из него ввод
-//				*in_fd = open("/tmp/heredoc_file", O_RDONLY); //открываю заново так как курсор сдвинулся
-//			unlink(""); //удалить надо файл, дескриптор остается
 			free(file_in->val);
 			file_in->val = heredoc_name;
 			return ;
@@ -78,17 +58,15 @@ int	open_heredocs(t_list *llst_elem)
 	i = -1;
 	while (llst_elem)
 	{
-		if (((t_cmd *)llst_elem->val)->files_in) //проверка мб нет файлов на воод вообще
+		if (((t_cmd *)llst_elem->val)->files_in)
 		{
 			head = *(((t_cmd *)llst_elem->val)->files_in);
 			while (head)
 			{
-//				printf("i = %d\n", i);
 				if (head->key == REDIR_HEREDOC)
 					heredoc_parser(head, ++i);
 				head = head->next;
 			}
-//			printf("ok\n");
 		}
 		
 		llst_elem = llst_elem->next;

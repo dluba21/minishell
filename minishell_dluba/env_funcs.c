@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char **convert_lst_to_str(t_list **lst) //создает новый массив переменных окуржения если в envp_lst были произведены изенеия (envp_f = 1)
+char **convert_lst_to_str(t_list **lst)
 {
 	t_list	*head;
 	char	**ret_str;
@@ -31,7 +31,7 @@ void	recreate_envp(t_vars *vars)
 	free_big_str(tmp);
 }
 
-char	*env_key_trimmer(char *env_elem) // записывает в буфер все до '='
+char	*env_key_trimmer(char *env_elem)
 {
 	char	*ret_str;
 	char	*tmp;
@@ -64,7 +64,7 @@ char	*env_var_trimmer(char *env_elem)
 	return (key);
 }
 
-char	*find_env_var(char *str, char **env) //ищет среди переменных окружения нужное или возвращает пустую строку если не нашло
+char	*find_env_var(char *str, char **env)
 {
 	char	*key;
 	char	*dollar_str;
@@ -79,7 +79,7 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 	while (*env)
 	{
 		key = env_key_trimmer(*env);
-		if (!ft_strcmp(str, key)) //если строки равны
+		if (!ft_strcmp(str, key))
 		{
 			dollar_str = env_var_trimmer(*env);
 			break ;
@@ -87,7 +87,7 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 		free(key);
 		env++;
 	}
-	if (!dollar_str) //если в итоге не нашло такую переменную
+	if (!dollar_str)
 		return (NULL);
 	return (dollar_str);
 }
@@ -100,7 +100,7 @@ int	is_var_in_env(t_list **envp_lst, char *key)
 	head = *envp_lst;
 	while (head)
 	{
-		tmp = env_key_trimmer((char *)head->val); //?
+		tmp = env_key_trimmer((char *)head->val);
 		if (!ft_strcmp(tmp, key))
 			return (1);
 		head = head->next;
@@ -114,7 +114,6 @@ void	change_env_val_key(t_vars *vars, char *old_key, char *new_key, char *value)
 	char	*tmp;
 
 	head = *(vars->envp_lst);
-	printf("old_key = %s\nnew_key = %s\nvalue= %s\n", old_key, new_key, value);
 	while (head)
 	{
 		tmp = env_key_trimmer((char *)head->val);
