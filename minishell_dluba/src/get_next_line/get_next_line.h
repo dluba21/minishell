@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   duo_list_methods_3.c                               :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anrdeysuvorov <anrdeysuvorov@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 01:47:05 by anrdeysuvor       #+#    #+#             */
-/*   Updated: 2022/10/01 01:58:09 by anrdeysuvor      ###   ########.fr       */
+/*   Created: 2022/03/12 03:48:42 by anrdeysuvor       #+#    #+#             */
+/*   Updated: 2022/03/12 03:48:47 by anrdeysuvor      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# include <stdlib.h>
+# include <unistd.h>
+# define BUFFER_SIZE 1
 
-t_list	*lst_get_last(t_list **lst)
-{
-	t_list	*head;
+int				ft_strlen_gnl(char *c);
 
-	if (!lst)
-		return (NULL);
-	head = *lst;
-	if (!head)
-		return (NULL);
-	while (head->next)
-		head = head->next;
-	return (head);
-}
+char			*ft_strjoin_gnl(char *s1, char *s2, char c);
 
-t_list	*lst_get_first(t_list *tail)
-{
-	if (!tail)
-		return (NULL);
-	while (tail->prev)
-		tail = tail->prev;
-	return (tail);
-}
+int				ft_strchr_gnl(const char *str, int sym);
+
+char			*re_string(char *str, int flag);
+
+char			*ft_strdup_gnl(char *str);
+
+char			*get_next_line(int fd);
+
+#endif
