@@ -98,13 +98,13 @@ void builtin_array_creator(t_vars *vars) //инициализация масси
 	vars->reserved_words = (char **)malloc(sizeof(char *) * 7);
 	vars->builtin_ptr_arr = (t_builtin_ptr *)malloc(sizeof(t_builtin_ptr) * 7);
 	
-	vars->reserved_words[0] = "echo";
-	vars->reserved_words[1] = "cd";
-	vars->reserved_words[2] = "pwd";
-	vars->reserved_words[3] = "export";
-	vars->reserved_words[4] = "unset";
-	vars->reserved_words[5] = "env";
-	vars->reserved_words[6] = "exit";
+	vars->reserved_words[0] = ft_strdup("echo");
+	vars->reserved_words[1] = ft_strdup("cd");
+	vars->reserved_words[2] = ft_strdup("pwd");
+	vars->reserved_words[3] = ft_strdup("export");
+	vars->reserved_words[4] = ft_strdup("unset");
+	vars->reserved_words[5] = ft_strdup("env");
+	vars->reserved_words[6] = ft_strdup("exit");
 	
 	vars->builtin_ptr_arr[0] = ft_echo;
 	vars->builtin_ptr_arr[1] = ft_cd;

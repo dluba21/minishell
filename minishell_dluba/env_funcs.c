@@ -31,29 +31,30 @@ void	recreate_envp(t_vars *vars)
 	free_big_str(tmp);
 }
 
-void	env_var_trimmer(char *env_elem, char **buffer) // записывает в буфер все до '='
+char	*env_key_trimmer(char *env_elem) // записывает в буфер все до '='
 {
+	char	*ret_str;
 	char	*tmp;
-
-	tmp = *buffer;
-	while (*env_elem && *env_elem != '=')
+	char	len;
+	
+	len = ft_strchr(env_elem, "=");
+	if (len == ft_strlen(env_elem))
+		return (NULL);
+	ret_str = (char *)malloc(len + 1);
+	tmp = ret_str;
+	while (len--)
 		*tmp++ = *env_elem++;
-	if (!*env_elem)
-		printf("no '=' in envp\n"); //удалить, такое не бывает, наверное
 	*tmp = 0;
+	return (ret_str);
 }
 
-char	*env_key_trimmer(char *env_elem)
+char	*env_var_trimmer(char *env_elem)
 {
 	char	*key;
 	char	*tmp;
 	
-//	if (ft_strchr(env_elem, "=") == ft_strlen(env_elem))
-//		return (NULL);
-	while (*env_elem && *env_elem != '=')
-		env_elem++;
-	env_elem++; // перешел за '='
-	key =  (char *)malloc(ft_strlen(env_elem) + 1);
+	env_elem += ft_strchr(env_elem, "=") + 1;
+	key = (char *)malloc(ft_strlen(env_elem) + 1);
 	if (!key)
 		return (NULL);
 	tmp = key;
@@ -65,7 +66,7 @@ char	*env_key_trimmer(char *env_elem)
 
 char	*find_env_var(char *str, char **env) //ищет среди переменных окружения нужное или возвращает пустую строку если не нашло
 {
-	char	*buffer;
+	char	*key;
 	char	*dollar_str;
 	int		i;
 
@@ -75,18 +76,17 @@ char	*find_env_var(char *str, char **env) //ищет среди переменн
 		return (NULL);
 	}
 	dollar_str = NULL;
-	buffer = ft_strset(100); // создает буфер
 	while (*env)
 	{
-		env_var_trimmer(*env, &buffer);
-		if (!ft_strcmp(str, buffer)) //если строки равны
+		key = env_key_trimmer(*env);
+		if (!ft_strcmp(str, key)) //если строки равны
 		{
-			dollar_str = env_key_trimmer(*env);
+			dollar_str = env_var_trimmer(*env);
 			break ;
 		}
+		free(key);
 		env++;
 	}
-	free(buffer);
 	if (!dollar_str) //если в итоге не нашло такую переменную
 		return (NULL);
 	return (dollar_str);
@@ -114,18 +114,17 @@ void	change_env_val_key(t_vars *vars, char *old_key, char *new_key, char *value)
 	char	*tmp;
 
 	head = *(vars->envp_lst);
+	printf("old_key = %s\nnew_key = %s\nvalue= %s\n", old_key, new_key, value);
 	while (head)
 	{
 		tmp = env_key_trimmer((char *)head->val);
 		if (!ft_strcmp(old_key, tmp))
 		{
-//			free(tmp);
-//			free(head->val);
+			free(tmp);
 			head->val = ft_strjoin(new_key, "=");
 			tmp = head->val;
 			head->val = ft_strjoin(head->val, value);
-//			free(value);
-//			free(tmp);
+			free(tmp);
 			break ;
 		}
 		free(tmp);

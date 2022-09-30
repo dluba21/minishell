@@ -116,9 +116,8 @@ int	ft_export(t_vars *vars, t_cmd *cmd) // добавляет или измен�
 	int		i;
 	char	*key;
 	char	*value;
-	char	*buffer;
+	char	*var;
 
-	buffer = ft_strset(50);
 	if (lst_len(cmd->args_lst) == 1)
 		return (0 / printf("unset: not enough arguments"));
 	i = 0;
@@ -127,15 +126,16 @@ int	ft_export(t_vars *vars, t_cmd *cmd) // добавляет или измен�
 		key = env_key_trimmer(cmd->args_array[i]);
 		if (key)
 		{
-			env_var_trimmer(cmd->args_array[i], &buffer);
+			var = env_var_trimmer(cmd->args_array[i]);
 			if (is_var_in_env(vars->envp_lst, key))
-				change_env_val_key(vars, key, key, ft_strdup(buffer));
+				change_env_val_key(vars, key, key, var);
 			else
-				add_env_value(vars, key, ft_strdup(buffer));
-			free(key);
+				add_env_value(vars, key, var);
+			free(var);
 		}
+		free(key);
 	}
-	free(buffer);
+	recreate_envp(vars);
 	return (0);
 }
 

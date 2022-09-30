@@ -22,4 +22,5 @@ int	ft_unset(t_vars *vars, t_cmd *cmd)
 		}
 	}
 	recreate_envp(vars);
+	return (0);
 }

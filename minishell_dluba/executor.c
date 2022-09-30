@@ -24,8 +24,9 @@ int	is_builtin(t_vars *vars, t_cmd *cmd)
 {
 	int		i;
 
-	i = 8;
-	while (i--)
+	i = -1;
+
+	while (++i < 7)
 		if (!ft_strcmp((*cmd->args_lst)->val, vars->reserved_words[i]))
 			return (1);
 	return (0);
@@ -130,6 +131,7 @@ int	child_process(t_list *llst_elem, t_vars *vars, int **pipe_array, int i, int 
 	root_paths_init(vars);
 	path_to_cmd = compose_cmd_path(cmd, vars->root_paths);
 	cmd->args_array = convert_lst_to_str(cmd->args_lst);
+	lst_print(cmd->args_lst);
 //	(const char *filename, char *const argv [], char *const envp[]);
 //	printf("path = %s\n", path_to_cmd);
 //	big_str_print(args_array);

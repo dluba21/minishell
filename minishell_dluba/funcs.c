@@ -200,8 +200,11 @@ int	ft_strcmp(char *s1, char *s2) //сравнивает строки
 {
 	if (!s1 || !s2)
 		return (-1);
-	while (*s1 == *s2 && *s1++ && *s2++)
-		;
+	while (*s1 == *s2 && *s1 && *s2)
+	{
+		s1++;
+		s2++;
+	}
 	return (*s1 - *s2);
 }
 
@@ -261,17 +264,20 @@ int		ft_putendl_fd(char *s, int fd)
 
 char	*ft_strdup(char *str)
 {
-	char	*ret_str;
-	char	*temp;
+	int		i;
+	char	*ptr;
 
-	ret_str = (char *)(malloc(ft_strlen(str) + 1));
-	if (!ret_str)
+	i = 0;
+	ptr = (char *)malloc(ft_strlen(str) + 1);
+	if (ptr == NULL)
 		return (NULL);
-	temp = ret_str;
-	while (*str)
-		*temp++ = *str++;
-	*temp = 0;
-	return (ret_str);
+	while (str[i])
+	{
+		ptr[i] = str[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (&ptr[0]);
 }
 
 int ft_isspace(char c)

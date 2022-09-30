@@ -1,4 +1,4 @@
-//////#include <conio.h>
+////#include "minishell.h"
 //# include <stdio.h>
 //# include <unistd.h>
 //# include <stdlib.h>
@@ -48,6 +48,15 @@
 ////
 ////char (*pFun)(int)
 //
+//int	ft_strcmp(char *s1, char *s2) //сравнивает строки
+//{
+//	if (!s1 || !s2)
+//		return (-1);
+//	while (*s1 == *s2 && *s1++ && *s2++)
+//		;
+//	return (*s1 - *s2);
+//}
+//
 //int a(t_vars *vars, t_cmd *cmd)
 //{
 //	printf("kek!\n");
@@ -86,8 +95,9 @@
 //
 //	aboba[0] = a;
 //
+//	printf("%d", ft_strcmp("~", "aboba"));
 ////	aboba[0](vars, cmd);
-//	printf("%s\n", values[3]);
+////	printf("%s\n", values[3]);
 ////	readline("aboba");
 ////	rl_replace_line("", 0);
 ////	rl_on_new_line();

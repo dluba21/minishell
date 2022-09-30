@@ -225,11 +225,10 @@ char	*dollar_expansion(char *str, t_vars *vars);
 void	not_dollar_part(char **str, char **ret_str);
 void	expand_dollar_var(char **str, char **ret_str, t_vars *vars);
 char	*find_env_var(char *str, char **env);
-void	env_var_trimmer(char *env_elem, char **buffer);
-char	*env_key_trimmer(char *env_elem);
+char	*env_var_trimmer(char *env_elem);
 void	recreate_envp(t_vars *vars);
 char	*env_key_trimmer(char *env_elem);
-void	env_var_trimmer(char *env_elem, char **buffer);
+char	*env_var_trimmer(char *env_elem);
 int		is_var_in_env(t_list **env_lst, char *key);
 void	add_env_value(t_vars *vars, char *key, char *value);
 void	change_env_val_key(t_vars *vars, char *old_key, char *new_key, char *value);
@@ -265,6 +264,7 @@ int	ft_unset(t_vars *vars, t_cmd *cmd);
 
 //cигналы
 void	sig_init(void);
+//int		ft_sig_int(int sig);
 
 
 

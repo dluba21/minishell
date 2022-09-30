@@ -46,7 +46,7 @@ int	ft_echo(t_vars *vars, t_cmd *cmd)
 	i = 1;
 	slash_n_f = 1;
 	len_args = lst_len(cmd->args_lst);
-	if (cmd->args_array[i] && !ft_strncmp("-n", cmd->args_array[i]), 1)
+	if (cmd->args_array[i] && !ft_strcmp("-n", cmd->args_array[i]))
 	{
 		slash_n_f = 0;
 		++i;
