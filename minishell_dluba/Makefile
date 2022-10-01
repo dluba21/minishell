@@ -1,79 +1,66 @@
-#NAMES
+SRCS	= 			src/dollar_parser_1.c \
+				src/dollar_parser_2.c \
+				src/duo_list_methods_1.c \
+				src/duo_list_methods_2.c \
+				src/duo_list_methods_3.c \
+				src/env_funcs_1.c   \
+				src/env_funcs_2.c   \
+				src/executor_2.c \
+				src/executor_1.c \
+				src/get_next_line/get_next_line.c \
+				src/get_next_line/get_next_line_utils.c \
+				src/initializing.c \
+				src/pipes.c  \
+				src/funcs_1.c  \
+				src/funcs_2.c  \
+				src/funcs_3.c  \
+				src/funcs_4.c  \
+				src/funcs_5.c  \
+				src/funcs_6.c  \
+				src/funcs_7.c  \
+				src/handler.c  \
+				src/files.c  \
+				src/heredoc.c  \
+				src/lexer_1.c   \
+				src/lexer_2.c   \
+				src/parser_1.c  \
+				src/parser_2.c  \
+				src/main.c  \
+				src/ft_cd.c  \
+				src/ft_echo.c  \
+				src/ft_env.c  \
+				src/ft_exit.c  \
+				src/ft_export.c  \
+				src/ft_pwd.c  \
+				src/ft_unset.c \
+		
+OBJS		= ${SRCS:.c=.o}
+
 NAME		= minishell
-MAKE		= make
 
-#COMP
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g
+HEADER		= src/minishell.h
 
-#SRC
-SRC_DIR		= src
-SRC			=	$(SRC_DIR)/dollar_parser.c \
-				$(SRC_DIR)/duo_list_methods.c \
-				$(SRC_DIR)/env_funcs.c   \
-				$(SRC_DIR)/executor.c \
-				$(SRC_DIR)/get_next_line.c \
-				$(SRC_DIR)/get_next_line_utils.c \
-				$(SRC_DIR)/initializing.c \
-				$(SRC_DIR)/pipes.c  \
-				$(SRC_DIR)/funcs_1.c  \
-				$(SRC_DIR)/funcs_2.c  \
-				$(SRC_DIR)/funcs_3.c  \
-				$(SRC_DIR)/funcs_4.c  \
-				$(SRC_DIR)/funcs_5.c  \
-				$(SRC_DIR)/funcs_6.c  \
-				$(SRC_DIR)/funcs_7.c  \
-				$(SRC_DIR)/handler.c  \
-				$(SRC_DIR)/heredoc.c  \
-				$(SRC_DIR)/parser_1.c  \
-				$(SRC_DIR)/parser_2.c  \
-				$(SRC_DIR)/main.c  \
-				$(SRC_DIR)/builtins/ft_cd.c  \
-				$(SRC_DIR)/builtins/ft_echo.c  \
-				$(SRC_DIR)/builtins/ft_env.c  \
-				$(SRC_DIR)/builtins/ft_exit.c  \
-				$(SRC_DIR)/builtins/ft_export.c  \
-				$(SRC_DIR)/builtins/ft_pwd.c  \
-				$(SRC_DIR)/builtins/ft_unset.c \
+CC		= cc
 
+CFLAGS		= -Wall -Wextra -Werror
 
-#INC
-INC_DIR		= inc
-INC			= $(INC_DIR) minishell.h
+INC		= -lreadline
 
-#OBJ
-OBJ_DIR		= obj
-OBJ			= $(patsubst $(SRC_DIR)%, $(OBJ_DIR)%, $(SRC:.c=.o))
+.c.o:
+	${CC} $(CFLAGS) -c $< -o ${<:.c=.o}
 
-#OBJ_INC
-OBJ_INC		= -I $(INC_DIR)
+all: $(NAME) clean
+	
 
-#RMS
-RM_DIR		= rm -rf
-RM_FILE		= rm -f
-
-#DEPS
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) -lreadline -o $(NAME)
-
-#OBJ DEPS
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(OBJ_INC) -c $< -o $@
-
-$(OBJ)		:	| $(OBJ_DIR)
-$(OBJ_DIR):
-			mkdir -p $(OBJ_DIR)
-
-#RULES
-all:	$(NAME)
+$(NAME): $(OBJS) $(HEADER)
+	$(CC) $(CFLAGS) ${INC} $(OBJS) -o $(NAME) 
 
 clean:
-		${RM_DIR} ${OBJ_DIR}
+	@rm -rf ${OBJS}
 
 fclean:	clean
-		${RM_FILE} $(NAME)
+	@rm -rf ${NAME}
 
-re:		fclean all
+re: fclean all
 
-#OTHER
-.PHONY: all clean fclean re%
+.PHONY: all clean fclean re

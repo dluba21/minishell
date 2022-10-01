@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	chdir_part(t_vars *vars, t_cmd *cmd, char *home_path, char *path)
 {
